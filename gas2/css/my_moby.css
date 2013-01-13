@@ -1,0 +1,19 @@
+ #container {
+	 width: 100%;
+	 border: solid 1px;
+	 font-family:cursive;
+	 
+	 }
+.medio {
+  font-size: 1.5em;   
+}
+
+.grosso {
+  font-size: 2em;   
+}
+
+.dati1 span{ color:black; 
+			 display:inline-table;
+			 margin-right:1em;
+}
+	
