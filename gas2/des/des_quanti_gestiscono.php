@@ -14,6 +14,10 @@ if (!_USER_LOGGED_IN){
 	pussa_via();
 	exit;     
 }    
+//CONTROLLI
+if (!(_USER_PERMISSIONS & perm::puo_vedere_retegas)){
+     go("sommario",_USER_ID,"Non hai i permessi necessari (Rilasciati dal tuo DES) per vedere questa pagina");
+}
 
 	if(!is_empty($min_ord)){
         if(is_numeric($min_ord)){

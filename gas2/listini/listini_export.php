@@ -128,6 +128,57 @@ if($type==1){
     
 }
 
+if($type==3){
+ 
+      
+ $values = $db->sql_query("SELECT * FROM retegas_articoli WHERE id_listini='$id'");
 
+ 
+ //INTESTAZIONE
+ $csv_output .= _USER_CSV_DELIMITER."Codice"._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;    
+    $csv_output .= _USER_CSV_DELIMITER."Descrizione"._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER."Prezzo"._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER."Unità misura"._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER."Misura"._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER."Note Brevi"._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER."Qtà scatola"._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER."Qtà frazione"._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER."Note"._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER."Univocità"._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER."OPZ 1"._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER."OPZ 2"._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER."OPZ 3"._USER_CSV_DELIMITER;
+    $csv_output .= _USER_CSV_EOL;
+
+
+//RIGHE 
+while ($rowr = $db->sql_fetchrow($values)) {
+
+    $note =  preg_replace('#[\r\n]#', '', $rowr["articoli_note"]);
+    if($rowr["articoli_unico"]==0){$unico="";}else{$unico=$rowr["articoli_unico"];}  
     
-?>
+    $csv_output .= _USER_CSV_DELIMITER.$rowr["codice"]._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;    
+    $csv_output .= _USER_CSV_DELIMITER.$rowr["descrizione_articoli"]._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER._nf($rowr["prezzo"])._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER.$rowr["u_misura"]._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER._nf($rowr["misura"])._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER.$rowr["ingombro"]._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER._nf($rowr["qta_scatola"])._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER._nf($rowr["qta_minima"])._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER.htmlentities($note)._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER.$unico._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER.$rowr["articoli_opz_1"]._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER.$rowr["articoli_opz_2"]._USER_CSV_DELIMITER._USER_CSV_SEPARATOR;
+    $csv_output .= _USER_CSV_DELIMITER.$rowr["articoli_opz_3"]._USER_CSV_DELIMITER;
+    $csv_output .= _USER_CSV_EOL;
+}
+ 
+$filename = "Listino-$id-".date("d-m-Y_H-i",time());
+ 
+header("Content-type: application/vnd.ms-excel");
+header("Content-disposition: csv".date("Y-m-d").".csv");
+header("Content-disposition: filename=".$filename.".csv");
+ 
+print trim($csv_output);    
+    
+}

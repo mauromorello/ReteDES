@@ -11,9 +11,13 @@ if (!_USER_LOGGED_IN){
      pussa_via(); 
 }    
 
-if(!(_USER_PERMISSIONS & perm::puo_vedere_retegas)){
-     pussa_via();
+//questa pagina la può vedere solo il responsabile DES e io
+if(!(_USER_PERMISSIONS & perm::puo_gestire_retegas)){
+    if((_USER_ID <> db_val_q("id_des",_USER_ID_DES,"id_referente","retegas_des"))){
+        pussa_via();
+     }
 }
+
 
 if($do=="do_des_logo"){
     write_option_des_text(_USER_ID_DES,"_DES_SITE_LOGO",sanitize($site_logo));
@@ -83,7 +87,7 @@ $h .= "<div class=\"rg_widget rg_widget_helper\">
       </div>";
 
  //DES CODICE
-$h .= "<div class=\"rg_widget rg_widget_helper\">
+$h2 .= "<div class=\"rg_widget rg_widget_helper\">
         <form method=\"post\" action=\"\" class=\"retegas_form\">
         <h3>Codice per Wordpress</h3>
         <label for=\"des_code\">Il codice da usare per il widget wordpress</label>

@@ -64,13 +64,13 @@ $erro_multi =0;
 $unici=0;
 $array_articoli[0]="";  
 
-if(!isset($separatore)){$separatore=";";}
+
 
 //SALTA LA PRIMA RIGA
-$data = fgetcsv($fd, 1000, "$separatore");
+$data = fgetcsv($fd, 1000, _USER_CSV_SEPARATOR);
 
 // initialize a loop to go through each line of the file
- while (($data = fgetcsv($fd, 1000, "$separatore")) !== FALSE) {
+ while (($data = fgetcsv($fd, 1000, _USER_CSV_SEPARATOR)) !== FALSE) {
 	$num = count($data);
 	$row++;
 		
@@ -198,7 +198,7 @@ $erro = 0;
 // initialize a loop to go through each line of the file
 
 //SALTA LA PRIMA RIGA
-$data = fgetcsv($fd, 1000, "$separatore");
+$data = fgetcsv($fd, 1000, _USER_CSV_SEPARATOR);
 $htable .="<tr>";
 $h_table .="<th>&nbsp</th>";		
 foreach($data as $value) {
@@ -206,7 +206,7 @@ foreach($data as $value) {
 		}
 $htable .="</tr>";
 
- while (($data = fgetcsv($fd, 1000, "$separatore")) !== FALSE) {
+ while (($data = fgetcsv($fd, 1000, _USER_CSV_SEPARATOR)) !== FALSE) {
 	$num = count($data);
 	$row++;
 			if(is_integer($row/2)){
@@ -239,11 +239,6 @@ $htable .="</tr>";
 		if (!is_numeric(trim(str_replace(array(","),array("."),$data[7])))){$bg[7] = "class=\"non_riconosciuto\"";} 
 		if (!is_numeric(trim(str_replace(array(","),array("."),$data[6])))){$bg[6] = "class=\"non_riconosciuto\"";}
 		
-		//if (!is_numeric($data[7])){$bg[7] = "class=\"non_riconosciuto\"";}   // Non sono numeri
-		//if (!is_numeric($data[6])){$bg[6] = "class=\"non_riconosciuto\"";}
-		
-		//if ($data[7]<1){$bg[7] = "class=\"qta_inf_1\"";}
-		//if ($data[6]<1){$bg[6] = "class=\"qta_inf_1\"";}
 		$data[8]=sanitize($data[8]);
 		
 		if (trim($data[9])=="UNICO"){$bg[9] = "class=\"non_riconosciuto\"";}else{$bg[9] = "";}
@@ -269,7 +264,7 @@ $htable .="</tr>";
 
 }
 $h_table .="</table>";
-//include("../footer.php");
+
 fclose ($fd);
 if ($erro_num + $erro_vuoti + $erro_doppi+ $erro_zero  > 0){          // se c'era qualche errore cancello il file'
  if(is_file("$filone")) {

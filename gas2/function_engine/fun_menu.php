@@ -265,7 +265,8 @@ function amministra_menu_gas(){
             $h_menu.='<ul>';
                 $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["amministra_nuovo_gas"].'" target="_self">Nuovo GAS</a></li>';
                 $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["amministra_gas_table_opt"].'" target="_self">Opzioni GAS</a></li>';
-
+                $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["amministra_gas_donate_all_gas"].'" target="_self">Donazioni GAS</a></li>';
+                
             $h_menu .='</ul>';  // Visualizza
         $h_menu .='</li>';    
 
@@ -526,112 +527,20 @@ function ditte_menu_completo($id_ditta=null){
 
 //--------------------------------------------------LISTINI
   function listini_menu($user,$id=null){
+           
+  //VUOTA DA CANCELLARE            
+  }
+  function listini_menu_esportazione($id_listino){
       
   global $RG_addr;
-      
-  $cookie_read     =explode("|", base64_decode($user));
-    $id_user  =  $cookie_read[0];
-    $usr =       $cookie_read[1]; 
-    $my_user_level = user_level($id_user);
-    $permission = $cookie_read[6];      
-      
-//echo "CICCIA user level = $my_user_level<br>";
-      
-if ($my_user_level>=0){
-      // NUOVA ORDINE
-   
-if($permission AND perm::puo_creare_ordini){
-    if(listino_tipo($id)==0){
-        if(articoli_n_in_listino($id)>0){
-            if(listino_tempo_valido($id)){            
-             $h_menu .='<li><a class="medium beige awesome" href="#"><b>Nuovo ordine !</b></a>';
-             $h_menu .='<ul>';
-                $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["nuovo_ordine_simple"].'?id_listino='.$id.'">Semplice</a></li>';
-                $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["nuovo_ordine_completo"].'?id_listino='.$id.'">Completo</a></li>';      
-             $h_menu .='</ul>';
-             $h_menu .='</li>';
-        }
-        }
-    }
-}
-//NUOVO ORDINE
 
-}
-
-
-// ------------------------------------------------ARTICOLI
-
-if ($my_user_level>=0){
-        if(listino_proprietario($id)==$id_user){        
-            $h_menu .='<li><a class="medium orange awesome"><b>Aggiungi Articoli</b></a>'; 
-            $h_menu .='<ul>';
-                $h_menu .='<li><a class="medium orange awesome" href="../articoli/articoli_form_add.php?id='.$id.'" target="_self">Uno per volta</a></li>';
-                $h_menu .='<li><a class="medium orange awesome" href="'.$RG_addr["select_listino_maga"].'?id_listino='.$id.'" target="_self">Da un listino MAGAZZINO</a></li>';
-                $h_menu .='<li><a class="medium orange awesome">Tutti assieme</a>';
-                    $h_menu .='<ul>';               
-                        $h_menu .='<li><a class="medium orange awesome" href="'.$RG_addr["listini_upload"].'?id='.$id.'&tipo_file=XLS" target="_self">File MS EXCEL (.XLS)</a></li>';
-                        $h_menu .='<li><a class="medium orange awesome" href="'.$RG_addr["listini_upload"].'?id='.$id.'&tipo_file=CSV" target="_self">File CSV (Tabella di testo)</a></li>';
-                        //$h_menu .='<li><a class="medium orange awesome" href="'.$RG_addr["listini_upload"].'?id='.$id.'&tipo_file=GOO" target="_self">OnLine (Google Docs)</a></li>';
-                    $h_menu .='</ul></li>';
-               
-            $h_menu .='</ul>';
-            $h_menu .='</li>';
-        }   
-}
-// ------------------------------------------------ARTICOLI
-
-
-// ------------------------------------------------Operazioni
-
-if ($my_user_level>=0){
-
-                  
-            $h_menu .='<li><a class="medium yellow awesome"><b>Operazioni</b></a>'; 
-            $h_menu .='<ul>';
-            $h_menu .='<li><a class="medium yellow awesome" href="'.$pa.'listini_form_clone.php?id='.$id.'" target="_self">Clona questo listino</a></li>';
-                 // OPZIONI SCHEDA
-                //$h_menu .='<li><a class="medium beige awesome" href="'.$pa.'listini_form_clone.php?id='.$id.'" target="_self">Clona questo listino</a></li>';
-                //$opt1 .="<a class=\"small yellow awesome destra\" href=\"listini_form_edit.php?id=$id\">Modifica scheda</a>";
-                
-             if(listino_proprietario($id)==$id_user){
-                 $h_menu .='<li><a class="medium yellow awesome" href="'.$pa.'listini_form_edit.php?id_listini='.$id.'" target="_self">Modifica intestazione listino</a></li>';
-
-                 if(articoli_n_in_listino($id)==0){
-                    //$opt2 .="<a class=\"small awesome destra\" href=\"listini_form_delete.php?id=$id\">Elimina scheda</a>";
-                    $h_menu .='<li><a class="medium red awesome" href="'.$pa.'listini_form_delete.php?id_listino='.$id.'" target="_self">Elimina questo listino</a></li>';
-                 }else{
-                     
-                 $h_menu .='<li><a class="medium yellow awesome">Operazioni sugli articoli</a>';
-                    $h_menu .='<ul>';               
-                        $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["delete_articoli"].'?id_listini='.$id.'" target="_self">Cancella alcuni articoli da questo listino</a></li>';
-                        $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["modifica_prz_alc_art"].'?id_listini='.$id.'" target="_self">Modifica i prezzi di alcuni articoli</a></li>';
-                        $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["modifica_dsc_alc_art"].'?id_listini='.$id.'" target="_self">Modifica la descrizione di alcuni articoli</a></li>';
-                        if(quanti_ordini_per_questo_listino($id)==0){
-                            $h_menu .='<li><a class="medium red awesome" href="'.$pa.'listini_form_empty.php?id='.$id.'" target="_self">Svuota questo listino</a></li>';
-                        }
-                    $h_menu .='</ul></li>';    
-                     
-                     
-                     
-                 }
-                 
-                 
-                 
-                 
-
-             }
-            $h_menu .='</ul>';
-            $h_menu .='</li>';
-         
-   
-}
 // ------------------------------------------------Esporta
         
             $h_menu .='<li><a class="medium silver awesome"><b>Esporta</b></a>'; 
             $h_menu .='<ul>';
-            $h_menu .='<li><a class="medium silver awesome" href="'.$RG_addr["listini_export"].'?id='.$id.'&type=1" target="_blank">File Excel</a></li>';
-            $h_menu .='<li><a class="medium silver awesome" href="'.$RG_addr["listini_export"].'?id='.$id.'&type=2" target="_blank">Tabella HTML</a></li>';
-            //$h_menu .='<li><a class="medium silver awesome" href="'.$RG_addr["listini_export"].'?id='.$id.'&type=3" target="_blank">File CSV</a></li>';
+            $h_menu .='<li><a class="medium silver awesome" href="'.$RG_addr["listini_export"].'?id='.$id_listino.'&type=1" target="_blank">File Excel</a></li>';
+            $h_menu .='<li><a class="medium silver awesome" href="'.$RG_addr["listini_export"].'?id='.$id_listino.'&type=2" target="_blank">Tabella HTML</a></li>';
+            $h_menu .='<li><a class="medium silver awesome" href="'.$RG_addr["listini_export"].'?id='.$id_listino.'&type=3" target="_blank">File CSV</a></li>';
             $h_menu .='</ul>';
             $h_menu .='</li>';
 
@@ -641,7 +550,95 @@ if ($my_user_level>=0){
 return $h_menu;            
               
   }
+  function listini_menu_ordine($id_listino){
+        global $RG_addr;
+
+   
+            if(_USER_PERMISSIONS AND perm::puo_creare_ordini){
+                if(listino_tipo($id_listino)==0){
+                    if(articoli_n_in_listino($id_listino)>0){
+                        if(listino_tempo_valido($id_listino)){            
+                         $h_menu .='<li><a class="medium beige awesome" href="#"><b>Nuovo ordine !</b></a>';
+                         $h_menu .='<ul>';
+                            $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["nuovo_ordine_simple"].'?id_listino='.$id_listino.'">Semplice</a></li>';
+                            $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["nuovo_ordine_completo"].'?id_listino='.$id_listino.'">Completo</a></li>';      
+                         $h_menu .='</ul>';
+                         $h_menu .='</li>';
+                    }
+                    }
+                }
+            }
+       return $h_menu;     
+  }
+  function listini_menu_gestione_articoli($id_listino){
+      global $RG_addr;
+      // ------------------------------------------------ARTICOLI
+
+        if(listino_proprietario($id_listino)==_USER_ID){        
+            $h_menu .='<li><a class="medium orange awesome"><b>Aggiungi Articoli</b></a>'; 
+            $h_menu .='<ul>';
+                $h_menu .='<li><a class="medium orange awesome" href="../articoli/articoli_form_add.php?id='.$id_listino.'" target="_self">Uno per volta</a></li>';
+                $h_menu .='<li><a class="medium orange awesome" href="'.$RG_addr["select_listino_maga"].'?id_listino='.$id_listino.'" target="_self">Da un listino MAGAZZINO</a></li>';
+                $h_menu .='<li><a class="medium orange awesome">Tutti assieme</a>';
+                    $h_menu .='<ul>';               
+                        $h_menu .='<li><a class="medium orange awesome" href="'.$RG_addr["listini_upload"].'?id='.$id_listino.'&tipo_file=XLS" target="_self">File MS EXCEL (.XLS)</a></li>';
+                        $h_menu .='<li><a class="medium orange awesome" href="'.$RG_addr["listini_upload"].'?id='.$id_listino.'&tipo_file=CSV" target="_self">File CSV (Tabella di testo)</a></li>';
+                        //$h_menu .='<li><a class="medium orange awesome" href="'.$RG_addr["listini_upload"].'?id='.$id_listino.'&tipo_file=GOO" target="_self">OnLine (Google Docs)</a></li>';
+                    $h_menu .='</ul></li>';
+               
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+        }   
+
+// ------------------------------------------------ARTICOLI    
+  return $h_menu;
+  }
+  function listini_menu_operazioni($id_listino){
+      global $RG_addr;
+      
+      // ------------------------------------------------Operazioni
+
+                  
+            $h_menu .='<li><a class="medium yellow awesome"><b>Operazioni</b></a>'; 
+            $h_menu .='<ul>';
+            $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["listini_form_clone"].'?id='.$id_listino.'">Clona questo listino</a></li>';
+         
+             if(listino_proprietario($id_listino)==_USER_ID){
+                 $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["listini_form_edit"].'?id_listini='.$id_listino.'">Modifica intestazione listino</a></li>';
+
+                 if(articoli_n_in_listino($id_listino)==0){
+                    $h_menu .='<li><a class="medium red awesome" href="'.$RG_addr["listini_form_delete"].'?id_listino='.$id_listino.'">Elimina questo listino</a></li>';
+                 }else{
+                     
+                 $h_menu .='<li><a class="medium yellow awesome">Operazioni sugli articoli</a>';
+                    $h_menu .='<ul>';               
+                        $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["delete_articoli"].'?id_listini='.$id_listino.'">Cancella alcuni articoli da questo listino</a></li>';
+                        $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["modifica_prz_alc_art"].'?id_listini='.$id_listino.'">Modifica i prezzi di alcuni articoli</a></li>';
+                        $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["modifica_dsc_alc_art"].'?id_listini='.$id_listino.'">Modifica la descrizione di alcuni articoli</a></li>';
+                        if(quanti_ordini_per_questo_listino($id_listino)==0){
+                            $h_menu .='<li><a class="medium red awesome" href="'.$RG_addr["listini_form_empty"].'?id_listino='.$id_listino.'" target="_self">Svuota questo listino</a></li>';
+                        }
+                    $h_menu .='</ul></li>';    
+                     
+                     
+                     
+                 }
+
+             }
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+      return $h_menu;
+  }
   
+  function listini_menu_completo($id_listino){
+        
+        $mio_menu[] = listini_menu_ordine($id_listino);
+        $mio_menu[] = listini_menu_gestione_articoli($id_listino);
+        $mio_menu[] = listini_menu_operazioni($id_listino); 
+        $mio_menu[] = listini_menu_esportazione($id_listino); 
+       
+        return $mio_menu;     
+  }
   
   
 //----------------------------------------------------GAS

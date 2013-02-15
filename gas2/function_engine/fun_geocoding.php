@@ -301,8 +301,8 @@ function build_address_list_gas($gas){
 function build_address_list_gas_2($gas){
 
       global $db;
-
       $qry = "SELECT * FROM retegas_gas WHERE (sede_gas<>'') AND (gas_gc_lat > 0) AND id_des = "._USER_ID_DES.";";
+      $qry = "SELECT * FROM retegas_gas WHERE (sede_gas<>'') AND (gas_gc_lat > 0);";
 
       $res = $db->sql_query($qry);
 

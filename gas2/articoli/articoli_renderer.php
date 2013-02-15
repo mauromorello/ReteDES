@@ -19,15 +19,23 @@ function articoli_render_add($id){
                 $opz_3;
 
 
-
-        //$help_descrizione='Inserisci una descrizione chiara e concisa dell\'ordine che stai aprendo.';
-        //$help_ditta ='Seleziona una ditta tra quelle con listini disponibili';
-        //$help_listino ='Seleziona un listino associato alla ditta scelta in precedenza tra quelli disponibili';
-        //$help_data_chiusura='Scegli quando l\'ordine deve chiudersi;<br>Se lasciato vuoto, si chiuder? tra una settimana alle 22.00';
-        //$help_partenza = 'Una volta che l\'ordine ? partito, potrai modificare tutti i dati che hai immesso e/o aggiungerne altri.<br>
-        //Puoi anche annullarlo, ma soltanto se nessuno ha prenotato articoli.';
-
-
+        if(isset($univoco)){$SU=" SELECTED ";}else{$SN=" SELECTED ";}                      
+                
+        $help_codice ='Questo è il codice che serve AL FORNITORE per identificare l\'articolo. Se il fornitore non ha un codice specifico, crearne uno seguendo un minimo di logica (ES "001" oppure "A" oppure "COD.1") Fate attenzione nel caso della numerazione ordinale, di porre sempre degli zeri davanti al codice (Es 001) anzichè solo "1" , perchè poi potrebbe risultare difficile metterli nell\'ordine voluto. Un buon metodo è chiamarli "010" "020" "030" "040" ecc.... che permette di infilare tra un articolo e l\'altro altri articoli.';
+        $help_descrizione='Inserisci una descrizione chiara e concisa di cosa si sta trattando.';
+        $help_u_misura ="L'unità di misura con cui viene venduto l'oggetto (N. ,  Kg, Lt. Pz, Gr. , Bancali, Borse, Cassette, Vasetti). E' da leggersi assieme alla prossima voce.";
+        $help_misura ="E' legata alla voce precedente, e compone L'unità di vendita (UDV), il cui prezzo è definito dalla prossima voce.";
+        $help_prezzo ="Il prezzo riferito all'UDV (unità di vendita), definita nelle voci 3 e 4. Tutto assieme si potrebbe leggere :  1 (M) KG (UDM)   a 5 Eu. (P)";
+        $help_qta_scatola="Una scatola, od un contenitore, può contenere n UDV.  Ad esempio, i pacchetti di pasta singoli sono venduti in scatole da 12 UDV";
+        $help_qta_multiplo="Qual'è la quantità minima di UDV che può essere venduta. La scatola  deve essere un suo multiplo. Sempre prendendo la pasta come esempio, io posso avere una scatola da 12 UDV, ma decido che il minimo multiplo (MM) è 3. Questo vuol dire che potrò comprare un minimo di tre pacchetti, e con 12 pacchetti completo una scatola. La scatola può essere naturalmente completata sia dallo stesso utente che da utenti diversi";
+        $help_univoco ="se si inserisce -UNIVOCO- in questa voce, vorrà dire che ogni ordine fatto di quell'articolo verrà trattato singolarmente. Ad esempio il parmigiano, se ne acquisto 5 pezzi da 1kg, nell'ordine fatto mi risulteranno 5 richieste da 1 kg a mio carico. Questo serve per poi poter trattare ogni pezzo singolarmente, e modificarne le quantità arrivate od il prezzo.";
+        $help_ingombro ="Note Brevi";
+        $help_note_articolo ="Le note lunghe possono contenere anche immagini, se importate correttamente da siti esterni a reteDES,";
+        
+        $help_opz_1 = 
+        $help_opz_2 =
+        $help_opz_3 ="Le voci 11 12 13 concorrono a formare un articolo RAGGRUPPABILE. Questa opzione serve a gestire le caratteristiche diverse di gruppi di articoli simili, ad esempio taglie, numeri di scarpa, misure dei vestiti, colori di oggetti ecc ecc. Per usarla è più conveniente passare al caricamento multiplo da excel. Nel caso di articoli singoli LASCIARE VUOTO";
+        
         $h = '<div class="rg_widget rg_widget_helper">
         <h3>Inserisci un articolo singolo nel listino "'.listino_nome($id).'"</h3>
 
@@ -72,7 +80,7 @@ function articoli_render_add($id){
         <h4>6</h4>
         <label for="qta_scatola">Adesso inserisci quante delle unità sopra descritte sono contenute in una scatola;</label>
         <input type="text" name="qta_scatola" value="'.$qta_scatola.'" size="10"></input>
-        <h5 title="'.$qta_scatola.'">Inf.</h5>
+        <h5 title="'.$help_qta_scatola.'">Inf.</h5>
         </div>
         
         <div>
@@ -85,7 +93,12 @@ function articoli_render_add($id){
         <div>
         <h4>8</h4>
         <label for="univoco">Qua decidi se sarà un articolo normale oppure univoco</label>
-        <input type="text" name="univoco" value="'.$univoco.'" size="50"></input>
+        <!--<input type="text" name="univoco" value="'.$univoco.'" size="50"></input>-->
+        <select name="univoco">
+          <option value=""          '.$SN.'>Normale</option>
+          <option value="UNIVOCO"   '.$SU.'>Univoco</option>
+        </select>
+        
         <h5 title="'.$help_univoco.'">Inf.</h5>
         </div>
         
@@ -98,30 +111,32 @@ function articoli_render_add($id){
         
         <div>
         <h4>10</h4>
-        <h5 title="'.$help_note_articolo.'">Inf.</h5>
+
         <label for="note_articolo">..oppure delle note più corpose, con magari dei link o delle immagini</label>
+        <h5 title="'.$help_note_articolo.'">Inf.</h5>
         <textarea id="note_articolo" class ="ckeditor" name="note_articolo" cols="28" style="display:inline-block;">'.$note_ordine.'</textarea>
+        
         </div>
         
         <div>
         <h4>11</h4>
         <label for="opz_1">Se l\'articolo fa parte di un insieme raggruppabile qua inserisci il primo livello del raggruppamento</label>
         <input type="text" name="opz_1" value="'.$opz_1.'" size="20"></input>
-        <h5 title="'.$opz_1.'">Inf.</h5>
+        <h5 title="'.$help_opz_1.'">Inf.</h5>
         </div>
         
         <div>
         <h4>12</h4>
         <label for="opz_2">... qua il secondo....</label>
         <input type="text" name="opz_2" value="'.$opz_1.'" size="20"></input>
-        <h5 title="'.$opz_2.'">Inf.</h5>
+        <h5 title="'.$help_opz_2.'">Inf.</h5>
         </div>
         
         <div>
         <h4>13</h4>
         <label for="opz_3">...ed il terzo;</label>
         <input type="text" name="opz_3" value="'.$opz_3.'" size="20"></input>
-        <h5 title="'.$opz_3.'">Inf.</h5>
+        <h5 title="'.$help_opz_3.'">Inf.</h5>
         </div>
         
         
@@ -131,7 +146,6 @@ function articoli_render_add($id){
         <input type="submit" name="submit" value="Aggiungi questo nuovo articolo" align="center" >
         <input type="hidden" name="do" value="add">
         <input type="hidden" name="id" value="'.$id.'">
-        <h5 title="'.$help_partenza.'">Inf.</h5>
         </div> 
 
 
@@ -168,7 +182,7 @@ function articoli_render_do_add($user,$id_listino){
       if (empty($prezzo)){$msg.="Devi inserire il prezzo riferito alla quantità indicata in \"misura\"<br>";$e_empty++;};
       if (empty($qta_multiplo)){$msg.="Devi inserire la quantità multiplo.<br>";$e_empty++;};
       
-      if (empty($unico)){$unico=0;};
+      if (empty($univoco)){$univoco=0;}else{$univoco=1;};
       
       if (empty($id_listino)){$msg.="L'articolo deve essere riferito ad un listino.<br>";$e_empty++;};
       

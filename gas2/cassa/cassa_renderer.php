@@ -1212,6 +1212,8 @@ function cassa_movimento_singolo($id_movimento){
               }else{
                   $c8 = "NO";
               }
+              
+              
               $c9 = $row["descrizione_movimento"];
               $c10 = $row["note_movimento"];
               $c11 = $row["data_movimento"];
@@ -1232,12 +1234,19 @@ function cassa_movimento_singolo($id_movimento){
                        Importo : <input type=\"text\" name=\"importo\" size=3><br>
                        <hr>
                        <input type=\"hidden\" name=\"id_movimento\" value=\"$c1\">
+                       <input type=\"hidden\" name=\"id_ordine\" value=\"".$row["id_ordine"]."\">
+                       <input type=\"hidden\" name=\"id_ditta\" value=\"".$row["id_ditta"]."\">
                        <input type=\"hidden\" name=\"do\" value=\"do_rett\">
                        <input class=\"awesome red medium mb6\" type=\"submit\" value=\"Rettifica\">
                        </form>";
               }else{
                  $form_rettifica = "Questo movimento è già una rettifica"; 
               }
+              if($c7==movimento::carico_credito){
+                 $form_rettifica = "Non si possono rettificare i carichi crediti"; 
+              }
+              
+              
               
               $form_elimina="<form method=\"POST\" action=\"\">
                        <input type=\"hidden\" name=\"id_movimento\" value=\"$c1\">

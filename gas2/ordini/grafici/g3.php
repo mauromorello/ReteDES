@@ -353,7 +353,7 @@ $bacino_non_part_mio_gas = $bacino_tot_mio_gas-$bacino_part_mio_gas;
 $h .= "<div class=\"container_3\">";
     
         $h .= "<p class=\"grid_3\" id=\"grafico_1\"></p>";
-        $h .= "<div class=\"clear\"></div>";
+        $h .= "<div class=\"clear\" style=\"clear:none\"></div>";
         $h .= "<p class=\"grid_1\" id=\"grafico_2\"></p>";
         $h .= "<p class=\"grid_1\" id=\"grafico_3\"></p>";
         $h .= "<p class=\"grid_1\" id=\"grafico_4\"></p>";

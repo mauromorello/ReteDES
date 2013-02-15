@@ -87,9 +87,14 @@ if($do=="add"){
             go("sommario",_USER_ID,"Errore inserimento");  
         }else{
             
-            log_me(0,_USER_ID,"LIS","ADD","Creato il listino ($descrizione_listini) riferito alla ditta ($nome_ditta)",0,$my_query);
+            $sql = "SELECT MAX(id_listini) FROM retegas_listini;";
+            $res = $db->sql_query($sql);
+            $row = $db->sql_fetchrowset($res);
+            $id_listino = $row[0][0];
+            
+            log_me(0,_USER_ID,"LIS","ADD","Creato il listino ($id_listino - $descrizione_listini) riferito alla ditta ($nome_ditta)",0,$my_query);
             $msg = "Nuovo listino aggiunto";
-            go("sommario",_USER_ID,"Listino correttamente inserito");  
+            go("listini_form_2",_USER_ID,"Listino correttamente inserito","?id_listino=$id_listino");  
         };
 
     

@@ -24,7 +24,7 @@ if (!_USER_LOGGED_IN){
 //Creazione della nuova pagina uso un oggetto rg_simplest
 $r = new rg_simplest();
 //Dico quale voce del men? verticale dovr? essere aperta
-$r->voce_mv_attiva = menu_lat::gas;
+$r->voce_mv_attiva = menu_lat::coseinutili;
 //Assegno il titolo che compare nella barra delle info
 $r->title = "Presentazione Cose(in)utili";
 

@@ -12,7 +12,10 @@ if (!_USER_LOGGED_IN){
      pussa_via(); 
 }    
 
-
+//CONTROLLI
+if (!(_USER_PERMISSIONS & perm::puo_vedere_retegas)){
+     go("sommario",_USER_ID,"Non hai i permessi necessari (Rilasciati dal tuo DES) per vedere questa pagina");
+}
 
 //Creazione della nuova pagina uso un oggetto rg_simplest
 $r = new rg_simplest();
@@ -112,7 +115,7 @@ $r->javascripts[]='<script type="text/javascript">
                         var mapOptions = {
                           center: new google.maps.LatLng('.db_val_q("id_des",_USER_ID_DES,"des_lat","retegas_des").',
                                                          '.db_val_q("id_des",_USER_ID_DES,"des_lng","retegas_des").'),
-                          zoom: 8,
+                          zoom: 9,
                           mapTypeId: google.maps.MapTypeId.TERRAIN
                         };
                         var map = new google.maps.Map(document.getElementById("map_canvas"),

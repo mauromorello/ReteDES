@@ -12,11 +12,11 @@ if (!_USER_LOGGED_IN){
      pussa_via(); 
 }    
 
-//CONTROLLI
-if (!(_USER_PERMISSIONS & perm::puo_gestire_retegas)){
-     //pussa_via();
-}
 
+//CONTROLLI
+if (!(_USER_PERMISSIONS & perm::puo_vedere_retegas)){
+     go("sommario",_USER_ID,"Non hai i permessi necessari (Rilasciati dal tuo DES) per vedere questa pagina");
+}
 
 
 //Creazione della nuova pagina uso un oggetto rg_simplest

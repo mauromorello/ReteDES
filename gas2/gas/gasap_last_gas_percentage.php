@@ -15,7 +15,10 @@ if (!_USER_LOGGED_IN){
     die;     
 }    
 
-	
+//CONTROLLI
+if (!(_USER_PERMISSIONS & perm::puo_vedere_retegas)){
+     go("sommario",_USER_ID,"Non hai i permessi necessari (Rilasciati dal tuo DES) per vedere questa pagina");
+}	
 	 
 	// ISTANZIO un nuovo oggetto "retegas"
 	// Prenderà come variabile globale $user, nel caso di user loggato
@@ -63,6 +66,7 @@ if (!_USER_LOGGED_IN){
                     FROM  maaking_users
                     Inner Join retegas_gas ON maaking_users.id_gas = retegas_gas.id_gas
                     WHERE maaking_users.last_activity >=  DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)
+                    AND retegas_gas.id_des = '"._USER_ID_DES."'
                     GROUP BY maaking_users.id_gas
                     ORDER BY Contgas ASC";
       $res = $db->sql_query($sql1);
@@ -83,6 +87,7 @@ if (!_USER_LOGGED_IN){
                     Inner Join retegas_gas ON maaking_users.id_gas = retegas_gas.id_gas
                     WHERE
                     maaking_users.last_activity >=  DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)
+                    AND retegas_gas.id_des = '"._USER_ID_DES."'
                     GROUP BY
                     maaking_users.id_gas
                     ORDER BY Contgas ASC";
@@ -121,7 +126,7 @@ if (!_USER_LOGGED_IN){
       legend: {
          layout: 'vertical',
          align: 'right',
-         verticalAlign: 'top'
+         verticalAlign: 'bottom'
          
       },
       tooltip: {

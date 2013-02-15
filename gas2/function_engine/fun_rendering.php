@@ -256,8 +256,8 @@ return   "<script type=\"text/javascript\" src=\"".$RG_addr["js_ckeditor"]."\"><
 }
 function java_head_datetimepicker(){
 global $RG_addr;  
-return   "<script type=\"text/javascript\" src=\"".$RG_addr["js_timepicker_addon"]."\"></script>
-            <script type=\"text/javascript\" src=\"/gas2/js/jquery.ui.datepicker-it.js\"></script>
+return   "<script type=\"text/javascript\" src=\"".$RG_addr["js_datetimepicker"]."\"></script>
+          <script type=\"text/javascript\" src=\"".$RG_addr["js_datepicker_loc"]."\"></script>
 "; 
       
 }
@@ -353,6 +353,7 @@ global $RG_addr;
 // 4 = DES
 // 5 = AIUTO
 // 6 = BACHECA
+// 7 = Cose(in)utili
 
 switch ($id_menu){
     case 0:              //USER
@@ -375,7 +376,10 @@ switch ($id_menu){
         break;
     case 6:              //BACHECA
         $id_menu=6;
-        break;                
+        break;
+    case 7:              //Cose(in)utili
+        $id_menu=7;
+        break;                        
 }    
 
 

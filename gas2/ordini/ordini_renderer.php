@@ -317,6 +317,9 @@
     }
 
 
+    
+    //CANCELLAMI----------------------------------------------------
+    
     // ADD SIMPLE 
     function ordine_render_add_simple($id){
 
@@ -1207,7 +1210,7 @@
         return $msg;    
 
     }  
-    
+    //---------------------------------------------------------------
     
     //EDIT ORDINE SPESE MIO GAS
     function ordine_render_edit_gas_spese($id_ordine,$id_gas){
@@ -1778,6 +1781,8 @@
 
     }
     
+    
+    //CANCELLAMI-----------------------------------------------------------------
     //EDIT ORDINE PARTECIPAZIONE
     function ordine_render_edit_partecipazione($id_ordine,$id_gas){
         global $db;     
@@ -1969,6 +1974,8 @@
         return $msg;    
 
     }
+    //---------------------------------------------------------------------------
+    
     
     //EDIT ORDINE DESCRIZIONE
     function ordine_render_edit_switch_listino($id_ordine){
@@ -2507,7 +2514,7 @@
        // $sparkline_data="<span class='inlinesparkline'>".$valori_sparkline."</span>";            
         
         $info = "   <p>Ditta: <a href='".$RG_addr["form_ditta"]."?id_ditte=$c_ditte'>$c4</a><br>
-                    Listino: <a href='".$RG_addr["listini_scheda"]."?id_listini=$c_listini'>$c3</a><br>
+                    Listino: <a href='".$RG_addr["listini_scheda"]."?id_listino=$c_listini'>$c3</a><br>
                     Tipologia: $c_tipologia</p>";
         
         $prog_value = (int)avanzamento_ordine_from_id_ordine($c1);            

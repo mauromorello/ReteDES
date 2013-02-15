@@ -10,7 +10,7 @@ include_once ("../retegas.class.php");
 
 
 // controlla se l'user ha effettuato il login oppure no
-//if (is_logged_in($user)){
+if (is_logged_in($user)){
 
 	// estraggo dal cookie le informazioni su chi è che sta vedendo la pagina
 	$cookie_read     =explode("|", base64_decode($user));
@@ -26,14 +26,14 @@ include_once ("../retegas.class.php");
 	// e poi scopro di che gas è l'user
 	$id_gas = id_gas_user($id_user);
 	
-//}else{
-	//pussa_via();
-	//exit;     
-//}    
+}else{
+	pussa_via();
+exit;     
+}    
 
+//CONTROLLI
 if (!(_USER_PERMISSIONS & perm::puo_vedere_retegas)){
-  pussa_via();
-   exit;
+     go("sommario",_USER_ID,"Non hai i permessi necessari o questa pagina non è disponibile per il tuo DES");
 }
 	 
 	// ISTANZIO un nuovo oggetto "retegas"

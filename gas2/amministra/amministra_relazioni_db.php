@@ -198,10 +198,18 @@ if(_USER_HAVE_MSG){
 					retegas_ordini.id_ordini IS NULL';
 	   break;
 	   
-       
        //ORDINI SENZA LISTINI
+       case "del_ord":
+         if(_USER_PERMISSIONS & perm::puo_gestire_retegas){
+            if(isset($id)){
+            
+                //echo "DELETE FROM `retegas_dettaglio_ordini WHERE `retegas_dettaglio_ordini`.`id_dettaglio_ordini` = '$id' LIMIT 1;"; 
+                $db->sql_query("DELETE FROM `retegas_ordini` WHERE `retegas_ordini`.`id_ordini` = '$id' LIMIT 1;");                                  
+            } 
+         }
+       
        case "o_s_l":
-       //$delete_command = "?do=del_det&id=";
+       $delete_command = "?do=del_ord&id=";
        $intestazione = '<div class="ui-state-error ui-corner-all padding_6px">Ordini senza listini</div><br></hr>';
                         $query="SELECT
                                 retegas_ordini.id_ordini,

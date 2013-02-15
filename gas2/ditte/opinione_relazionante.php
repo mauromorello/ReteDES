@@ -22,37 +22,37 @@ if(!isset($id_ditta)){
 
 $value=CAST_TO_INT($value,0,5);
 
-if($tipo=="sociale"){
+if($tipo=="pulizia"){
    if(($value>0)){
-        write_option_opinione_ditta($id_ditta,_USER_ID,opinioni::sociale,CAST_TO_INT($value,1,5));
+        write_option_opinione_ditta($id_ditta,_USER_ID,opinioni::pulizia,CAST_TO_INT($value,1,5));
         echo "Registrato il tuo voto: <span style=\"font-size:1.1em;font-weight:bold\">$value</span>.";
         die(); 
    }else{
-        delete_option_opinione_ditta($id_ditta,_USER_ID,opinioni::sociale);
+        delete_option_opinione_ditta($id_ditta,_USER_ID,opinioni::pulizia);
         echo "Cancellato !";
         die(); 
     }
      
 }
-if($tipo=="finanza"){
+if($tipo=="artigianalita"){
    if(($value>0)){
-        write_option_opinione_ditta($id_ditta,_USER_ID,opinioni::finanza,CAST_TO_INT($value,1,5));
+        write_option_opinione_ditta($id_ditta,_USER_ID,opinioni::artigianalita,CAST_TO_INT($value,1,5));
         echo "Registrato il tuo voto: <span style=\"font-size:1.1em;font-weight:bold\">$value</span>.";
         die(); 
    }else{
-        delete_option_opinione_ditta($id_ditta,_USER_ID,opinioni::finanza);
+        delete_option_opinione_ditta($id_ditta,_USER_ID,opinioni::artigianalita);
         echo "Cancellato !";
         die(); 
     }
      
 }
-if($tipo=="ambiente"){
+if($tipo=="disponibilita"){
    if(($value>0)){
-        write_option_opinione_ditta($id_ditta,_USER_ID,opinioni::ambiente,CAST_TO_INT($value,1,5));
+        write_option_opinione_ditta($id_ditta,_USER_ID,opinioni::disponibilita,CAST_TO_INT($value,1,5));
         echo "Registrato il tuo voto: <span style=\"font-size:1.1em;font-weight:bold\">$value</span>.";
         die(); 
    }else{
-        delete_option_opinione_ditta($id_ditta,_USER_ID,opinioni::ambiente);
+        delete_option_opinione_ditta($id_ditta,_USER_ID,opinioni::disponibilita);
         echo "Cancellato !";
         die(); 
     }
@@ -80,12 +80,12 @@ $r->menu_orizzontale = ditte_menu_completo($id_ditta);
 
 //Assegno le due tabelle a tablesorter
 
-$opi_sociale = CAST_TO_INT(read_option_opinione_ditta($id_ditta,_USER_ID,opinioni::sociale),0,5);
-$opi_finanza = CAST_TO_INT(read_option_opinione_ditta($id_ditta,_USER_ID,opinioni::finanza),0,5);
-$opi_ambiente = CAST_TO_INT(read_option_opinione_ditta($id_ditta,_USER_ID,opinioni::ambiente),0,5);
+$opi_pulizia = CAST_TO_INT(read_option_opinione_ditta($id_ditta,_USER_ID,opinioni::pulizia),0,5);
+$opi_artigianalita = CAST_TO_INT(read_option_opinione_ditta($id_ditta,_USER_ID,opinioni::artigianalita),0,5);
+$opi_disponibilita = CAST_TO_INT(read_option_opinione_ditta($id_ditta,_USER_ID,opinioni::disponibilita),0,5);
 
 
-//QUALITA
+//PULIZIA
 $r->javascripts[]='<script type="text/javascript">
      $(\'.rateit\').bind(\'rated reset\', function (e) {
          var ri = $(this);
@@ -94,19 +94,19 @@ $r->javascripts[]='<script type="text/javascript">
          var productID = ri.data(\'productid\'); // if the product id was in some hidden field: ri.closest(\'li\').find(\'input[name="productid"]\').val()
  
          $.ajax({
-             url: \'\', //your server side script
+             url: \'\', 
              data: { tipo: productID, value: value, id_ditta: '.$id_ditta.' }, //our data
              type: \'POST\',
              success: function (data) {
                  
-                 if(productID == \'sociale\'){
-                    $(\'#sociale_text\').html(data);
+                 if(productID == \'pulizia\'){
+                    $(\'#pulizia_text\').html(data);
                  }
-                 if(productID == \'finanza\'){
-                    $(\'#finanza_text\').html(data);
+                 if(productID == \'artigianalita\'){
+                    $(\'#artigianalita_text\').html(data);
                  }
-                 if(productID == \'ambiente\'){
-                    $(\'#ambiente_text\').html(data);
+                 if(productID == \'disponibilita\'){
+                    $(\'#disponibilita_text\').html(data);
                  }
                  
              },
@@ -126,7 +126,7 @@ if(_USER_HAVE_MSG){
 if($msg) $r->messaggio = $msg;
 
 //istruzioni
-$i="<p>I certificati sono gestibili poi dalla pagina CER</p>
+$i="<p>I certificati sono gestibili poi dalla pagina personale</p>
     <p>Per cambiare la propria valutazione sugli argomenti proposti, clicca sulle stelline, il salvataggio è immediato.</p>
     <p>Si può inserire un commento a piacere. I commenti NON sono anonimi, e possono essere letti da tutti gli utenti iscritti a retedes.</p>
     <p></p>
@@ -139,39 +139,39 @@ $i = rg_toggable("ISTRUZIONI","istr",$i,false);
 $h .= "<div class=\"rg_widget rg_widget_helper\">";
 $h .= "<form  method=\"POST\" action=\"\">";
 $h .= "<table><tr><td style=\"width:50%;vertical-align:top;\">";
-$h2 .= "<h4>Imposta la valutazione del DES <br> cliccando sulle stelline</h4>
+$h .= "<h4>Imposta la valutazione del GAS <br> cliccando sulle stelline</h4>
         
-        <span>Valore aggiunto SOCIALE della ditta in questione</span>
+        <span>Pulizia e cura ambienti di lavoro</span>
         <div style=\"height:4em; font-size:1.1em\">
-            <div    id=\"sociale\" 
+            <div    id=\"pulizia\" 
                     data-rateit-step=\"1\" 
-                    data-rateit-value=\"$opi_sociale\" 
-                    data-productid=\"sociale\" 
+                    data-rateit-value=\"$opi_pulizia\" 
+                    data-productid=\"pulizia\" 
                     class=\"rateit\">
             </div><br>
-            <span id=\"sociale_text\" ></span><br>
+            <span id=\"pulizia_text\" ></span><br>
             
        </div>";
-$h2 .= " <span>Trasparenza FINANZIARIA</span>
+$h .= " <span>Artigianalità del processo produttivo</span>
         <div style=\"height:4em; font-size:1.1em\">
-            <div    id=\"finanza\" 
+            <div    id=\"artigianalita\" 
                     data-rateit-step=\"1\" 
-                    data-rateit-value=\"$opi_finanza\" 
-                    data-productid=\"finanza\" 
+                    data-rateit-value=\"$opi_artigianalita\" 
+                    data-productid=\"artigianalita\" 
                     class=\"rateit\">
             </div><br>
-            <span id=\"finanza_text\"></span><br>
+            <span id=\"artigianalita_text\"></span><br>
             
        </div>";
-$h2 .= " <span>Tutela aspetto Ambientale</span>
+$h .= " <span>Disponibilità del produttore a spiegare e far conoscere il processo produttivo.</span>
         <div style=\"height:4em; font-size:1.1em\">
-            <div    id=\"ambiente\" 
+            <div    id=\"disponibilita\" 
                     data-rateit-step=\"1\" 
-                    data-rateit-value=\"$opi_ambiente\" 
-                    data-productid=\"ambiente\" 
+                    data-rateit-value=\"$opi_disponibilita\" 
+                    data-productid=\"disponibilita\" 
                     class=\"rateit\">
             </div><br>
-            <span id=\"ambiente_text\"></span><br>
+            <span id=\"disponibilita_text\"></span><br>
             
        </div>";
        $h .= "</td><td style=\"width:50%;vertical-align:top;\">";              

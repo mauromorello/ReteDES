@@ -86,8 +86,45 @@ if (is_logged_in($user)){
       $retegas->java_scripts_header[] = java_accordion(null, menu_lat::user); // laterale    
       $retegas->java_scripts_header[] = java_superfish();
       $retegas->java_scripts_bottom_body[] = java_tablesorter("output");       
+      
+      
+              $retegas->java_scripts_bottom_body[] = "<script src=\"js/protoclass.js\"></script>
+                                                 <script src=\"js/box2d.js\"></script>
+                                                 
+                                                 <script>
+                                                 function reset() {
 
- 
+            var i;
+
+            if ( bodies ) {
+
+                for ( i = 0; i < bodies.length; i++ ) {
+
+                    var body = bodies[ i ]
+                    canvas.removeChild( body.GetUserData().element );
+                    world.DestroyBody( body );
+                    body = null;
+                }
+            }
+
+            // color theme
+            theme = themes[ Math.random() * themes.length >> 0 ];
+            //document.body.style[ 'backgroundColor' ] = theme[ 0 ];
+
+            bodies = [];
+            elements = [];
+
+            
+            for( i = 0; i < 100; i++ ) {
+                createBall();
+            }
+            
+
+        }
+                                                 </script>
+                                                 
+        <script src=\"js/Main.js\"></script>";
+      
       // assegno l'eventuale messaggio da proporre
       if(isset($msg)){ 
         $retegas->messaggio=$msg;
@@ -95,15 +132,18 @@ if (is_logged_in($user)){
       
 
       
-      $retegas->content  = tutti_gli_amici($id_user, $ref_table,$id_ordine,$go_back);
+      $retegas->content  = '
+      <style>
+            body {
+                overflow: hidden;
+                background-color: #ffffff;
+            }
+      </style>
+      <div id="canvas"></div>'.tutti_gli_amici($id_user, $ref_table,$id_ordine,$go_back);
       
         
       $html = $retegas->sito_render();
       echo $html;
       exit;
 
-      unset($retegas);      
-      
-      
-     
-?>
+      unset($retegas); 

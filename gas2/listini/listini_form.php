@@ -35,9 +35,11 @@ if (is_logged_in($user)){
    
    if($do=="upload"){
             if($tipo_file=="CSV"){  
+                
                 $msg = do_upload($fname,$listino);
                 unset($do);
                 $id=$listino;
+                
                 include("listini_form.php");
                 exit;
             }
@@ -89,7 +91,7 @@ if (is_logged_in($user)){
     $retegas->sezioni = $retegas->html_standard;
     
         
-    $retegas->menu_sito[]=listini_menu($user,$id);
+    $retegas->menu_sito[]=listini_menu_completo($id);
  
     // dico a retegas quali sono i fogli di stile che dovr? usare
     // uso quelli standard per la maggior parte delle occasioni

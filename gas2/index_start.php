@@ -254,7 +254,7 @@ if($do=="do_register"){
     //$retegas->css_header[]="<link type=\"text/css\" href=\"".$RG_addr["css_qtip"]."\" rel=\"Stylesheet\">";
     $retegas->css_header[]="<link type=\"text/css\" href=\"".$RG_addr["css_grid_3"]."\" rel=\"Stylesheet\">";
     $retegas->css_header[]="<link type=\"text/css\" href=\"".$RG_addr["css_awesome"]."\" rel=\"Stylesheet\">";
-    $retegas->css_header[]="<link href='http://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet' type='text/css'>";                                 
+    //$retegas->css_header[]="<link href='http://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet' type='text/css'>";                                 
     $retegas->css_header[]="<style type=\"text/css\">
                             html {font-family: 'Anaheim', sans-serif;}
                             a:link, a:visited{color:##585858}
@@ -625,7 +625,8 @@ if($do=="do_register"){
                                 <li>Ogni utente può personalizzare la propria HomePage, con una serie di widget già pronti, liberamente posizionabili sull'area di lavoro.</li>
                                 <li>Gestione delle valutazioni, certificazioni, opinioni e commenti da parte degli organismi DES, dei gestori Ordini, e dei partecipanti.</li>
                                 <li>Reportistica in HTML, excel, word e PDF</li>
-                                <li><strong>Ogni gas e DES può avere un codice privato da usare in abbinamento con widget WordPress, in modo da avere sul proprio sito un dialogo personalizzato con il gestionale.</strong> (beta)</li>
+                                <li><strong>gestione BARATTI, BANCA DEL TEMPO, attraverso la collaborazione con <a style=\"color:#800000\" href=\"http://www.coseinutili.it\" TARGET=\"_blank\">www.coseinutili.it</a></strong></li>
+                                <li>Ogni gas e DES può avere un codice privato da usare in abbinamento con widget WordPress, in modo da avere sul proprio sito un dialogo personalizzato con il gestionale. (beta)</li>
                                 <li>Statistiche spesa a livello di utente, Gas e DES</li>
                                 <li>Hashtags twitter personalizzabili, ogni gas può generare tweet in base alle operazioni effettuate.</li>
                                 <li>Ogni Gas può gestire un proprio flusso RSS</li>
@@ -634,20 +635,18 @@ if($do=="do_register"){
                                 <li>Storici di tutti gli ordini a livello di utente, gas e Retegas, tabulari e grafici</li>
                                 <li>Ampia parte di aiuto (wiki.retegas.info)</li>
                                 <li>Versione per dispositivi mobili (beta), visibile su m.retegas.info</li>
-                                <li>Si basa su software autoprodotto, NO CMS = personalizzabile al massimo !!!</li>
-                                <li>Codice libero e gratuito</li>
-                                <li></li>
+                                <li>Si basa su software autoprodotto artigianalmente in cantina.</li>
+                                <li>Codice libero e gratuito consultabile su <a style=\"color:#800000\" target=\"_blank\" href=\"https://github.com/mauromorello/ReteDES\">GitHUB</a></li>
+                                
                                 </ul>
-                                <center>
-                                    <embed style=\"padding:2em;\" type=\"application/x-shockwave-flash\" src=\"https://picasaweb.google.com/s/c/bin/slideshow.swf\" width=\"320\" height=\"240\" flashvars=\"host=picasaweb.google.com&noautoplay=1&hl=it&feat=flashalbum&RGB=0x000000&feed=https%3A%2F%2Fpicasaweb.google.com%2Fdata%2Ffeed%2Fapi%2Fuser%2F117546303239517778943%2Falbumid%2F5828832234709736017%3Falt%3Drss%26kind%3Dphoto%26hl%3Dit\"></embed>
-                                </center>
+                                
                             </section>
                             
                             
                             <section>
                             <h2 class=\"title\" >LOGIN</h2>
                                 
-                                <form method=\"POST\" action=\"\">
+                                <form method=\"POST\" action=\"index_start.php\">
                                     <div class=\"container_3\">
                                         
                                         <div class=\"grid_3\" style=\"color:#800000; font-size:1.3em; text-align:center; margin:1em; background-color:rgba(200,30,30,.2);\">
@@ -677,7 +676,7 @@ if($do=="do_register"){
                                         <div class=\"clear\">&nbsp;</div>
                                         <div class=\"prefix_1 grid_1\" style=\"margin-top:1em; margin-bottom:1em;\">
                                             <center>
-                                                <input style=\"font-size:1.4em;\" class=\"awesome silver\" type=\"submit\" name=\"submit\" value=\"Entra\">
+                                                <input style=\"font-size:1.4em; padding:1em;\" class=\"awesome silver\" type=\"submit\" name=\"submit\" value=\"ENTRA\">
                                             </center>
                                         </div>
                                     </div>
@@ -705,8 +704,8 @@ if($do=="do_register"){
                                     <li>Feed RSS: Fare riferimento al proprio gas.</li>
                                     <li>Twitter: segui l'hashtag <b>#retedes</b></li>
                                     <li><a style=\"color:#800000\" href=\"http://www.coseinutili.it\" TARGET=\"_blank\"><b>Cose(in)utili</b></a>: Il sito di baratto e banca del tempo</li>
-                                    <li></li>
-                                    <li>Contatti GAS: coming soon...</li>
+                                    <li>Codice sorgente su <a style=\"color:#800000\" target=\"_blank\" href=\"https://github.com/mauromorello/ReteDES\">GitHUB</a></li>
+                                    
                                 </ul>                 
                                 </p>
                             </section>

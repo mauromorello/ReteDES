@@ -19,7 +19,7 @@ $locations_ordini=Array(  "ordini_aperti"           =>$root."ordini/aperti/ordin
                           "partecipat_cronologia"   =>$root."ordini/partecipanti/ordini_cronologia.php",
                           "partecipat_gastable"     =>$root."ordini/partecipanti/ordini_tabella_gas_partecipanti.php",
                           "nuovo_ordine_simple"     =>$root."ordini/add/ordini_form_add_simple_2.php",
-                          "nuovo_ordine_completo"   =>$root."ordini/add/ordini_form_add_complete.php",
+                          "nuovo_ordine_completo"   =>$root."ordini/add/ordini_form_add_complete_2.php",
                           "ordini_gestione_riepgas"  =>$root."ordini/gestore/riepilogo_totali_gas.php",
                           "ordini_mia_spesa_riepilogo"=>$root."ordini/mia_spesa/ordini_mia_spesa_riepilogo.php",
                           "ordini_mia_spesa_dettaglio"=>$root."ordini/mia_spesa/ordini_mia_spesa_dettaglio.php",

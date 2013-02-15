@@ -179,7 +179,3 @@ if ($do=="mod"){
 	  
 	  //distruggo retegas per recuperare risorse sul server
 	  unset($retegas);	  
-	  
-	  
-	  
-?>

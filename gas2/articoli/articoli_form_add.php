@@ -40,7 +40,7 @@ if (is_logged_in($user)){
 			
 			$msg = 	articoli_render_do_add($user,$id);
 			if($msg=="OK"){$msg="Articolo aggiunto correttamente";
-						   include("../listini/listini_form.php");
+						   go("listini_scheda",_USER_ID,$msg,"?id_listino=$id");
 						   exit;}
 	}
 		 

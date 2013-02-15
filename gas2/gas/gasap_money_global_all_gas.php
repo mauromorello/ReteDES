@@ -31,9 +31,9 @@ if (is_logged_in($user)){
 	exit;     
 }    
 
+//CONTROLLI
 if (!(_USER_PERMISSIONS & perm::puo_vedere_retegas)){
-    //pussa_via();
-    exit;
+     go("sommario",_USER_ID,"Non hai i permessi necessari o questa pagina non è disponibile per il tuo DES");
 }
 	 
 	// ISTANZIO un nuovo oggetto "retegas"
@@ -146,7 +146,7 @@ if (!(_USER_PERMISSIONS & perm::puo_vedere_retegas)){
             enabled: true,
             align: 'right',
             layout: 'vertical',
-            verticalAlign: 'top',
+            verticalAlign: 'bottom',
             shadow: true
         },
         

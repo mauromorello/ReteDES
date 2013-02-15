@@ -13,8 +13,8 @@ if (!_USER_LOGGED_IN){
 }    
 
 //CONTROLLI
-if (!(_USER_PERMISSIONS & perm::puo_gestire_retegas)){
-     //pussa_via();
+if (!(_USER_PERMISSIONS & perm::puo_vedere_retegas)){
+     go("sommario",_USER_ID,"Non hai i permessi necessari o questa pagina non è disponibile per il tuo DES");
 }
 
 

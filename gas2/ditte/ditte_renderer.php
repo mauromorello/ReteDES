@@ -485,6 +485,7 @@ function ditte_render_form_2($id_ditta){
           // QUERY
       global $db,$user,$id_user;
       
+      //DES
       $n_opinioni_sociale = conteggio_opinione_singola_ditta($id_ditta,opinioni::sociale);
       $m_opinioni_sociale = media_opinione_singola_ditta($id_ditta,opinioni::sociale); 
 
@@ -494,15 +495,19 @@ function ditte_render_form_2($id_ditta){
       $n_opinioni_ambiente = conteggio_opinione_singola_ditta($id_ditta,opinioni::ambiente);
       $m_opinioni_ambiente = media_opinione_singola_ditta($id_ditta,opinioni::ambiente); 
 
+      
+      //REFERENTE
       $n_opinioni_logistica =  conteggio_opinione_singola_ditta($id_ditta,opinioni::logistica);
       $m_opinioni_logistica =  media_opinione_singola_ditta($id_ditta,opinioni::logistica);
       
       $n_opinioni_rapporti =  conteggio_opinione_singola_ditta($id_ditta,opinioni::rapporti);
       $m_opinioni_rapporti =  media_opinione_singola_ditta($id_ditta,opinioni::rapporti);
-      
+                  
       $n_opinioni_velocita =  conteggio_opinione_singola_ditta($id_ditta,opinioni::velocita);
       $m_opinioni_velocita =  media_opinione_singola_ditta($id_ditta,opinioni::velocita);
       
+      
+      //UTENTE
       $n_opinioni_qualita =  conteggio_opinione_singola_ditta($id_ditta,opinioni::qualita);
       $m_opinioni_qualita =  media_opinione_singola_ditta($id_ditta,opinioni::qualita);
       
@@ -510,10 +515,22 @@ function ditte_render_form_2($id_ditta){
       $m_opinioni_affare =  media_opinione_singola_ditta($id_ditta,opinioni::affare);
       
       
+      //GAS
+      $n_opinioni_pulizia =  conteggio_opinione_singola_ditta($id_ditta,opinioni::pulizia);
+      $m_opinioni_pulizia =  media_opinione_singola_ditta($id_ditta,opinioni::pulizia);
+      
+      $n_opinioni_artigianalita =  conteggio_opinione_singola_ditta($id_ditta,opinioni::artigianalita);
+      $m_opinioni_artigianalita =  media_opinione_singola_ditta($id_ditta,opinioni::artigianalita);
+      
+      $n_opinioni_disponibilita =  conteggio_opinione_singola_ditta($id_ditta,opinioni::disponibilita);
+      $m_opinioni_disponibilita =  media_opinione_singola_ditta($id_ditta,opinioni::disponibilita);
+      
+      
+      
       $n_certificazioni = bacheca_n_messaggi_ditta($id_ditta,ruoli::certificante);
       $n_valutazioni = bacheca_n_messaggi_ditta($id_ditta,ruoli::referente);
       $n_commenti   =  bacheca_n_messaggi_ditta($id_ditta,ruoli::partecipante);
-      
+      $n_relazioni =   bacheca_n_messaggi_ditta($id_ditta,ruoli::relazionante);
       
       $n_listini_attivi =  listini_ditte($id_ditta);
       $n_listini_totali =  listini_ditte_totali($id_ditta);
@@ -594,7 +611,7 @@ function ditte_render_form_2($id_ditta){
                                 <table>
                                     <tr class=\"titolino\">
                                         <td colspan=2>
-                                            Certificazioni DES
+                                            Ambito DES
                                         </td>
                                     </tr>
                                     <tr class=\"scheda\">
@@ -602,7 +619,7 @@ function ditte_render_form_2($id_ditta){
                                         <td $col_2><div class=\"rateit\"    data-rateit-value=\"$m_opinioni_sociale\" 
                                                                             data-rateit-ispreset=\"true\" 
                                                                             data-rateit-readonly=\"true\">
-                                        </div><span class=\"small_link\" > ($m_opinioni_sociale)</span>
+                                        
                                         </td>
                                     </tr>
                                     <tr class=\"scheda\">
@@ -610,7 +627,7 @@ function ditte_render_form_2($id_ditta){
                                         <td $col_2><div class=\"rateit\"    data-rateit-value=\"$m_opinioni_finanza\" 
                                                                             data-rateit-ispreset=\"true\" 
                                                                             data-rateit-readonly=\"true\">
-                                        </div><span class=\"small_link\" > ($m_opinioni_finanza)</span>
+                                        
                                         </td>
                                     </tr>
                                     <tr class=\"scheda\">
@@ -618,7 +635,7 @@ function ditte_render_form_2($id_ditta){
                                         <td $col_2><div class=\"rateit\"    data-rateit-value=\"$m_opinioni_ambiente\" 
                                                                             data-rateit-ispreset=\"true\" 
                                                                             data-rateit-readonly=\"true\">
-                                        </div><span class=\"small_link\" > ($m_opinioni_ambiente)</span></td>
+                                        
                                     </tr>
                                     <tr class=\"scheda\">
                                         <th $col_1>Certificazioni</th>
@@ -626,7 +643,38 @@ function ditte_render_form_2($id_ditta){
                                     </tr>
                                     <tr class=\"titolino\">
                                         <td colspan=2>
-                                            Valutazione GESTORI
+                                            Ambito GAS
+                                        </td>
+                                    </tr>
+                                    <tr class=\"scheda\">
+                                        <th $col_1>Pulizia ($n_opinioni_pulizia)</th>
+                                        <td $col_2><div class=\"rateit\"    data-rateit-value=\"$m_opinioni_pulizia\" 
+                                                                            data-rateit-ispreset=\"true\" 
+                                                                            data-rateit-readonly=\"true\">
+                                        </div>
+                                        </td>
+                                    </tr>
+                                    <tr class=\"scheda\">
+                                        <th $col_1>Artigianalità ($n_opinioni_artigianalita)</th>
+                                        <td $col_2><div class=\"rateit\"    data-rateit-value=\"$m_opinioni_artigianalita\" 
+                                                                            data-rateit-ispreset=\"true\" 
+                                                                            data-rateit-readonly=\"true\">
+                                        </div></td>
+                                    </tr>
+                                    <tr class=\"scheda\">
+                                        <th $col_1>Disponibilità ($n_opinioni_disponibilita)</th>
+                                        <td $col_2><div class=\"rateit\"    data-rateit-value=\"$m_opinioni_disponibilita\" 
+                                                                            data-rateit-ispreset=\"true\" 
+                                                                            data-rateit-readonly=\"true\">
+                                        </div></td>
+                                    </tr>
+                                    <tr class=\"scheda\">
+                                        <th $col_1>Relazioni</th>
+                                        <td $class_certificazioni>$n_relazioni</td>
+                                    </tr>
+                                    <tr class=\"titolino\">
+                                        <td colspan=2>
+                                            Ambito GESTORI
                                         </td>
                                     </tr>
                                     <tr class=\"scheda\">
@@ -652,12 +700,12 @@ function ditte_render_form_2($id_ditta){
                                         </div></td>
                                     </tr>
                                     <tr class=\"scheda\">
-                                        <th $col_1>Commenti</th>
+                                        <th $col_1>Valutazioni</th>
                                         <td $class_certificazioni>$n_valutazioni</td>
                                     </tr>
                                     <tr class=\"titolino\">
                                         <td colspan=2>
-                                            Opinioni PARTECIPANTI
+                                            Ambito PARTECIPANTI
                                         </td>
                                     </tr>
                                     <tr class=\"scheda\">
@@ -949,7 +997,7 @@ function listini_render_table_2($ref_table,$id_ditta=null){
        if($show){
            $h   .='<li class="ui-corner-all padding_6px">';
            $h   .= $pal;
-           $h   .='<span style="font-size:1.4em; "><a href = "'.$RG_addr["listini_scheda"].'?id='.$row["id_listini"].'">'.$descrizione_listini.'</a> - </span>'.$tipologia.', '.$tipo_listino.', '.$privato.', '.$scaduto.'<br>';
+           $h   .='<span style="font-size:1.4em; "><a href = "'.$RG_addr["listini_scheda"].'?id_listino='.$row["id_listini"].'">'.$descrizione_listini.'</a> - </span>'.$tipologia.', '.$tipo_listino.', '.$privato.', '.$scaduto.'<br>';
            $h   .='Proposto da <a href="'.$RG_addr["pag_users_form"].'?id='.mimmo_encode($row["id_utenti"]).'" >'.$proponente.'</a>, del '.$gas_proponente.' con <b>'.$articoli_listino.'</b> articoli inseriti.<br>';
            $h   .='<span class="filtrum small_link" style="font-variant: small-caps; text-transform: uppercase;">'.$tags.'</span>'.$elimina.'';
            $h   .='</li>';  
@@ -1044,7 +1092,7 @@ function listini_render_table_3($ref_table,$id_ditta=null){
        if($show){
            $h   .='<li class="ui-corner-all padding_6px">';
            $h   .= $pal;
-           $h   .='<span style="font-size:1.4em; "><a href = "'.$RG_addr["listini_scheda"].'?id='.$row["id_listini"].'">'.$descrizione_listini.'</a> - </span>'.$tipologia.', '.$tipo_listino.', '.$privato.', '.$scaduto.'<br>';
+           $h   .='<span style="font-size:1.4em; "><a href = "'.$RG_addr["listini_scheda"].'?id_listino='.$row["id_listini"].'">'.$descrizione_listini.'</a> - </span>'.$tipologia.', '.$tipo_listino.', '.$privato.', '.$scaduto.'<br>';
            $h   .='Proposto da <a href="'.$RG_addr["pag_users_form"].'?id='.mimmo_encode($row["id_utenti"]).'" >'.$proponente.'</a>, del '.$gas_proponente.' con <b>'.$articoli_listino.'</b> articoli inseriti.<br>';
            $h   .='<span class="filtrum small_link" style="font-variant: small-caps; text-transform: uppercase;">'.$tags.'</span>'.$elimina.'';
            $h   .='</li>';  

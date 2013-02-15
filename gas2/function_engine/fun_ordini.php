@@ -890,7 +890,7 @@ function controlla_integrita_ordine_totale($id_ordine){
                                     </tr>
                                     <tr class=\"scheda\">
                                         <th $col_1>Listino</th>
-                                        <td $col_2><a href=\"".$RG_addr["listini_scheda"]."?id=$id_listino\">$listino</a></td>
+                                        <td $col_2><a href=\"".$RG_addr["listini_scheda"]."?id_listino=$id_listino\">$listino</a></td>
                                     </tr>
                                     <tr class=\"scheda\">
                                         <th $col_1>Merce trattata</th>
@@ -2905,15 +2905,17 @@ $quante_distribuzioni = $db->sql_affectedrows();
         $vo = valore_totale_ordine($id);
         $no = descrizione_ordine_from_id_ordine($id);
 
-        
-// CANCELLO DALLA CASSA        
-        if(read_option_prenotazione_ordine($id,$id_user)<>"SI"){
-                $log .="PRENOTAZIONE ? NO, eseguo update cassa<br>";
-                cassa_update_ordine_utente($id,$id_user);
+        if(_USER_USA_CASSA){
+        // CANCELLO DALLA CASSA        
+            if(read_option_prenotazione_ordine($id,$id_user)<>"SI"){
+                    $log .="PRENOTAZIONE ? NO, eseguo update cassa<br>";
+                    cassa_update_ordine_utente($id,$id_user);
+            }else{
+                    $log .="PRENOTAZIONE ? SI, salto update cassa<br>";
+            }
         }else{
-                $log .="PRENOTAZIONE ? SI, salto update cassa<br>";
+            $log .="USER USA CASSA ? NO, salto update cassa<br>";
         }
-        
         log_me($id,$id_user,"ORD","ART","Eliminazione multipla di articoli all'ordine $id ($no), adesso vale $vo",$vo,$msg."<br>".$pippo."---".$sql2."---<br>".$log);
 
         

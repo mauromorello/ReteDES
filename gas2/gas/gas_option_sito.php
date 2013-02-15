@@ -41,6 +41,8 @@ if($do=="do_gas_puo_partecipare_ordini_esterni"){
         $gas_puo_partecipare_ordini_esterni = "NO";
     }
     write_option_gas_text(_USER_ID_GAS,"_GAS_PUO_PART_ORD_EST",$gas_puo_partecipare_ordini_esterni);
+    write_option_gas_text_new(_USER_ID_GAS,"_GAS_PUO_PART_ORD_EST",$gas_puo_partecipare_ordini_esterni);
+
     sleep(1);
     $msg="Impostazione modificata";
 }
@@ -50,6 +52,8 @@ if($do=="do_gas_condivisione_propri_ordini"){
         $gas_condivisione_propri_ordini = "NO";
     }
     write_option_gas_text(_USER_ID_GAS,"_GAS_PUO_COND_ORD_EST",$gas_condivisione_propri_ordini);
+    write_option_gas_text_new(_USER_ID_GAS,"_GAS_PUO_COND_ORD_EST",$gas_condivisione_propri_ordini);
+
     sleep(1);
     $msg="Impostazione modificata";
 }

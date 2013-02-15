@@ -13,6 +13,7 @@ $locations_amministra=Array(//AMMINISTRA
                           "amministra_ute_storti"   =>$root."amministra/amministra_utenti_storti.php",
                           "amministra_ute_temi"     =>$root."amministra/amministra_user_temi.php",
                           "amministra_user_donate"     =>$root."amministra/amministra_user_donate.php",
+                          "amministra_gas_donate_all_gas"     =>$root."amministra/amministra_gas_donate_all_gas.php",
                           "amministra_merge_ditte"     =>$root."amministra/amministra_merge_ditte.php",
                           "amministra_ute_tutti"    =>$root."amministra/amministra_user_tutti.php",
                           "amministra_ordini_time_interval" =>$root."amministra/amministra_ordini_time_interval.php",

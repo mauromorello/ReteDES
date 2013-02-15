@@ -57,7 +57,8 @@ if (!_USER_LOGGED_IN){
    
   function initialize() {
 
-	var latlng = new google.maps.LatLng(45.80, 8.400);
+	var latlng = new google.maps.LatLng('.db_val_q("id_des",_USER_ID_DES,"des_lat","retegas_des").',
+                                        '.db_val_q("id_des",_USER_ID_DES,"des_lng","retegas_des").');
 	var image = "'.$RG_addr["img_omino"].'";
     var image2 = "'.$RG_addr["img_gas_home"].'";
 	var myOptions = {

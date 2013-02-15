@@ -24,13 +24,13 @@ if(_USER_ID<>listino_proprietario($id_listini)){
 $nome_listino = listino_nome($id_listini);
 
 
-//se il comando è quello di aggiungere la ditta
+//se il comando ? quello di aggiungere la ditta
 if($do=="mod"){
       
       $descrizione_listini=sanitize($descrizione_listini);
       $id_tipologie = CAST_TO_INT($id_tipologie,0);
       $is_privato = CAST_TO_INT($is_privato,0);
-       // se è vuoto
+       // se ? vuoto
       if (($descrizione_listini)==""){$msg.="Devi almeno inserire il nome del listino<br>";$e_empty++;};
       if (($id_tipologie)==""){$msg.="Devi associare una tipologia di merce<br>";$e_empty++;};
       if (($data_valido)==""){$msg.="Devi inserire la data di scadenza<br>";$e_empty++;};
@@ -77,14 +77,14 @@ if($do=="mod"){
             $msg = "Dati modificati";
         };
         
-        go("listini_scheda",_USER_ID,$msg,"?id=$id_listini");
+        go("listini_scheda",_USER_ID,$msg,"?id_listino=$id_listini");
         
         //EDIT END --------------------------------------------------------- 
               
       } // se non ci sono errori
     
       //ci sono errori
-      //Msg è già settato
+      //Msg ? gi? settato
   
     
 }else{
@@ -105,7 +105,7 @@ $is_privato = $row["is_privato"];
 
 //Creazione della nuova pagina uso un oggetto rg_simplest
 $r = new rg_simplest();
-//Dico quale voce del menù verticale dovrà essere aperta
+//Dico quale voce del men? verticale dovr? essere aperta
 $r->voce_mv_attiva = 2;
 //Assegno il titolo che compare nella barra delle info
 $r->title = "Modifica intestazione listino";
@@ -157,7 +157,7 @@ $t->number=3;
 $t->name= "tipo_listino";
 $t->value = $tipo_listino;
 $t->label="Tipo di listino";
-$t->help="Seleziona se è un listino normale o magazzino";
+$t->help="Seleziona se ? un listino normale o magazzino";
 
 $t->options[]=$t->create_option_item("Standard",0);
 $t->options[]=$t->create_option_item("Magazzino",1);
@@ -190,7 +190,7 @@ $t->number=5;
 $t->name= "is_privato";
 $t->value = $is_privato;
 $t->label="Listino Pubblico o privato ?";
-$t->help="Seleziona se è un listino che si può vedere solo dal tuo GAS oppure da tutti";
+$t->help="Seleziona se ? un listino che si pu? vedere solo dal tuo GAS oppure da tutti";
 
 $t->options[]=$t->create_option_item("Pubblico",0);
 $t->options[]=$t->create_option_item("Privato",1);
@@ -222,7 +222,7 @@ unset($h);
 $form = $f->create_form();
 
 
-//Questo è¨ il contenuto della pagina
+//Questo ?? il contenuto della pagina
 $r->contenuto = "<div class=\"rg_widget rg_widget_helper\">
                  <h3>Modifica il listino $nome_listino</h3>
                  ".$form."</div>";

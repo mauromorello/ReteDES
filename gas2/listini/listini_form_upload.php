@@ -20,7 +20,7 @@ if (!(_USER_PERMISSIONS & perm::puo_creare_listini)){
 //Creazione della nuova pagina uso un oggetto rg_simplest
 $r = new rg_simplest();
 //Dico quale voce del menù verticale dovrà essere aperta
-$r->voce_mv_attiva = 1;
+$r->voce_mv_attiva = menu_lat::anagrafiche;
 //Assegno il titolo che compare nella barra delle info
 $r->title = "Carica listino";
 
@@ -28,7 +28,7 @@ $r->title = "Carica listino";
 //Messaggio popup;
 //$r->messaggio = "Pagina di test"; 
 //Dico quale menù orizzontale dovrà  essere associato alla pagina.
-$r->menu_orizzontale[] = listini_menu($user,$id);
+$r->menu_orizzontale = listini_menu_completo($id);
 
 //Assegno le due tabelle a tablesorter
 //$r->javascripts[]=java_tablesorter("output_1");
@@ -41,7 +41,7 @@ $r->messaggio = $msg;
       // UPLOAD
       
      if($tipo_file=="CSV"){$titolo_file="Carica una tabella di testo <b>(.CSV)</b> contenente gli articoli per questo listino";
-                           $destinazione = "listini_upload.php";
+                           $destinazione = $RG_addr["listini_upload_csv"];
                            $avvertenze = "<h3>Attenzione : Gli articoli RAGGRUPPATI si possono caricare (per ora) soltanto usando un file EXCEL</h3>
                                           La prima riga è destinata ai nomi delle colonne, pertanto non sarà inclusa dall'importazione.<br>
                                           Alcuni fogli elettronici esportano i file CSV usando dei delimitatori di campo diversi da quelli standard.<br>
@@ -49,7 +49,7 @@ $r->messaggio = $msg;
                                           <br>";
                                           
                            $tag_input = "Carica una tabella di testo .csv : <input type=\"file\" name=\"upfile\" class=\"\">";
-                           $tag_separatori = 'Separatore di elenco  <input type="text" name="separatore" value=";" size="1" maxlength="1"   title="separatore">
+                           $tag_separatori = 'Il separatore di elenco è impostabile nella parte "opzioni" del sito.<br>
                            <span style="font-size:0.8em; font-weight:normal;">Normalmente è il carattere ";" (Punto e virgola). In alcuni casi può essere la "," (virgola)</span><br>
                            </span><br><br>';};
      if($tipo_file=="XLS"){$titolo_file="Carica un file MS EXCEL <b>(.XLS)</b> contenente gli articoli per questo listino";
@@ -86,6 +86,8 @@ $r->messaggio = $msg;
                                     $tag_input
                                     <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"10000\">
                                     <input type=\"hidden\" name=\"listino\" value=$id>
+                                    <input type=\"hidden\" name=\"id_listino\" value=$id>
+                                    <input type=\"hidden\" name=\"do\" value=\"check_data\">
                                     <input type=\"hidden\" name=\"tipo_file\" value=$tipo_file>
                                     <input type=\"submit\" class=\"awesome green\" value=\"Carica il file\">
                                     </form>
@@ -102,5 +104,4 @@ $r->contenuto = listini_form($id).$h_table;
 //Mando all'utente la sua pagina
 echo $r->create_retegas();
 //Distruggo l'oggetto r    
-unset($r)   
-?>
+unset($r);

@@ -1008,22 +1008,6 @@ return $h_table;
 	   global $RG_addr, $db; 
 	  
 
-	  if (empty($data_6) or $data_6==""){
-
-		  $data_6 .="<br>
-
-				  <br>
-
-				  <img src=\"".$RG_addr["img_logo_retedes"]."\" border=\"0\" width=\"75\" height=\"75\">
-				  <b><a href=\"http://www.retedes.it\">www.retedes.it</a></b><br />
-				  ReteDes.it - La rete dei Des e dei GAS<br />
-				  <br>
-
-				  <hr>
-
-				  ";}
-
-	  
 
 	  $cookie_read     =explode("|", base64_decode($user));
 	  $permission = $cookie_read[6];
@@ -1094,110 +1078,39 @@ return $h_table;
 
 	  global $data_2,$data_6,$RG_addr;
 
-	  
-
-	  if (empty($data_6) or $data_6==""){
-
-		  $data_6 .="<br>
-
-				  <br>
-
-				  <img src=\"".$RG_addr["img_logo_retedes"]."\" border=\"0\" width=\"50\" height=\"75\">
-
-				  <b><a href=\"http://www.retedes.it\">www.retedes.it</a></b><br />
-                  ReteDes.it - La rete dei Des e dei GAS<br />
-				  <br>
-
-				  <hr>
-
-				  ";
-
-	  }
-
-	  
-
 	  $cookie_read     =explode("|", base64_decode($user));
-
 	  $permission = $cookie_read[6];
-
-		  
 
 	  // TITOLO FORM_ADD
 
-	  $titolo_tabella='<h3>Manda una mail a tutti gli utenti di ReteGas.AP</h3>';
-
-	  
-
+	  $titolo_tabella='<h3>Manda una mail a tutti gli utenti di '._SITE_NAME.'</h3>';
 	  $col_2="style=\"text-align:left;\" ";
-
-
-
-		  
 
 	  // FORM -------------------------------------------
 
-	  
-
 	 $title_form = "<form name=\"Aggiungi Messaggio\" method=\"POST\" action=\"gas_comunica_retegas.php\" style=\"margin-top:10px;\">";
-
 	 $submit_form ="<input class = \"large awesome\" style=\"margin:20px;\" type=\"submit\" value=\"Invia\">";  
 
-	  
-
 	  // Campi
-
 	 $input_2 = "<input type=\"text\" name=\"data_2\" size=\"70\" value=\"$data_2\" style=\"font-size:1.4em\">"; 
-
 	 $input_6 = "<textarea class=\"ckeditor\" name=\"data_6\" cols=\"28\">$data_6</textarea>";
-
 	 $input_hidden = "<input type=\"hidden\" name=\"do\"  value=\"send\">";
 
-	  
-
-
-
-	  
-
-	  
-
-	  
-
-	  
 
 	  // COSTRUZIONE TABELLA  -----------------------------------------------------------------------
 
-	  
-
-		
 
 	  $h_table = " <div class=\"ui-widget-content padding-6px ui-corner-all\">
-
 					<h3><center> 
-
 					$titolo_tabella
-
 					</center>
-
 					</h3>
-
 					$title_form
-
 					<table>
-
 					<tr class=\"odd\">
-
 						<th $col_1>Oggetto:</th>
-
 						<td $col_2>$input_2</td>
-
-					</tr>
-
-					
-
-					
-
-					";
-
+					</tr>";
 	 
 
 	 $h_table .=  " <tr class=\"odd\">

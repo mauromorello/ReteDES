@@ -302,12 +302,15 @@ function l($var){
 
 //UPLOAD
 function do_upload($fil,$lis){
-    
+ global $db;   
 $row = 0;
 $fd = fopen ($fil, "r");
 
+//SALTO LA PRIMA RIGA
+$data = fgetcsv($fd, 1000, _USER_CSV_SEPARATOR,_USER_CSV_DELIMITER);
+
 // initialize a loop to go through each line of the file
- while (($data = fgetcsv($fd, 1000, ";")) !== FALSE){
+ while (($data = fgetcsv($fd, 1000, _USER_CSV_SEPARATOR,_USER_CSV_DELIMITER)) !== FALSE){
     $num = count($data);
     $row++;
     
@@ -319,10 +322,13 @@ $fd = fopen ($fil, "r");
     $data[5]=ereg_replace("[^àèéìòùA-Za-z0-9.,-_!$%()= ]"," ",$data[5]); 
     $data[6]=floatval(trim(str_replace(array(","),array("."),$data[6]))); 
     $data[7]=floatval(trim(str_replace(array(","),array("."),$data[7])));
-    $data[8]=sanitize($data[8]);
-    if(trim($data[9])=="UNICO"){$data[9]="1";}else{$data[9]="";}
+    $data[8]=sanitize(html_entity_decode($data[8]));
+    if(trim($data[9])<>""){$data[9]="1";}else{$data[9]="";}
+    $data[10]=sanitize($data[10]);
+    $data[11]=sanitize($data[11]);
+    $data[12]=sanitize($data[12]);
     
-    $result = mysql_query("INSERT INTO retegas_articoli
+    $result = $db->sql_query("INSERT INTO retegas_articoli
      (id_listini,codice,descrizione_articoli,prezzo,u_misura,misura,ingombro,qta_scatola,qta_minima,articoli_note,articoli_unico)
      VALUES
      ($lis,'$data[0]','$data[1]',$data[2],'$data[3]','$data[4]','$data[5]','$data[6]','$data[7]','$data[8]','$data[9]')");                               

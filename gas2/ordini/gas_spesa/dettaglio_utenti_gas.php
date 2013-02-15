@@ -134,7 +134,7 @@ while ($row = mysql_fetch_array($res)){
         //Subtotale
         $h .="<tr class=\"total\">";
         $h .="<th class=\"sinistra column_hide\">$opz</th>";
-        $h .="<th class=\"sinistra\">".fullname_from_id($row["id_utenti"])."</th>";
+        $h .="<th class=\"sinistra\">".fullname_from_id($row["id_utenti"])." - (".telefono_from_id($row["id_utenti"]).")</th>";
         $h .="<th class=\"centro\"><span class=\"small_link\">Articolo</span></th>";
         $h .="<th class=\"centro\"><span class=\"small_link\">Descrizione</span></th>";
         $h .="<th class=\"centro\"><span class=\"small_link\">QO / QA</span></th>";

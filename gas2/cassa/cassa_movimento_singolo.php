@@ -34,6 +34,8 @@ if(_USER_ID_GAS <> db_val_q("id_cassa_utenti",(int)$id_movimento,"id_gas","reteg
 
 if($do=="do_rett"){
         $importo=sanitize($importo);
+        $id_ordine=CAST_TO_INT($id_ordine,0);
+        $id_ditta=CAST_TO_INT($id_ditta,0);
         if(valuta_valida($importo)){
             if($segno=="+"){$segno="+";}else{$segno="-";}
             $descrizione = "Rettifica op. # $id_movimento";
@@ -62,7 +64,7 @@ if($do=="do_rett"){
                                                                 data_movimento,
                                                                 numero_documento,
                                                                 id_ordine,
-                                                                '".$id_user."' 
+                                                                '"._USER_ID."' 
                                                                     FROM retegas_cassa_utenti 
                                                                     WHERE id_cassa_utenti ='$id_movimento';";  
             

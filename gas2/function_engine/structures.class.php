@@ -51,6 +51,7 @@ class menu_lat{
         const des = 4;
         const aiuto = 5;
         const bacheca = 6;
+        const coseinutili = 7;
 }
 //----------------------------------
 
@@ -112,15 +113,26 @@ class argomenti{
     const valutazione = 12;
 }
 class opinioni{
+        
+        //PARTECIPANTE
         const qualita       =   "OPI_QUALITA";
         const affare        =   "OPI_AFFARE";
+        
+        //DES
         const sociale       =   "OPI_SOCIALE";
         const finanza       =   "OPI_FINANZA";
         const ambiente      =   "OPI_AMBIENTE";
+        
+        //GESTORE
         const logistica     =   "OPI_LOGISTICA";
         const rapporti      =   "OPI_RAPPORTI";
         const tutte         =   "OPI_%"; //TODO da verificare
         const velocita      =   "OPI_VELOCITA";
+        
+        //GAS
+        const pulizia       =   "OPI_PULIZIA";
+        const artigianalita =   "OPI_ARTIGIANALITA";
+        const disponibilita =   "OPI_DISPONIBILITA";
    }   
 //----------------------------------  
 
@@ -209,14 +221,7 @@ public function __construct($site,$local,$root = null,$image=null) {
                           "bacheca_form"            =>$root."bacheca/bacheca_form.php",
 						  
 
-						  //LISTINI
-						  "listini_scheda"          =>$root."listini/listini_form.php", 
-						  "listini_delete"          =>$root."listini/listini_form_delete.php",
-                          "listini_export"          =>$root."listini/listini_export.php",
-                          "listini_upload_dir"      =>$root."listini/upload",
-                          "listini_upload"          =>$root."listini/listini_form_upload.php",
-                          "modifica_prz_alc_art"    =>$root."listini/listini_modifica_prz_alc_art.php",
-                          "modifica_dsc_alc_art"    =>$root."listini/listini_modifica_dsc_alc_art.php", 
+						  
                 
                           
 						  //REPORT
@@ -278,6 +283,9 @@ public function __construct($site,$local,$root = null,$image=null) {
     
     include_once("locations_images.php");
     $this->addr = $this->addr + $locations_images;
+    
+    include_once("locations_listini.php");
+    $this->addr = $this->addr + $locations_listini;
     
     include_once("locations_amministra.php");
     $this->addr = $this->addr + $locations_amministra;

@@ -227,7 +227,7 @@ function schedona_ordine_mobile($id_ordine,$id_user=null){
         <ul data-role=\"listview\" data-inset=\"true\">
              <li data-role=\"list-divider\" >Ordine $id_ordine ($ordine_nome)</li>
              <li><p>Fornitore: <a href=\"".$RG_addr["m_ditta_scheda"]."?id_ditta=$id_ditta\" data-role=\"button\">$ditta</a></p></li>
-             <li><p>Listino: <a href=\"".$RG_addr["listini_scheda"]."?id=$id_listino\" data-role=\"button\">$listino</a></p></li>
+             <li><p>Listino: <a href=\"".$RG_addr["listini_scheda"]."?id_listino=$id_listino\" data-role=\"button\">$listino</a></p></li>
              <li>Merce trattata: $tipologia</li>
              <li>Stato: $stato</li>
              <li>Data apertura: $data_apertura</li>

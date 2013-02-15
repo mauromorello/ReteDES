@@ -30,7 +30,10 @@ if (is_logged_in($user)){
 	exit;     
 }    
 
-	
+//CONTROLLI
+if (!(_USER_PERMISSIONS & perm::puo_vedere_retegas)){
+     go("sommario",_USER_ID,"Non hai i permessi necessari (Rilasciati dal tuo DES) per vedere questa pagina");
+}	
 	 
 	// ISTANZIO un nuovo oggetto "retegas"
 	// Prenderà come variabile globale $user, nel caso di user loggato

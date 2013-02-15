@@ -397,29 +397,8 @@ button.ui-button:-moz-focus-inner { border: 0; padding: 0; } /* reset extra padd
 .ui-slider-horizontal .ui-slider-range-min { left: 0; }
 .ui-slider-horizontal .ui-slider-range-max { right: 0; }
 /*SLIDER RETEDES*/
-.ui-slider-horizontal .ui-state-default {background: white;
-                                         width :50px;
-                                         height :50px;
-                                         border:0;
-                                         margin-top: -12px;
-                                         margin-left:-25px;
-                                         -webkit-box-shadow:  0px 0px 50px 1px rgba(255, 255, 0, 1);
-        
-        box-shadow:  0px 0px 50px 1px rgba(255, 255, 0, 1);
-                                        -webkit-border-radius: 25px;
-                                        border-radius: 25px;
-                                        background: rgb(252,234,187); /* Old browsers */
-background: -moz-radial-gradient(center, ellipse cover,  rgba(252,234,187,1) 0%, rgba(252,205,77,1) 50%, rgba(248,181,0,1) 51%, rgba(251,223,147,1) 100%); /* FF3.6+ */
-background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(252,234,187,1)), color-stop(50%,rgba(252,205,77,1)), color-stop(51%,rgba(248,181,0,1)), color-stop(100%,rgba(251,223,147,1))); /* Chrome,Safari4+ */
-background: -webkit-radial-gradient(center, ellipse cover,  rgba(252,234,187,1) 0%,rgba(252,205,77,1) 50%,rgba(248,181,0,1) 51%,rgba(251,223,147,1) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-radial-gradient(center, ellipse cover,  rgba(252,234,187,1) 0%,rgba(252,205,77,1) 50%,rgba(248,181,0,1) 51%,rgba(251,223,147,1) 100%); /* Opera 12+ */
-background: -ms-radial-gradient(center, ellipse cover,  rgba(252,234,187,1) 0%,rgba(252,205,77,1) 50%,rgba(248,181,0,1) 51%,rgba(251,223,147,1) 100%); /* IE10+ */
-background: radial-gradient(ellipse at center,  rgba(252,234,187,1) 0%,rgba(252,205,77,1) 50%,rgba(248,181,0,1) 51%,rgba(251,223,147,1) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fceabb', endColorstr='#fbdf93',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-}
-.ui-slider-horizontal {background: #FFFF80;
-                        -webkit-box-shadow: inset 5px 0px 10px 5px rgba(100, 100, 100, .9);
-                        box-shadow: inset 5px 0px 10px 5px rgba(100, 100, 100, .9);}
+.ui-slider-horizontal .ui-state-default {}
+.ui-slider-horizontal {}
 
 .ui-slider-vertical { width: .8em; height: 100px; }
 .ui-slider-vertical .ui-slider-handle { left: -.3em; margin-left: 0; margin-bottom: -.6em; }

@@ -23,10 +23,11 @@ if($do=="add"){
             $msg .= "Descrizione mancante<br>";
         }
         
-        $data_chiusura= $giorni_chiusura;
+        
+        $data_chiusura = CAST_TO_INT($giorni_chiusura,0); 
             
         //se manca la data di chiusura chiudo l'ordine tra una settimana alle 22:00;  
-        if(empty($data_chiusura) | $data_chiusura==""){
+        if(empty($data_chiusura) | $data_chiusura==0){
             
             
             $data_chiusura=date("d/m/Y");
@@ -263,7 +264,8 @@ if($msg){$r->messaggio=$msg;}
         $help_listino ='Seleziona un listino associato alla ditta scelta in precedenza tra quelli disponibili';
         $help_data_chiusura='Scegli tra quanti giorni l\'ordine deve chiudersi;<br>Se lasciato vuoto, si chiuderà tra una settimana alle 22.00;<br>Gli ordini aperti con questa scheda possono durare massimo 15 giorni.';
         $help_partenza = 'Una volta che l\'ordine è partito, potrai modificare tutti i dati che hai immesso e/o aggiungerne altri.<br>
-        Puoi anche annullarlo, ma soltanto se nessuno ha prenotato articoli.';
+        Puoi anche annullarlo, ma soltanto se nessuno ha prenotato articoli.<br>
+        <strong>L\'ordine partirà dopo due ore dalla sua creazione !!</strong>';
 
 
         $h = '<div class="rg_widget rg_widget_helper">
@@ -308,11 +310,9 @@ if($msg){$r->messaggio=$msg;}
 
         </form>
         <br>
-        <div class="ui-state-error ui-corner-all" style="padding:1em">NB : Usando questa procedura "rapida" l\'ordine sarà disponibile da subito, e potranno parteciparvi solo gli utenti del tuo gas.<br>
-        potrai cambiare le impostazione e/o aggiungere altre informazioni dal menù "modifica" che troverai nella scheda specifica, oppure se vuoi
-        inserire un ordine più complesso, usa la procedura completa. (Vedi Help)<br>
-        Potrai cancellare questo ordine finchè non vi è nessun articolo prenotato.
-        </div>
+            <div class="ui-state-error ui-corner-all" style="padding:1em">
+                clicca <a href="https://sites.google.com/site/retegasapwiki/come-fare-per/creare-un-nuovo-ordine/gestire-un-ordine-modalita-semplice" target="_blank">QUA</a> per le istruzioni.
+            </div>
         </div>';
 
 //Questo ?? il contenuto della pagina

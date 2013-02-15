@@ -122,10 +122,10 @@ function write_option_opinione_ditta($id_ditta,$id_utente,$chiave_opinione,$valo
                              '$id_des'
                     );";    
     }else{
-        $qry = "UPDATE  `retegas_options` 
+        $qry = "UPDATE  `retegas_opinioni` 
                 SET  `valore_int` =  '$valore_opinione' 
                 WHERE  
-                id_user = '$id_utente'
+                id_utente = '$id_utente'
                 AND
                 chiave = '$chiave_opinione'
                 AND

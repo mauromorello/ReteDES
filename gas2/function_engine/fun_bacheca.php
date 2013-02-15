@@ -351,6 +351,18 @@ function bacheca_render_fullwidth_messaggio($id_messaggio){
     global $db;
     global $RG_lista_argomenti_messaggi;
     
+    $protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === FALSE ? 'http' : 'https';
+    $host     = $_SERVER['HTTP_HOST'];
+    $script   = $_SERVER['SCRIPT_NAME'];
+    $params   = $_SERVER['QUERY_STRING'];
+    if($params<>""){$question = "?";}else{$question="";}
+     
+    $currentUrl = urlencode($protocol . '://' . $host . $script . $question . $params);
+     
+    
+    
+    
+    
     $sql = "SELECT * FROM retegas_bacheca WHERE id_bacheca='$id_messaggio' LIMIT 1;";
     $res = $db->sql_query($sql);
     $row = $db->sql_fetchrow($res);
@@ -360,7 +372,7 @@ function bacheca_render_fullwidth_messaggio($id_messaggio){
           $ordine =" (Ordine #".$row["id_ordine"]." del ".conv_date_from_db(db_val_q("id_ordini",$id_ordine,"data_chiusura","retegas_ordini")).") ";
     }
 
-    if($row["bacheca_address"]<>""){$indirizzo=", locato in <cite>".$row["bacheca_address"]."</cite>";}
+    if($row["bacheca_address"]<>""){$indirizzo=", commento geolocato in <cite>".$row["bacheca_address"]."</cite>";}
     
     
     $info_div="<br>
@@ -371,7 +383,7 @@ function bacheca_render_fullwidth_messaggio($id_messaggio){
     
     if($row["id_utente"]==_USER_ID){
         $show_commands ="[<a>EDIT</a>] 
-                         [<a>DELETE</a>] 
+                         [<a href=\"#?$currentUrl\">DELETE</a>] 
                          [<a>GEOMAP</a>]";
     }else{
         $show_commands ="";
@@ -414,4 +426,8 @@ function bacheca_delete_messaggio($id_bacheca){
     
     return;
     
+}
+
+function bacheca_proprietario_messaggio($id_messaggio){
+    return db_val_q("id_utente",$id_messaggio,"id_bacheca");
 }

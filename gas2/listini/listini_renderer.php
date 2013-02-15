@@ -441,8 +441,8 @@ return $h2;
    
    $h   .='<li '.$backg.' class="ui-corner-all padding_6px">';
    $h   .= $pal;
-   $h   .='<span style="font-size:1.4em; "><a href = "'.$RG_addr["listini_scheda"].'?id='.$row["id_listini"].'">'.$descrizione_listini.'</a> - </span>'.$tipologia.', '.$tipo_listino.', '.$privato.', '.$scaduto.'<br>';
-   $h   .='Della ditta <a href="'.$RG_addr["form_ditta"].'?id_ditta='.$row["id_ditte"].'" >'.$ditta.'</a>, con <b>'.$articoli_n_in_listino.'</b> articoli inseriti.<br>';
+   $h   .='<span style="font-size:1.4em; "><a href = "'.$RG_addr["listini_scheda"].'?id_listino='.$row["id_listini"].'">'.$descrizione_listini.'</a> - </span>'.$tipologia.', '.$tipo_listino.', '.$privato.', '.$scaduto.'<br>';
+   $h   .='Della ditta <a href="'.$RG_addr["form_ditta"].'?id_ditta='.$row["id_ditte"].'" >'.$ditta.'</a>, con <b>'.$articoli_listino.'</b> articoli inseriti.<br>';
    $h   .='<span class="filtrum small_link" style="font-variant: small-caps; text-transform: uppercase;">'.$tags.'</span>'.$elimina.'';
    $h   .='</li>';  
    

@@ -44,7 +44,7 @@ if (is_logged_in($user)){
 
          if($db->sql_numrows($result) == 0){
          
-          $msg .= "La password non ? stata riconosciuta";
+          $msg .= "La password non è stata riconosciuta";
           
           $e_pwd++;
                
@@ -210,5 +210,4 @@ if (is_logged_in($user)){
       
       //distruggo retegas per recuperare risorse sul server
       unset($retegas);    
-  
-?>
+      

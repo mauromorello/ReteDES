@@ -92,6 +92,7 @@ $h="
 <meta name=\"revisit-after\" content=\"15 days\">
 <meta name=\"title\" content=\"ReteDes.it (Rete dei distretti di economia solidale)\">
 <meta http-equiv=\"X-UA-Compatible\" content=\"chrome=1\">
+<link href='http://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet' type='text/css'>
 ";    
 //<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 //   "http://www.w3.org/TR/html4/loose.dtd">    
@@ -125,16 +126,8 @@ if(_GAS_SITE_LOGO<>""){
 }
 
 
-$des_site_logo = '<img align="left" src="'._DES_SITE_LOGO.'" border="0" width="75" height="75" alt="Logo DES">';
+$des_site_logo = '<img align="left" src="'._DES_SITE_LOGO.'" style="margin:6px;" border="0" width="75" height="75" alt="Logo DES">';
 
-
-//CANCELLARE
-$logo_gas =' <div style=" margin:0;padding:0;float:left;" id="logo_gas">
-                <a href="'.$RG_addr["sommario"].'">
-                    <img align="left" src="'.$RG_addr["img_piemonte_cuore_s"].'" border="0" width="75" height="75" alt="ReteDes.it">
-                </a>
-             </div>';
-//-----------------------
 
              
 $logo_des =' <div style=" margin:0;padding:0;float:left;" id="logo_des">
@@ -144,13 +137,13 @@ $logo_des =' <div style=" margin:0;padding:0;float:left;" id="logo_des">
              </div>';              
  
 
-$scritta .= '   <div style="display:block;float:left;margin-top:10px">
-                    <div style="margin:0;padding:0;float:left;vertical-align:bottom;font-size:1.2em;font-family:helvetica">'._USER_DES_NAME.'</div><br>  
-                    <div style="margin:0;padding:0;float:left;vertical-align:bottom;font-size:1em;font-family:helvetica">'.gas_nome(_USER_ID_GAS).'</div>
+$scritta .= '   <div style="display:block;float:left;margin-top:10px;font-family:\'Anaheim\', sans-serif;">
+                    <div style="margin:0;padding:0;float:left;vertical-align:bottom;font-size:2em;">'._USER_DES_NAME.'</div><br>  
+                    <div style="margin:0;padding:0;float:left;vertical-align:bottom;font-size:1.5em;">'.gas_nome(_USER_ID_GAS).'</div><br>
+                    
                 </div>';
                 
-$logo_dx_retedes .= '<img '.rg_tooltip("Questa è una bozza di un possibile logo per ReteDes.it. Rappresenta un omino (quello giallo sotto in basso) che porta della merce (il cerchio in mezzo) ad un gruppo di altri omini (quelli sopra colorati), che la ricevono.
-                                         Se ti viene un'idea migliore (e gratuita) sei caldamente invitato a proporla.").' align="left" src="'.$RG_addr["img_logo_retedes"].'" border="0" width="20" height="20" alt="Logo DES">';                
+$logo_dx_retedes .= '<img align="left" src="'.$RG_addr["img_logo_retedes"].'" border="0" width="20" height="20" alt="Logo DES">';                
              
 //<div id="logo_retedes" style="display:block;float:right">'.$logo_dx_retedes.'</div>
 $boxino_destro .= '	<div id="boxino">
@@ -308,7 +301,7 @@ $h.= "
                     <span id=\"icon_rg\" class=\"ui-icon ui-icon-circle-check small awesome destra\" style=\"margin-top:-3px;margin-bottom:0;display:none;\"></span>
                     "."
                     <div id=\"info_container\" style=\"display:inline-block;margin:0;padding:0;overflow:hidden\"> 
-                    <span class=\"small_link \">Utente: </span> ".$show_id." "._USER_FULLNAME." 
+                    <span class=\"small_link \">User: </span> ".$show_id." "._USER_FULLNAME." 
                     <span class=\"small_link \">Posizione: </span>".$params["page_title"].";  
                     ".$credito."
                     </div>
@@ -407,15 +400,21 @@ global $RG_addr,$db;
                                         </div>";
             }
             
-            if(_USER_PERMISSIONS & perm::puo_vedere_retegas){
+            //questa pagina la può vedere solo il responsabile DES e io
+            
+            if((_USER_ID == db_val_q("id_des",_USER_ID_DES,"id_referente","retegas_des"))
+                OR
+                (_USER_PERMISSIONS & perm::puo_gestire_retegas)){
+                    
                 $amministra_des ="<div class=\"menu_lat_divider ui-corner-top\">AMMINISTRA</div>
                                     <div class=\"menu_lat_container ui-corner-bottom\">
                                     <a href=\"".$RG_addr["des_option_sito"]."\">Amministra DES</a><br>
-                                    </div>";    
+                                    </div>";
             }
             
-            //-----------------------------------BIRRA
-            //Anche se è presente a 0 l'utente è risparmiato
+            
+            
+            //-----------------------------------BIRRINO
             
             if(_USER_DONATION>0){
                $birra = ""; 
@@ -549,6 +548,35 @@ global $RG_addr,$db;
                                     <a href=\"".$RG_addr["disclaimer"]."\">"._ML_DISCLAIMER."</a><br>
                             </div>";
             
+            $menu_lat_coseinutili ="<h3><a href=\"#\" class=\"medium nav awesome yellow\" style=\"margin:6px\"><img SRC=\"".$RG_addr["logo_coseinutili"]."\" style=\"height:29px;width:112px;\" ".rg_tooltip("Cose(in)utili, un sito che permette di gestire lo scambio, il baratto e la banca del tempo. Clicca su 'cos'è ?' per avere maggiori informazioni.")."></a></h3>
+                            <div>
+                                    <div class=\"menu_lat_divider ui-corner-top\">INFO</div>
+                                    <div class=\"menu_lat_container ui-corner-bottom\">
+                                        <a href=\"".$RG_addr["coseinutili"]."\">Cos'è ?</a>
+                                    </div>
+                                    
+                                    <div class=\"menu_lat_divider ui-corner-top\">MAPPE</div>
+                                    <div class=\"menu_lat_container ui-corner-bottom\">
+                                        <a href=\"".$RG_addr["ci_geo_oggetti"]."\">Oggetti vicini</a>
+                                    </div>
+                                    
+                                    <div class=\"menu_lat_divider ui-corner-top\" ".rg_tooltip("Cerca un oggetto tra quelli barattabili con cose(in)utili").">Cerca Oggetti</div>
+                                    <div class=\"menu_lat_container ui-corner-bottom\">
+                                        <form action=\"".$RG_addr["ci_search_oggetti"]."\" method=\"POST\">
+                                            <input type=\"text\" name=\"oggetto\" size=\"10\">
+                                                <input type=\"submit\" value=\"GO!\">
+                                        </form>
+                                    </div>
+                                    
+                                    <div class=\"menu_lat_divider ui-corner-top\">BANCA DEL TEMPO</div>
+                                    <div class=\"menu_lat_container ui-corner-bottom\">
+                                        <a href=\"".$RG_addr["ci_table_bdt"]."\">Lista annunci</a>
+                                    </div>
+                                        
+                            </div>";
+            
+            
+            
             
             /// IL MENU PARTE DA QUA
             
@@ -568,10 +596,11 @@ global $RG_addr,$db;
                    $h .= "<div id=\"section_4\">".$menu_lat_ordini."</div>";
                    $h .= "<div id=\"section_5\">".$menu_lat_anag."</div>";
                    $h .= "<div id=\"section_6\">".$menu_lat_help."</div>";
-                   $h .= "<div id=\"section_7\">".$menu_lat_bacheca."</div>";   
+                   $h .= "<div id=\"section_7\">".$menu_lat_bacheca."</div>";
+                   $h .= "<div id=\"section_8\">".$menu_lat_coseinutili."</div>";   
             }else{
           
-                for($i=0;$i<7;$i++){
+                for($i=0;$i<8;$i++){
                     switch ($MENU_LAT[$i]){
                         case 1:
                              $h .= "<div id=\"section_1\">".$menu_lat_des."</div>";
@@ -601,6 +630,9 @@ global $RG_addr,$db;
                              $h .= "<div id=\"section_7\">".$menu_lat_bacheca."</div>";
                         break;
                         
+                        case 8:
+                             $h .= "<div id=\"section_8\">".$menu_lat_coseinutili."</div>";
+                        break;
                     }
                 }
             } // SE USER HA L'ORDINAMENTO LATERALE 
@@ -614,11 +646,11 @@ global $RG_addr,$db;
 			$h .= "</div>";
             
             //AGGIUNTA SPONSOR COSEINUTILI
-            $h .= "<div id=\"coseinutili\" style=\"margin-top:1em;margin-left:9px\">";
-            $h .= "<a href=\"".$RG_addr["coseinutili"]."\">";
-            $h .= "<img SRC=\"".$RG_addr["logo_coseinutili"]."\" ".rg_tooltip("Cose(in)utili, un sito che permette di gestire lo scambio, il baratto e la banca del tempo. Clicca per avere maggiori informazioni.")." width=112 height=29 >";
-            $h .= "</a>";
-            $h .= "</div>";
+            $h2 .= "<div id=\"coseinutili\" style=\"margin-top:1em;margin-left:9px\">";
+            $h2 .= "<a href=\"".$RG_addr["coseinutili"]."\">";
+            $h2 .= "<img SRC=\"".$RG_addr["logo_coseinutili"]."\" ".rg_tooltip("Cose(in)utili, un sito che permette di gestire lo scambio, il baratto e la banca del tempo. Clicca per avere maggiori informazioni.")." width=112 height=29 >";
+            $h2 .= "</a>";
+            $h2 .= "</div>";
             
             
 
@@ -909,6 +941,9 @@ unset ($v);
   }
 // AGGIUNGO IL DEBUG
 $h .= $debug_html;
+$h2 .= "<script>$('form#rg').submit(function(e){
+$(this).children('input[type=submit]').attr('disabled', true);
+});</script>";
 $h .= '</body>';
 $h .= '</html>';
 
@@ -1194,6 +1229,8 @@ $rg->java_scripts_header = array_merge($rg->java_scripts_header,$this->javascrip
 if(!is_empty($this->tabella_da_ordinare)){
  $rg->java_scripts_bottom_body[] = java_tablesorter($this->tabella_da_ordinare);   
 }
+//Auto disable double input submit
+
 $rg->java_scripts_bottom_body = array_merge($rg->java_scripts_bottom_body,$this->javascripts);
  
       // assegno l'eventuale messaggio da proporre
@@ -2146,4 +2183,47 @@ class Date_Time_Converter{
 
     
     
+}
+
+class MessageTemplateFile{
+    /**
+     * @var string
+     */
+    private $file;
+    /**
+     * @var string[] varname => string value
+     */
+    private $vars;
+
+    public function __construct($file, array $vars = array())
+    {
+        $this->file = (string)$file;
+        $this->setVars($vars);
+    }
+
+    public function setVars(array $vars)
+    {
+        $this->vars = $vars;
+    }
+
+    public function getTemplateText()
+    {
+        return file_get_contents($this->file);
+    }
+
+    public function __toString()
+    {
+        return strtr($this->getTemplateText(), $this->getReplacementPairs());
+    }
+
+    private function getReplacementPairs()
+    {
+        $pairs = array();
+        foreach ($this->var as $name => $value)
+        {
+            $key = sprintf('[{%s}]', strtoupper($name));
+            $pairs[$key] = (string)$value;
+        }
+        return $pairs;
+    }
 }

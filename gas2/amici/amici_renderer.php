@@ -259,19 +259,16 @@ return $h_table;
         
         
 
-        $help_descrizione_ditte='Il nome della ditta.';
-        $help_indirizzo='Indirizzo della ditta, se non si sa mettere almeno la città'; 
-        $help_website ='Se la sita ha un indirizzo internet inserirlo qua';
-        $help_note_ditte ='Si possono mettere immagini facendo il copia e incolla dal sito della ditta in questione. Le immagini saranno collegate, non incorporate.';
-        $help_mail_ditte='Mail della ditta, se si lascia vuoto allora sarà inserita la mail del proponente';
-        $help_tag_ditte = 'I tag sono delle parole che si possono liberamente associare alla ditta stessa, separate da una virgola, 
-        che permettono di filtrarla più agevolmente in mezzo alle altre e quindi di ritrovarla subito.<br>Ad esempio, i tag di una ditta che vende miele possono essere : miele, api, arnie, vasetti, acacia, castagno, biologico, artigianale ';
+        $help_nome='Il nome dell\'amico.';
+        $help_indirizzo='Campo facoltativo, l\'indirizzo. (in un futuro potrebbe essere geolocalizzato)'; 
+        $help_telefono ='Se devi contattare questa persona.';
+        $help_note ='Campo libero, mettici cosa vuoi.';
 
 
         $h = '<div class="rg_widget rg_widget_helper">
         <h3>Aggiungi un posto a tavola....</h3>
 
-        <form name="modifica_options" method="POST" action="amici_form_add.php" class="retegas_form ui-corner-all">
+        <form id="rg" name="modifica_options" method="POST" action="amici_form_add.php" class="retegas_form ui-corner-all">
 
         
         <div>
@@ -297,8 +294,9 @@ return $h_table;
  
         <div>
         <h4>4</h4>
-        <h5 title="'.$help_note.'">Inf.</h5>
+        
         <label for="note_option">Qua puoi mettere delle note</label>
+        <h5 title="'.$help_note.'">Inf.</h5>
         <textarea id="note_amici" class ="ckeditor" name="note_amici" cols="28" style="display:inline-block;">'.$note_amici.'</textarea>
         </div>
         
@@ -309,11 +307,14 @@ return $h_table;
         <input type="submit" name="submit" value="...che c\'è un amico in più..." align="center" >
         <input type="hidden" name="do" value="add">
         <input type="hidden" name="ida" value="'.$ida.'">
-        <h5 title="'.$help_partenza.'">Inf.</h5>
+        
         </div> 
 
 
         </form>
+        
+        <div>Le istruzioni su cosa siano gli "amici" le trovi cliccando <a href="https://sites.google.com/site/retegasapwiki/meccanismi-di-funzionamento/la-sezione-amici" target="_blank">QUA</a></div>
+        
         </div>';              
 
 

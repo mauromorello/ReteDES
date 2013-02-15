@@ -1375,5 +1375,4 @@ function wp_id_gas_from_code($code){
    
    return $row["id_gas"];    
 }
-  
-?>
+ 
