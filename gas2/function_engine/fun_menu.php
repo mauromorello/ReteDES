@@ -705,7 +705,7 @@ return $h_menu;
 
                     $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["gas_modifica"].'" target="_self">Modifica dati</a></li>'; 
                     $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["gas_option_sito"].'" target="_self">Gestisci opzioni GAS</a></li>';
-                    $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["gas_nuovo_gas"].'" target="_self">Crea nuovo GAS</a></li>';
+
             $h_menu .='</ul>';
 
             $h_menu .='</li>';
@@ -734,8 +734,6 @@ return $h_menu;
                     $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["gas_users"].'?out=csv">Esporta CSV</a></li>';
                 $h_menu .='</ul>';
             $h_menu .='</li>';
-            $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["gas_sposta_utenti"].'" target="_self">Sposta utenti</a></li>';
-
             $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["gas_perm_new_users"].'" target="_self">Permessi nuovi utenti</a></li>';
             $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["user_add"].'">Crea Nuovo utente</a></li>';
             $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["user_to_activate"].'">Attivazione utenti</a><li>';
@@ -1632,7 +1630,7 @@ function articoli_menu_operazioni($id_articolo){
                 // ma solo se non sono io il referente ordine
                     if (id_referente_ordine_globale($id)<>$id_user){ 
                         $com2 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=1" target="_self">Al referente Ordine</a></li>';
-                        $com3 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=3" target="_self">A coloro i quali hanno comprato qualcosa, nel mio GAS</a></li>';
+                        $com3 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=3" target="_self">Ai partecipanti (mio GAS)</a></li>';
                         $show = true;
                     }
                 
@@ -1641,8 +1639,8 @@ function articoli_menu_operazioni($id_articolo){
                 // Se invece sono il referente ORDINE
                  if (id_referente_ordine_globale($id)==$id_user){
                     $com4 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=5" target="_self">Ai referenti GAS</a></li>';   
-                    $com5 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=3" target="_self">A coloro i quali hanno comprato qualcosa (mio GAS)</a></li>';
-                    $com6 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=4" target="_self">A coloro i quali hanno comprato qualcosa, di tutti i GAS</a></li>';
+                    $com5 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=3" target="_self">Partecipanti (mio GAS)</a></li>';
+                    $com6 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=4" target="_self">Partecipanti (TUTTI)</a></li>';
                     $com7 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=6" target="_self">Bacino utenti potenziali</a></li>';
                     $com9 ='<li><a class="medium magenta awesome" href="'.$RG_addr["opinione_referente"].'?id_ordine='.$id.'" target="_self">Recensisci il fornitore come gestore</a></li>';
 
@@ -1690,18 +1688,17 @@ return $h_menu;
             $partecipazione_utenti = '<li><a class="awesome medium blue"  href="'.$RG_addr["partecipat_utenti"].'?id_ordine='.$id_ordine.'">Lista Partecipanti</a></li>';
             $cronologia_utenti = '<li><a class="awesome medium blue"  href="'.$RG_addr["partecipat_cronologia"].'?id_ordine='.$id_ordine.'">Cronologia ordini</a></li>';
             $avanzo_ammanco = '<li><a class="awesome medium blue"  href="'.$RG_addr["rep_avanzo_ammanco"].'?id='.$id_ordine.'">Avanzo ammanco (Oleggio)</a></li>';
-            $dashboard ='<li><a class="awesome medium black"  href="'.$RG_addr["extra_dashboard"].'?id_ordine='.$id_ordine.'">Pannello reports</a></li>';
+        
         
         $h_menu ='<li><a class="medium black awesome"><b>EXTRA</b></a>'; 
         $h_menu .='<ul>';
         
-        $h_menu .= $dashboard;
-        //$h_menu .= $report_dettaglio_gas;
-        //$h_menu .= $report_articoli_gas;
-        //$h_menu .= $report_gas;
-        //$h_menu .= $report_dettaglio_articoli;
-        //$h_menu .= $report_riepilogo_articoli;
-        //$h_menu .= $report_scatole_intere;
+        $h_menu .= $report_dettaglio_gas;
+        $h_menu .= $report_articoli_gas;
+        $h_menu .= $report_gas;
+        $h_menu .= $report_dettaglio_articoli;
+        $h_menu .= $report_riepilogo_articoli;
+        $h_menu .= $report_scatole_intere;
         $h_menu .= $partecipazione_utenti;
         $h_menu .= $cronologia_utenti;
         $h_menu .= $avanzo_ammanco;

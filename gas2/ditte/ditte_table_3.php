@@ -115,7 +115,7 @@ $query = "SELECT * FROM retegas_ditte ORDER BY retegas_ditte.descrizione_ditte A
    $t .= "<thead>";
    $t .= "<tr>";
        $t .= "<th></th>";
-       $t2 .= "<th>ID</th>";
+       $t .= "<th>ID</th>";
        $t .= "<th>NOME</th>";
        $t .= "<th>INDIRIZZO</th>";
        $t .= "<th>DISTANZA</th>";
@@ -188,7 +188,7 @@ $query = "SELECT * FROM retegas_ditte ORDER BY retegas_ditte.descrizione_ditte A
    if($show=="OK"){
        $t .= "<tr>";
             $t .= "<td $valu_sorter style=\"padding:2px;\" title=\"Valutazione media : $val_valu\">$valutazione</td>";
-            $t2 .= "<td>".$row["id_ditte"]."</td>";
+            $t .= "<td>".$row["id_ditte"]."</td>";
             $t .= "<td><a href=\"".$RG_addr["ditte_form_new"]."?id_ditta=".$row["id_ditte"]."\">$nome_ditta</a></td>";
             $t .= "<td class=\"edit_address\" id=\"".$row["id_ditte"]."\">$indirizzo</td>";
             $t .= "<td>$distance</td>";

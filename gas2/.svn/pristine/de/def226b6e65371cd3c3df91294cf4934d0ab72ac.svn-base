@@ -1,6 +1,0 @@
- *,html{font-family: verdana;font-size:11px;}
- span  {font-size:8px;}
- 
- #output {width:100%;}
- #output td{background-color: #FFFFFF; border-bottom: solid 1px #808080;}
- #output tr{border-bottom: 1px solid #000000;}

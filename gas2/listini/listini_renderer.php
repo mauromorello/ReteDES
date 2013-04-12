@@ -134,7 +134,7 @@ return $h2;
 
   function listini_articoli_table($ref_table, $id_listino){
       
-      global $RG_addr,$db;
+      global $RG_addr;
       
       // --------------START LISTINI
       // TITOLO TABELLA
@@ -176,28 +176,20 @@ return $h2;
       
       // COSTRUZIONE TABELLA  LISTINI -----------------------------------------------------------------------
       
-      $result = $db->sql_query($my_query);
+      $result = mysql_query($my_query);
         
           
       $h_table .= "<br /> 
             <div class=\"rg_widget rg_widget_helper\" style = \"margin-bottom:6px;\">
             <h3>$titolo_tabella</h3>
-            <div class=\"ui-state-error\" style=\"padding:1em;font-size:1.2em\">
-            <h4>Novità !!</h4>
-            <p>Da oggi è possibile editare \"INLINE\" i valori di alcuni campi (<strong>Codice, Descrizione, prezzo, opz1 opz2 e opz3</strong>), cioè cambiare i loro valori direttamente nella tabella sottostante.<br>
-            Per poter fare ciò basta cliccare sopra al valore da modificare, sostituirlo con quello nuovo e premere INVIO.<br>
-            Per lavorare al meglio con listini complessi, sfruttare il filtro !
-            NB: Si possono modificare i valori degli articoli che non sono ancora stati usati negli ordini !!</p>
-            </p></div>
+
             <table id=\"$ref_table\">
             <thead>
         <tr>
-            <th class=\"sinistra filter-false\">Opz.</th>
-            <th class=\"sinistra {sorter: 'fancyNumber'}\">Codice</th>
-            <th class=\"sinistra\">Descrizione</th>
-            <th class=\"sinistra\">U.Mis</th>
-            <th class=\"sinistra filter-false\">Mis.</th>
-            <th class=\"{sorter: 'fancyNumber'}\">Prezzo</th>
+            <th class=\"sinistra\">$h1</th>
+            <th class=\"sinistra\">$h2</th>
+            <th class=\"sinistra\">$h3</th>
+            <th class=\"sinistra\">$h4</th>
             <th class=\"sinistra\">$h5</th>
             <th class=\"sinistra\">$h6</th>
             <th class=\"sinistra\">UNIVOCO</th>
@@ -207,79 +199,45 @@ return $h2;
         <tbody>";
   
        $riga=0;  
-         while ($row = $db->sql_fetchrow($result)){
+         while ($row = mysql_fetch_array($result)){
          $riga++;
               $c1 = $row["$d1"];
               $c2 = $row["$d2"];
-              //$c3 = $row["$d3"]." ".  $row["$d4"];
+              $c3 = $row["$d3"]." ".  $row["$d4"];
               $c4 = _nf($row["$d5"])." $euro";
               $c5 = _nf($row["$d6"])." / "._nf($row["$d7"]);              
               if(!empty($row["$d9"])){$c6=trim(substr(strip_tags($row["$d9"]),0,15)) ." ...";}else{$c6="";}
               $c6_alt = htmlentities($row["$d9"]); 
               $c8 = $row["$d8"];
               $c10=  $row["$d10"];       // ID articolo
+              $c7 = $row["articoli_opz_1"]." - ".$row["articoli_opz_2"]." - ".$row["articoli_opz_3"];
 
               
             
-        
-            $h_table.= "<tr>";    // Colore Riga
-  
-     
+        if(is_integer($riga/2)){  
+            $h_table.= "<tr class=\"odd $extra\">";    // Colore Riga
+        }else{
+            $h_table.= "<tr class=\"$extra\">";    
+        }
         
         if($row["articoli_unico"]==1){$au="SI";}else{$au="";};
         
-        $used = articoli_in_ordine($c10);
         
-        if(id_listino_user($id_listino)==_USER_ID){
-            
-            $opz_clone = "<a class=\"awesome option blue\" href=\"?do=clone&id_articolo=$c10&id_listino=$id_listino\" title=\"Clona\">C</a>";
-            
-            
-            if($used==0){
-                $opz_edit="<a class=\"awesome option yellow\" href=\"".$RG_addr["articoli_edit"]."?id_articoli=$c10\" title=\"Modifica\">M</a>";
-                $opz_del="<a class=\"awesome option black\" href=\"?do=delete&id_articolo=$c10&id_listino=$id_listino\" title=\"Elimina (immediata)\">E</a>"; 
-                $class_inline_desc ="class=\"edit_desc\"";
-                $class_inline_cod ="class=\"edit_cod\"";
-                $class_inline_prezzo ="class=\"edit_prezzo\"";
-                $class_inline_u_mis ="class=\"edit_u_misura\"";
-                $opz_edit_opz_3 ="class=\"edit_opz_3\"";
-                $opz_edit_opz_2 ="class=\"edit_opz_2\"";
-                $opz_edit_opz_1 ="class=\"edit_opz_1\"";
-            }else{
-                $opz_edit ="";
-                $opz_del="";
-                $class_inline_desc ="";
-                $class_inline_cod ="";
-                $class_inline_prezzo ="";
-                $class_inline_u_mis ="";
-                $opz_edit_opz_3 ="";
-                $opz_edit_opz_2 ="";
-                $opz_edit_opz_1 ="";
-            }
-        
-        }
-        
-        $varianti = "<span $opz_edit_opz_1 id=\"$c10-opz1\">".$row["articoli_opz_1"]."</span> - <span $opz_edit_opz_2 id=\"$c10-opz2\">".$row["articoli_opz_2"]."</span> - <span $opz_edit_opz_3 id=\"$c10-opz3\">".$row["articoli_opz_3"]."</span>";
-        $opz_vis = "<a class=\"awesome option green\" onclick=\"
+        $h_table.= "<td><a class=\"awesome option green\" onclick=\"
                                         $.ajax({
                                           url: '".$RG_addr["ajax_schedina_articolo"]."?id_articolo=$c10',
                                           success: function(data) {
                                             $('#container_articolo').html(data);
                                           }
                                         });
-                    \" title=\"Visualizza\">V</a>";
-        $opz_scheda ="<a class=\"awesome option silver\" href=\"".$RG_addr["articoli_form"]."?id_articolo=$c10\" title=\"Scheda\">S<a>";                               
-        
-        $h_table.= "<td>$opz_vis $opz_clone $opz_edit $opz_del </td>
-                    <td><div $class_inline_cod id=\"$c10-cod\" style=\"display:inline-block;\">".$row["codice"]."</div></td> 
-                    <td><div $class_inline_desc id=\"$c10-desc\" style=\"display:inline-block;\">".$row["descrizione_articoli"]."</div></td>    
-                    <td><span $class_inline_u_mis id=\"$c10-u_mis\">".$row["u_misura"]."</span></td>
-                    <td>".$row["misura"]."</td>
-                    <td class=\"destra\"><div $class_inline_prezzo id=\"$c10-prezzo\" style=\"display:inline-block;\">$c4</div> Eu.</td>
+                    \">$c1</a></td> 
+                    <td><a href=\"../articoli/articoli_form_new.php?id_articolo=$c10\">$c2<a></td>    
+                    <td>$c3</td>
+                    <td>$c4</td>
                     <td>$c5</td>
                     <td><a title=\"$c6_alt\">$c6</a></td>
                     <td>$au</td>
-                    <td>$varianti</td>  
+                    <td>$c7</td>  
                 </tr>
             ";
          }//end while

@@ -150,7 +150,7 @@ if($do=="add"){
                 $messa = "<b>L'utente $fullname ha creato l'ordine speedy $nome_ordine</b>";
                 log_me($ur,_USER_ID,"ORD","CRE",$messa,0,$my_query);
 
-                $msg .= "L'ordine $ur ($descrizione) è stato creato, partirà il $date_next; C'è tutto il tempo per modificarlo o cancellarlo, prima che una mail venga mandata a tutti i possibili partecipanti.";
+                $msg .= "Ordine $ur ($descrizione) PARTITO !!";
                 
                 go("sommario",_USER_ID,$msg);
                 

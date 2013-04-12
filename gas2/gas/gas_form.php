@@ -31,11 +31,7 @@ if (!_USER_LOGGED_IN){
 	// Queste sono contenute in un array che ho chiamato HTML standard
 	
 	$retegas->sezioni = $retegas->html_standard;
-	
-    //DISQUS
-    $retegas->disqus_id = "GAS-"._USER_ID_GAS;
-    $retegas->disqus_title = "Parliamo del ".gas_nome(_USER_ID_GAS);
-      
+	  
 	// Il menu' orizzontale è pronto ma è vuoto. Con questa istruzione lo riempio con un elemento
 	$retegas->menu_sito = gas_menu_completo();
  

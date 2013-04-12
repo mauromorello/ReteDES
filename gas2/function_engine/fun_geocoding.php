@@ -54,7 +54,7 @@ if (!$result) {
 
 // Initialize delay in geocode speed
 $delay = 0;
-$base_url = "http://maps.googleapis.com/maps/api/geocode/xml?sensor=false";
+$base_url = "http://" . MAPS_HOST . "/maps/geo?output=xml" . "&key=" . GOOGLE_KEY;
 
 // Iterate through the rows, geocoding each address
 while ($row = @mysql_fetch_assoc($result)) {
@@ -64,20 +64,22 @@ while ($row = @mysql_fetch_assoc($result)) {
 	$address = $row["country"].", ".$row["city"];
 	$log .= "ADDRESS : ".$address."<br>";
 	$id = $row["userid"];
-	$request_url = $base_url . "&address=" . urlencode($address);
-	$log .= "REQUEST URL : ".$request_url."<br>";
+	$request_url = $base_url . "&q=" . urlencode($address);
+	$log .= "REQUEST URL : ".$request_url."<br>"; 
 	$xml = simplexml_load_file($request_url) or die("url not loading");
-	//$log .= "XML : ".print_r($xml)."<br>"; 
-	$status = $xml->status;
+	$log .= "XML : ".$xml."<br>"; 
+	$status = $xml->Response->Status->code;
 	$log .= "STATUS: ".$status."<br>"; 
-	
-    if (strcmp($status, "OK") == 0) {
+	if (strcmp($status, "200") == 0) {
 	  // Successful geocode
-      
 	  $geocode_pending = false;
-	  $lat = $xml->result->geometry->location->lat;
-	  $lng = $xml->result->geometry->location->lng;
-	  $log .= "LAT LON : $lat $lng  <br>"; 
+	  $coordinates = $xml->Response->Placemark->Point->coordinates;
+	  $coordinatesSplit = split(",", $coordinates);
+	  // Format: Longitude, Latitude, Altitude
+	  $lat = $coordinatesSplit[1];
+	  $lng = $coordinatesSplit[0];
+	  $log .= "LAT LON : ".$lat." $lng  <br>"; 
+	  
 	  
 	  $query = sprintf("UPDATE maaking_users " .
 			 " SET user_gc_lat = '%s', user_gc_lng = '%s' " .
@@ -90,10 +92,8 @@ while ($row = @mysql_fetch_assoc($result)) {
 	  if (!$update_result) {
 		die("Invalid query: " . mysql_error());
 	  }
-	} else if ($status<>"OK") {
+	} else if (strcmp($status, "620") == 0) {
 	  // sent geocodes too fast
-      $failed++;
-      if($failed>10){echo "TOO MANY FAILS";die;}
 	  $delay += 100000;
 	} else {
 		
@@ -130,7 +130,7 @@ if (!$result) {
 
 // Initialize delay in geocode speed
 $delay = 0;
-$base_url = "http://maps.googleapis.com/maps/api/geocode/xml?sensor=false";
+$base_url = "http://" . MAPS_HOST . "/maps/geo?output=xml" . "&key=" . GOOGLE_KEY;
 
 // Iterate through the rows, geocoding each address
 while ($row = @mysql_fetch_assoc($result)) {
@@ -138,20 +138,25 @@ while ($row = @mysql_fetch_assoc($result)) {
 
   while ($geocode_pending) {
     $address = $row["sede_gas"];
-    
+    //echo "ADDRESS : ".$address."<br>";
     $id = $row["id_gas"];
-    $request_url = $base_url . "&address=" . urlencode($address);
-    
+    $request_url = $base_url . "&q=" . urlencode($address);
+    //echo "REQUEST URL : ".$request_url."<br>"; 
     $xml = simplexml_load_file($request_url) or die("url not loading");
-     
-    $status = $xml->status;
-    
-    if ($status=="OK") {
+    //echo "XML : ".$xml."<br>"; 
+    $status = $xml->Response->Status->code;
+    //echo "STATUS: ".$status."<br>"; 
+    if (strcmp($status, "200") == 0) {
       // Successful geocode
       $geocode_pending = false;
-      $lat = $xml->result->geometry->location->lat;
-      $lng = $xml->result->geometry->location->lng;
-
+      $coordinates = $xml->Response->Placemark->Point->coordinates;
+      $coordinatesSplit = split(",", $coordinates);
+      // Format: Longitude, Latitude, Altitude
+      $lat = $coordinatesSplit[1];
+      $lng = $coordinatesSplit[0];
+      //echo "LAT LON : ".$lat." $lng  <br>"; 
+      
+      
       $query = sprintf("UPDATE retegas_gas " .
              " SET gas_gc_lat = '%s', gas_gc_lng = '%s' " .
              " WHERE id_gas = '%s' LIMIT 1;",
@@ -159,15 +164,12 @@ while ($row = @mysql_fetch_assoc($result)) {
              mysql_real_escape_string($lng),
              mysql_real_escape_string($id));
       $update_result = $db->sql_query($query);
-      $log =  "QUERY UPDATE : ".$query."<br>"; 
+      //echo "QUERY UPDATE : ".$query."<br>"; 
       if (!$update_result) {
         die("Invalid query: " . mysql_error());
       }
-    } else if ($status<>"OK") {
+    } else if (strcmp($status, "620") == 0) {
       // sent geocodes too fast
-      $log_fail .= "$address -> $status <br>";
-      $failed++;
-      if($failed>10){echo "TOO MANY FAILS<br>$log_fail";die;}
       $delay += 100000;
     } else {
         
@@ -177,8 +179,11 @@ while ($row = @mysql_fetch_assoc($result)) {
              " WHERE id_gas = '$id' LIMIT 1;";
 
       $update_result = $db->sql_query($query);
+      // failure to geocode
       $geocode_pending = false;
-
+      //echo "Address " . $address . " failed to geocoded. ";
+      //echo "Received status " . $status . "
+//\n";
     }
     usleep($delay);
   }
@@ -203,7 +208,7 @@ if (!$result) {
 
 // Initialize delay in geocode speed
 $delay = 0;
-$base_url = "http://maps.googleapis.com/maps/api/geocode/xml?sensor=false";
+$base_url = "http://" . MAPS_HOST . "/maps/geo?output=xml" . "&key=" . GOOGLE_KEY;
 
 $h .="Base url: ".$base_url."</br>";
 
@@ -215,16 +220,20 @@ while ($row = @mysql_fetch_assoc($result)) {
     $address = $row["indirizzo"];
     $h.= "ADDRESS : ".$address."<br>";
     $id = $row["id_ditte"];
-    $request_url = $base_url . "&address=" . urlencode($address);
+    $request_url = $base_url . "&q=" . urlencode($address);
     $h.= "REQUEST URL : ".$request_url."<br>"; 
     $xml = simplexml_load_file($request_url) or $h.= "URL not loading";
-    $status = $xml->status;
+    $h.=  "XML : ".$xml."<br>"; 
+    $status = $xml->Response->Status->code;
     $h.= "STATUS: ".$status."<br>"; 
-    if ($status=="OK") {
+    if (strcmp($status, "200") == 0) {
       // Successful geocode
       $geocode_pending = false;
-      $lat = $xml->result->geometry->location->lat;
-      $lng = $xml->result->geometry->location->lng;
+      $coordinates = $xml->Response->Placemark->Point->coordinates;
+      $coordinatesSplit = split(",", $coordinates);
+      // Format: Longitude, Latitude, Altitude
+      $lat = $coordinatesSplit[1];
+      $lng = $coordinatesSplit[0];
       $h.= "LAT LON :$lat $lng <br>"; 
       
       
@@ -239,11 +248,8 @@ while ($row = @mysql_fetch_assoc($result)) {
       if (!$update_result) {
         die("Invalid query: " . mysql_error());
       }
-    } else if ($status<>"OK") {
+    } else if (strcmp($status, "620") == 0) {
       // sent geocodes too fast
-      $log_fail .= "FAIL :$address -> $status <br>";
-      $failed++;
-      if($failed>10){echo "TOO MANY FAILS<br>$log_fail"; die();}
       $delay += 100000;
     } else {
         

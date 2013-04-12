@@ -188,7 +188,7 @@ if (is_logged_in($user)){
         if ($go>0){
         
             $msg = "Utente inserito e mail di avviso inviata correttamente";
-            go("gas_users",_USER_ID,$msg);
+            go("sommario",_USER_ID,$msg);
             exit;
         }    
             

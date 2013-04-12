@@ -275,8 +275,7 @@ if($do=="add"){
 
                 }        
                 // referenze
-                $msg .= "L'ordine $ur ($descrizione) è stato creato, partirà il $date_next;";
-
+                $msg .= "Ordine $ur ($descrizione) PARTITO !!";
                 $nome_ordine = descrizione_ordine_from_id_ordine($ur);
                 $messa = "<b>L'utente $fullname ha creato l'ordine complete $nome_ordine</b>";
                 log_me($ur,_USER_ID,"ORD","MOD",$messa,0,$my_query);
