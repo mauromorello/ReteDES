@@ -70,7 +70,7 @@ $h_table .=  "<table class=\"sinistra\">
 
 		<tr class=\"odd\">
 
-			<th $col_1>Referente Retegas.AP</th>
+			<th $col_1>Referente ReteDES.it</th>
 
 			<td $col_2>$c7</td>
 

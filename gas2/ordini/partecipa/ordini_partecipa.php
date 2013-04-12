@@ -536,10 +536,13 @@ if($check<>"OK"){
       $retegas->java_scripts_header[] = java_superfish();       
       $retegas->java_scripts_header[] = java_tablesorter($ref_table);
       $retegas->java_scripts_header[] = java_head_fg_menu();
-      //$retegas->java_scripts_header[] = java_head_jquery_dirtyform();
+      
       
       //Jgrowl  CSS
       $retegas->java_scripts_header[] = "<link type=\"text/css\" href=\"".$RG_addr["css_jgrowl"]."\" media=\"screen\" rel=\"stylesheet\">\n";
+      //Breadcumb CSS
+      //$retegas->java_scripts_header[] = "<link type=\"text/css\" href=\"".$RG_addr["css_fg_menu"]."\" media=\"screen\" rel=\"stylesheet\">\n";
+      
       
       $retegas->css_body[] = fg_css();
       

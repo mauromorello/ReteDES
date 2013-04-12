@@ -1,0 +1,18 @@
+/*
+Copyright (c) 2003-2010, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.html or http://ckeditor.com/license
+*/
+
+CKEDITOR.editorConfig = function( config )
+{
+	// Define changes to default configuration here. For example:
+	config.language = 'it';
+	config.width = '90%';
+	config.uiColor = '#AADC6E';
+	config.toolbar = 'Basic';
+	config.toolbar_Basic = [['Cut','Copy','Paste','PasteText','PasteFromWord', 'SpellChecker'],
+							['Bold','Italic','Underline','Strike','Subscript','Superscript'],
+							['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
+							['Image','Link','Smiley'],
+							['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock']];
+};

@@ -1,0 +1,118 @@
+<?php
+   
+// immette i file che contengono il motore del programma
+include_once ("../rend.php");
+include_once ("../retegas.class.php");
+
+
+// controlla se l'user ha effettuato il login oppure no
+if (!_USER_LOGGED_IN){
+     pussa_via(); 
+}    
+
+//CONTROLLI
+if (!(_USER_PERMISSIONS & perm::puo_gestire_retegas)){
+     pussa_via();
+}
+
+
+
+//Creazione della nuova pagina uso un oggetto rg_simplest
+$r = new rg_simplest();
+//Dico quale voce del men? verticale dovr? essere aperta
+$r->voce_mv_attiva = menu_lat::user;
+//Assegno il titolo che compare nella barra delle info
+$r->title = "Amministra ordini";
+
+
+//Dico quale men? orizzontale dovr?? essere associato alla pagina.
+$r->menu_orizzontale = amministra_menu_completo();
+
+//Assegno le due tabelle a tablesorter
+$r->javascripts[]=java_tablesorter("output_1");
+
+
+if(_USER_HAVE_MSG){
+    $r->messaggio = _USER_MSG;
+    delete_option_text(_USER_ID,"MSG");
+}
+//Contenuto
+
+    $query="SELECT * FROM  retegas_ordini ORDER BY id_ordini DESC";
+ 
+      $result= mysql_query($query);
+
+      $h_table .="<div class=\"rg_widget rg_widget_helper\">";
+      $h_table .= $intestazione;
+      $h_table .= "<table id=\"output_1\">
+      <thead>
+      <tr>";
+      //$h_table .= '<th> OPZ </th>';
+      $h_table .="<th>ID</th>";
+      $h_table .="<th>DESC</th>"; 
+      $h_table .="<th>STATO</th>"; 
+      $h_table .="<th>USER</th>"; 
+      $h_table .="<th>GAS</th>"; 
+      $h_table .="<th>LISTINO</th>"; 
+      $h_table .="<th>APERTURA</th>"; 
+      $h_table .="<th>CHIUSURA</th>"; 
+      $h_table .="<th>OPERAZIONI</th>"; 
+      
+      $h_table .= "</tr>
+      </thead>
+      <tbody>";
+   
+     
+   
+      while ($row = mysql_fetch_array($result)) 
+      {
+          
+         
+      $h_table.= '<tr>
+                        <td>
+                        '.$row["id_ordini"].'
+                        </td>
+                        <td>
+                        '.$row["descrizione_ordini"].'
+                        </td>
+                        <td>
+                        '.$row["id_stato"].'
+                        </td>
+                        <td>
+                            '.fullname_from_id($row["id_utente"]).'
+                        </td>
+                        <td>
+                            '.gas_user($row["id_utente"]).'
+                        </td>
+                        <td>
+                            '.listino_nome($row["id_listini"]).'
+                        </td>
+                        <td>
+                            '.conv_datetime_from_db($row["data_apertura"]).'
+                        </td>
+                        <td>
+                            '.conv_datetime_from_db($row["data_chiusura"]).'
+                        </td>
+                        <td>
+                            <a class="awesome black small" href="'.$RG_addr["amministra_ordini_del_all"].'?id_ordine='.$row["id_ordini"].'">elimina</a>
+                        </td>
+                    </tr>';
+      
+       
+      //$h_table .= '<tr><td></td><td  style="background-color:#'.$colo["$row[2]"].';display: block;">'.implode($row,'</td><td>')."</td></tr>\n"; 
+      }
+      $h_table .= "
+      </tbody>
+      </table>
+      </div>";
+
+
+
+//Questo ?? il contenuto della pagina
+$r->contenuto = $h_table;
+
+//Mando all'utente la sua pagina
+echo $r->create_retegas();
+//Distruggo l'oggetto r    
+unset($r)   
+?>

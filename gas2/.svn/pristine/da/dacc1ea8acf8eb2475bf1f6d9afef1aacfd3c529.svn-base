@@ -1,0 +1,3 @@
+ #output {width:100%;}
+ #output td{background-color: blue;}
+ #output .odd td{background-color: yellow;}

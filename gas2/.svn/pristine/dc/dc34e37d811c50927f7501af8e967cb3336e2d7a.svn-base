@@ -1,0 +1,235 @@
+<?php
+
+include_once ("../rend.php");
+
+if (is_logged_in($user)){
+		$cookie_read = explode("|", base64_decode($user));
+		$id_user = $cookie_read[0];
+		$username =$cookie_read[1];
+		$gas = id_gas_user($id_user);
+		$gas_name = gas_nome($gas);
+		$permission = (int)$cookie_read[6];
+
+	  if(!($permission & perm::puo_postare_messaggi)){
+			$q = "not_allowed";
+			include ("../index.php");
+			exit;  		  
+	 }
+	  
+	  
+	  if ($do=="add"){
+	  //echo "DATA =$data_3<br>";
+		  
+	  $data_3 = (int)$data_3;
+	  if($data_3<0){$data_3=0;}
+	  if($data_3>4){$data_3=4;}
+	  
+	  $data_4 = (int)$data_4;
+	  if($data_4<0){$data_4=0;}
+	  
+	  
+	  if (empty($data_2)){$msg.="Titolo obbligatorio<br>";$e_empty++;};
+	  //if (empty($data_3)){$msg.="Visibilità obbligatoria<br>";$e_empty++;};
+	  //if (empty($data_4)){$msg.="Argomento obbligatorio<br>";$e_empty++;};
+	  if (empty($data_6)){$msg.="Il messaggio deve contenere qualcosa<br>";$e_empty++;}; 
+	  
+	  if (gas_mktime($data_5)<gas_mktime(date("d/m/Y"))){
+		 $msg.="Data scadenza già passata";
+		 $e_date++; 
+	  }
+
+	  
+	  
+	  
+	  //Echo "Puro data_6 = $data_6<br>";
+	  
+	   
+	  
+	  //$data_6 = base64_encode($data_6);
+	  
+	  $msg.="<br>Verifica i dati immessi e riprova";
+	  
+	  
+	  $e_total = $e_empty + $e_logical + $e_numerical + $e_date;
+	  
+	  if($e_total==0){
+		  
+		 $data_2 = sanitize($data_2); 
+		 $data_5 = conv_date_to_db($data_5);
+		 $data_6 = sanitize($data_6); 
+		//echo "ZERO ERRORI !!!";
+		
+		//echo "Data 2 = $data_2<br>";
+		//echo "Data 3 = $data_3<br>";
+		//echo "Data 4 = $data_4<br>";
+		//echo "Data 5 = $data_5<br>";
+		//echo "Data 6 = $data_6<br>";
+		
+		
+		
+		// QUERY INSERT
+		$my_query="INSERT INTO retegas_bacheca (id_utente, retegas_bacheca.visibility, code_uno, titolo_messaggio, scadenza, messaggio) 
+				VALUES 
+				('$id_user','$data_3','$data_4','$data_2','$data_5','$data_6');";
+		
+		//INSERT BEGIN ---------------------------------------------------------
+		 $result = mysql_query($my_query);
+		 //echo "query = $my_query<br>";
+		// echo "result = $result";
+		 
+		 if (empty($result)){
+			$msg = "Errore nell'inserimento del record";
+			//include ("../index.php");
+			exit;  
+		}else{
+			$msg = "Nuovo messaggio aggiunto";
+			include("bacheca_table.php");
+			exit;  
+		};
+		
+		//INSERT END --------------------------------------------------------- 
+		
+		
+		
+		 
+		  
+	  }else{
+		  
+		  
+		  
+		  
+		  
+		include_once("bacheca_form_add.php");  
+		  
+		  
+	  } // se non ci sono errori
+	  
+	  } // Se do = add
+	  
+	  // Controlli sui dati --------------------------------- CCCC
+
+	  
+	  // MENU APERTO
+	  $menu_aperto=2;
+	  
+					  
+	  // TITOLO FORM_ADD
+	  $titolo_tabella="Aggiungi un messaggio alla bacheca";
+	  
+	  $col_2=" style=\"text-align:left;\" ";
+	  $help_msg = "<b>Editor per messaggi</b><br>
+				   Qua devo mettere l'help.";
+					
+	  
+		  
+	  // FORM -------------------------------------------
+	  
+	 $title_form = "<form name=\"Aggiungi Messaggio\" method=\"POST\" action=\"bacheca_form_add.php\" style=\"margin-top:10px;\">";
+	 $submit_form ="<input class = \"large awesome\" style=\"margin:20px;\" type=\"submit\" value=\"Aggiungi\">";  
+	  
+	  // Campi
+	  
+	  $input_2 = "<input type=\"text\" name=\"data_2\" size=\"70\" value=\"$data_2\" style=\"font-size:1.4em\">";
+	  $input_3 = "<input type=\"text\" name=\"data_3\" size=\"28\" value=\"$data_3\">";
+	  
+	  // LISTA ARGOMENTI
+	  $input_3 = "<fieldset style=\"border:0\"><select name= \"data_3\">";
+		//$input_4 .= "<option value=\"0\" SELECTED >Selezionare argomento messaggio</option>";
+			while (list($chiave,$valore) = each($RG_visibility_messaggi)){
+				if((int)$chiave==0){$sel = " SELECTED ";}else{$sel = "";}; 
+				$input_3.= "<option value=\"".$chiave."\" $sel>".$valore ."  </option>";
+			}
+	  $input_3 .="</select></fieldset>";
+	  unset($chiave);
+	  unset($valore);
+	  unset($sel);
+	  
+	  // LISTA ARGOMENTI
+	  $input_4 = "<fieldset style=\"border:0\"><select name= \"data_4\">";
+		
+		while (list($chiave,$valore) = each($RG_lista_argomenti_messaggi)){
+			if($chiave==0){$sel = " SELECTED ";}else{$sel = "";};	 
+			$input_4.= "<option value=\" $sel".$chiave ."\">".$valore ."  </option>";
+			}
+	  $input_4 .="</select></fieldset>";
+	  
+	  $input_5 = "<input id=\"datepicker\" type=\"text\" name=\"data_5\" size=\"15\" value=\"$data_5\">";
+	  $input_6 = "<textarea class =\"ckeditor\" name=\"data_6\" cols=\"28\">$data_6</textarea>";
+	  $input_hidden = "<input type=\"hidden\" name=\"do\" size=\"28\" value=\"add\">";
+	  
+
+	  
+	  
+	  
+	  
+	  // COSTRUZIONE TABELLA  -----------------------------------------------------------------------
+	  
+	  //$h_table .= ditte_menu_1();
+	  
+	  include("bacheca_menu_core.php");
+	  
+	  $h_table .= "	<div class=\"ui-widget-content padding-6px ui-corner-all\">
+					<h3><center> 
+					$titolo_tabella
+					</center>
+					</h3>
+					
+					
+					
+					
+					$title_form
+					<table>
+					 
+					";
+	 
+	 $h_table .=  "
+					<tr class=\"odd\">
+						<th $col_1>Titolo</th>
+						<td $col_2>$input_2</td>
+					</tr>
+					<tr class=\"odd\">
+						<th $col_1>Visibilità</th>
+						<td $col_2>$input_3</td>
+					</tr>
+					<tr class=\"odd\">
+						<th $col_1>Argomento</th>
+						<td $col_2>$input_4</td>
+					</tr>
+					<tr class=\"odd\">
+						<th $col_1>Scadenza</th>
+						<td $col_2>$input_5</td>
+					</tr>
+					<tr class=\"odd\">
+						<th $col_1>Messaggio<div style=\"margin-top:10px;\"><a class=\"awesome small silver\" title=\"$help_msg\">Aiuto</a></div></th>
+						<td $col_2>$input_6 $input_hidden</td>
+					</tr>
+					<tr>
+						<th $col_1>&nbsp</th>
+						<td $col_2>$submit_form </td>
+					</tr>
+					
+					 
+					</table>
+					
+					
+					</form> 
+					</div>
+					
+					";
+
+	  // END TABELLA ----------------------------------------------------------------------------
+	  
+	  // HEADER HTML
+	  $posizione ="<b>Aggiungi un messaggio alla bachecona</b>";
+	  
+	  $is_ckeditor = "SI";
+	  $datepickers = "SI";
+	  $datepickers_name_1 = "datepicker";
+	  $qtip_on = "SI";
+	  
+	  include ("bacheca_main.php");
+ 
+}else{
+	c1_go_away("?q=no_permission");
+} 
+?>

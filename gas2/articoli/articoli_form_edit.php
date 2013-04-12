@@ -100,7 +100,7 @@ if($do=="mod"){
         };
         
         
-        go("listini_scheda",_USER_ID,$msg,"?id=$id_listini");
+        go("listini_scheda",_USER_ID,$msg,"?id_listino=$id_listini");
         
         //EDIT END --------------------------------------------------------- 
               
@@ -121,7 +121,7 @@ $sql = "SELECT * FROM retegas_articoli WHERE id_articoli='$id_articoli'";
 //Creazione della nuova pagina uso un oggetto rg_simplest
 $r = new rg_simplest();
 //Dico quale voce del menù verticale dovrà essere aperta
-$r->voce_mv_attiva = 2;
+$r->voce_mv_attiva = menu_lat::anagrafiche;
 //Assegno il titolo che compare nella barra delle info
 $r->title = "Modifica anagrafica articolo";
 //Carico il 

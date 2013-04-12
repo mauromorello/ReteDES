@@ -1,0 +1,356 @@
+<?php
+ function dareavere_menu_completo($user){
+	global $RG_addr;
+		
+		$cookie_read     =explode("|", base64_decode($user));
+		$permission = $cookie_read[6];  
+	 
+		
+		$h_menu ='<li><a class="medium green awesome"><b>Visualizza</b></a>'; 
+		$h_menu.='<ul>';
+		$h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["dareavere"].'" target="_self">Dare-Avere su Ordini</a></li>';
+
+
+		
+		$h_menu .='</ul>';  // Visualizza
+		$h_menu .='</li>';
+		
+		$h_menu .='<li><a class="medium yellow awesome"><b>Gestisci</b></a>'; 
+		$h_menu.='<ul>';
+		$h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["gestisci_dareavere"].'" target="_self">Dare-Avere attuale</a></li>';
+
+
+		
+		$h_menu .='</ul>';  // Visualizza
+		$h_menu .='</li>';
+		
+
+		return $h_menu; 
+	 
+	 
+ };
+ function dareavere_render_form_select($ref_table){
+		 // COSTRUZIONE TABELLA  -----------------------------------------------------------------------
+	  global $db;  
+	  global $id_gas,$id_user;
+	
+		  $query="SELECT retegas_ordini.id_ordini, 
+			retegas_ordini.descrizione_ordini, 
+			retegas_listini.descrizione_listini, 
+			retegas_ditte.descrizione_ditte, 
+			retegas_ordini.data_chiusura,
+			retegas_ordini.id_stato, 
+			retegas_gas.descrizione_gas, 
+			retegas_referenze.id_gas_referenze, 
+			maaking_users.userid, 
+			maaking_users.fullname,
+			retegas_ordini.id_utente,
+			retegas_ordini.is_printable,
+			retegas_gas.id_gas
+			FROM (((((retegas_ordini INNER JOIN retegas_referenze ON retegas_ordini.id_ordini = retegas_referenze.id_ordine_referenze) 
+			LEFT JOIN maaking_users ON retegas_referenze.id_utente_referenze = maaking_users.userid) 
+			INNER JOIN retegas_listini ON retegas_ordini.id_listini = retegas_listini.id_listini) 
+			INNER JOIN retegas_ditte ON retegas_listini.id_ditte = retegas_ditte.id_ditte) 
+			INNER JOIN maaking_users AS maaking_users_1 ON retegas_ordini.id_utente = maaking_users_1.userid) 
+			INNER JOIN retegas_gas ON maaking_users_1.id_gas = retegas_gas.id_gas 
+			WHERE (id_stato='3') AND(retegas_referenze.id_gas_referenze='$id_gas')
+			ORDER BY retegas_ordini.id_ordini DESC;";
+
+	$result= $db->sql_query($query);
+
+	  $h_table .="</ hr>";
+	  $h_table .= "
+	  <div class=\"retegas_form ui-corner-all\">
+	  <h3>Gestisci il tuo dare-avere</h3>
+	  <form method='post'  action='dareavere_form_select.php'>
+	  <div>
+		<h4>1</h4>
+		<h5 title='$help_dareavere'>Inf.</h5>
+		<label for='gas_partecipanti'>Seleziona gli ordini da inserire nel dare-avere :</label>
+		
+	  
+	  <table id=\"$ref_table\">
+	  <thead>
+	  <tr>";
+	  //$h_table .= '<th> OPZ </th>';
+	  $h_table .="<th>ID</th>";
+	  $h_table .="<th>Descrizione</th>"; 
+	  $h_table .="<th>Conf.</th>"; 
+	  $h_table .="<th>Mio Ruolo</th>"; 
+	  $h_table .="<th>Gas Proponente</th>"; 
+	  $h_table .="<th>Mia Spesa</th>";
+	  $h_table .="<th>Totale Ordine</th>";
+	  $h_table .="<th>Chiuso il</th>";
+	  $h_table .="<th>Seleziona</th>";
+	  $h_table .= "</tr>
+	  </thead>
+	  <tbody>";
+   
+	 
+   
+	  while ($row = mysql_fetch_array($result)) 
+	  {
+	  
+		  
+	  if($row["is_printable"]==1){
+		  $stato="OK";
+	  }else{
+		  $stato="";
+	  }	  
+		  
+		  
+		  
+	  $mio_valore =valore_totale_mio_ordine_lordo($row["id_ordini"],$id_user);    
+	  $tot_ordine = $c12 = valore_totale_lordo_ordine($row["id_ordini"]);
+	  unset ($user_level);
+	  
+	  
+	  
+	  if($mio_valore>0){
+		  $user_level = "Utente;<br> ";
+		  $u_par = "SI";
+	  }else{
+		  unset($u_par);
+	  }
+	  if (id_referente_ordine_proprio_gas($row["id_ordini"],id_gas_user($id_user))==$id_user){
+		$user_level .= "Ref. GAS;<br> ";
+		$u_gas ="SI"; 
+	  }else{
+		  unset($u_gas);
+	  }
+	
+	  if (id_referente_ordine_globale($row["id_ordini"])==$id_user){  
+			$user_level .= "Ref. ORDINE;";
+			$u_ref ="SI"; 
+	  }else{
+		  unset($u_ref);
+	  }	  
+	  
+	  if(isset($u_par) | isset($u_gas) | isset($u_ref)){
+	  
+		  
+	  if(dareavere_check_ordine($row["id_ordini"],$id_user)=="1"){
+		  $selected = " CHECKED ";
+	  }else{
+		  $selected = "";
+	  }
+		  
+	  $selezione = "<input type='checkbox' name='box_dareavere[]' value='".$row["id_ordini"]."' $selected>";	 
+	  $h_table.= '<tr>
+						<td>
+						'.$row["id_ordini"].'
+						</td>
+						<td>
+						'.$row["descrizione_ordini"].'
+						</td>
+						<td>
+						'.$stato.'
+						</td>
+						<td>
+							'.($user_level).'
+						</td>
+						<td>
+							'.gas_user($row["id_utente"]).'
+						</td>
+						<td>
+							'.$mio_valore.'
+						</td>
+						<td>
+							'.$tot_ordine.'
+						</td>
+						<td>
+							'.conv_date_from_db($row["data_chiusura"]).'
+						</td>
+						<td>
+							'.$selezione.'
+						</td>
+					</tr>';
+					
+	  }//se ho acquistato qualcosa               
+   }
+	  $h_table .= '
+	  </tbody>
+	  </table>
+	  </div>
+	  
+	  <div>
+		<h4>2</h4>
+		<label for="submit">e infine... </label>
+		<input type="submit" name="submit" value="Conferma la selezione" align="center" >
+		<input type="hidden" name="do" value="mod">
+		</div>
+	  </form>
+	  </div>';
+  
+	   
+	  // END TABELLA ----------------------------------------------------------------------------
+	  return $h_table;     	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+ }
+ function dareavere_do_form_select($box_dareavere){
+	global $db,$id_user;
+	
+	if(isset($box_dareavere)){
+	//Cancello il vacchio dareavere
+	$result = $db->sql_query("DELETE FROM retegas_dareavere WHERE id_utente='$id_user';");
+	
+	
+	//passo tutti i box e aggiungo il dareavere corrispondente.
+	while (list ($key,$val) = @each ($box_dareavere)) {
+	$result = $db->sql_query("INSERT INTO retegas_dareavere (
+										id_utente,
+										id_ordine,
+										data_dareavere)
+										VALUES
+										(
+										$id_user,
+										$val,
+										now());");	
+	$quanti++;    
+		
+	}    
+	
+		$msg = "Inseriti $quanti ordini nel dare-avere";
+	
+	}else{
+		$msg = "Nessun ordine selezionato";        
+	}
+	
+   return $msg; 
+ }
+ 
+ function dareavere_render_table_full($id_user){
+	 global $db,$RG_addr;
+	 global $somma_dare,$somma_avere;
+	 $query = "SELECT * FROM retegas_dareavere WHERE id_utente='$id_user';";
+	 $res = $db->sql_query($query);
+	 
+	 $h .='<div class="rg_widget rg_widget_helper">
+           <h3>Dareavere attuale</h3>';
+     
+	 while ($row = mysql_fetch_array($res)){
+	 
+	 //io cosa sono
+	 $mio_valore =valore_totale_mio_ordine_lordo($row["id_ordine"],$id_user);    
+	  $tot_ordine = $c12 = valore_totale_lordo_ordine($row["id_ordine"]);
+	  unset ($user_level);
+	  
+	  
+	  
+	  if($mio_valore>0){
+		  $user_level = "Utente; ";
+		  $u_par = "SI";
+	  }else{
+		  unset($u_par);
+	  }
+	  if (id_referente_ordine_proprio_gas($row["id_ordine"],id_gas_user($id_user))==$id_user){
+		$user_level .= "Ref. GAS; ";
+		$u_gas ="SI"; 
+	  }else{
+		  unset($u_gas);
+	  }
+	
+	  if (id_referente_ordine_globale($row["id_ordine"])==$id_user){  
+			$user_level .= "Ref. ORDINE;";
+			$u_ref ="SI"; 
+	  }else{
+		  unset($u_ref);
+	  }	 
+		 
+	  //io cosa sono  
+	 
+	 
+	 
+		 
+	 $h .= '<div>
+			  <h3>#'.$row["id_ordine"].', "'.descrizione_ordine_from_id_ordine($row["id_ordine"]).'", <span class="small_link">Di cui sono :'.$user_level.'</span></h3>
+			  '.dareavere_render_table_ordine($row["id_ordine"],$id_user).'<hr>
+			  <table>
+			  <tr>
+			   <td style="width:20%"></td>
+			   <td style="width:20%"><b>'.valore_totale_mio_ordine_lordo($row["id_ordine"],$id_user).'</b></td>
+			   <td style="width:20%"><b>'.$somma_avere.'</b></td>
+			   <td style="width:20%"><b></b></td>
+			   </tr>
+			  </table> 
+			</div>';	 
+
+	 }
+
+	 $h.="</div>";
+     
+	 return $h;
+	 
+	 
+ }
+
+function dareavere_render_table_ordine($id_ordine,$id_user){
+	global $db,$somma_avere;
+	$id_gas=id_gas_user($id_user);
+	//echo "ORDINE -> $id_ordine, USER = $id_user<br>";
+	$somma_avere=0;
+	unset($query);
+	
+	if ($id_user == id_referente_ordine_proprio_gas($id_ordine,$id_gas)){
+	$query = "SELECT
+				retegas_dettaglio_ordini.id_ordine,
+				maaking_users.fullname,
+				maaking_users.userid,
+				Sum(retegas_dettaglio_ordini.qta_arr * retegas_articoli.prezzo) AS pippo
+				FROM
+				retegas_dettaglio_ordini
+				Inner Join retegas_articoli ON retegas_dettaglio_ordini.id_articoli = retegas_articoli.id_articoli
+				Inner Join maaking_users ON retegas_dettaglio_ordini.id_utenti = maaking_users.userid
+				WHERE
+				retegas_dettaglio_ordini.id_ordine =  '$id_ordine' AND
+				maaking_users.id_gas =  '$id_gas'
+				GROUP BY
+				retegas_dettaglio_ordini.id_ordine,
+				maaking_users.fullname,
+				maaking_users.userid";
+	
+	}
+	
+	$h = '<table>
+		  <tr>
+		  <th style="width:20%">Utente :</th>
+		  <th style="width:20%">DARE</th>
+		  <th style="width:20%">AVERE</th>
+		  <th style="width:20%">&nbsp;</th>
+		  </tr>';
+	
+	$res = $db->sql_query($query);
+	
+	if(!is_null($query)){
+		while ($row = mysql_fetch_array($res)){
+			$h .= '<tr>
+				   <td>'.$row["fullname"].'</td>
+				   <td></td>
+				   <td>'.valore_totale_mio_ordine_lordo($id_ordine,$row["userid"]).'</td>
+				   <td></td>
+				   </tr>	';
+			$somma_avere = $somma_avere + valore_totale_mio_ordine_lordo($id_ordine,$row["userid"]);       	
+		}
+	}
+	if(valore_totale_mio_ordine_lordo($id_ordine,$id_user)>0){
+			   $h .= '<tr>
+			   <td>'.fullname_from_id(id_referente_ordine_proprio_gas($id_ordine,$id_gas)).'</td>
+			   <td>'.valore_totale_mio_ordine_lordo($id_ordine,$id_user).'</td>
+			   <td></td>
+			   <td></td>
+			   </tr>    ';     
+	
+	}
+	
+		  
+	$h.='</table>';
+	
+	return $h;
+}  
+?>

@@ -1,0 +1,39 @@
+<?php
+  
+  include_once ("../rend.php");
+  
+  
+  if (is_logged_in($user)){
+	 $cookie_read = explode("|", base64_decode($user));
+		$id_user = $cookie_read[0];
+		$username =$cookie_read[1];
+		//$gas = id_gas_user($id_user);
+		//$gas_name = gas_nome($gas); 
+	   
+	  
+  // QUERY
+	  $vid_link = sanitize($vid_link);
+	  $my_query="SELECT retegas_bacheca.*
+				FROM retegas_bacheca
+				WHERE
+				id_bacheca='$vid_link';";
+  
+	  $result = $db->sql_query($my_query);   
+	  $row = $db->sql_fetchrow($result);
+	  
+	  $fn = fullname_from_id($row["id_utente"]);
+	  $h .= '<span style="text-size=0.7em">'.$fn.' scrive:</span>';  
+	  $h .= '<h3>'.$row["titolo_messaggio"].'</h3>';
+	  $h .= '<div>'.$row["messaggio"].'</div>';
+	  
+	  echo $h;
+	  
+	  
+	  
+	  
+	  
+  }
+  
+	
+
+?>

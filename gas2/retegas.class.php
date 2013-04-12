@@ -38,6 +38,8 @@ public $header_sito;
 public $menu_sito =array();
 public $messaggio ="";
 public $user ="";
+public $disqus_id = "";
+public $disqus_title = "";
 public $has_bookmark=false;
 
 //IDs
@@ -305,8 +307,9 @@ $h.= "
                     <span class=\"small_link \">Posizione: </span>".$params["page_title"].";  
                     ".$credito."
                     </div>
-                    <div style=\"clear:both\"> </div>
+                    <div style=\"clear:both\"></div>
                     ";
+$h.="</div>";
 $h.="</div>";
 $h2.='<div class="ui-state-error ui-corner-all padding_6px" style="margin-top:10px"><b>ATTENZIONE :</b> In data 16/12/2010 è stata redatta una nuova versione del dlsclaimer di questo sito. Siete tutti invitati a leggerla attentamente, e 
 a mandarmi una segnalazione nel caso non siate disposti ad accettarla, in modo da poter rimuovere il vostro account.<br>
@@ -323,6 +326,8 @@ $h.= "<div style=\"font-size:1.3em; text-align:left;\"><a class=\"small awesome 
 ";
 $h.="</div>";    
 }
+
+
 return $h;    
 }
 
@@ -559,6 +564,10 @@ global $RG_addr,$db;
                                     <div class=\"menu_lat_container ui-corner-bottom\">
                                         <a href=\"".$RG_addr["ci_geo_oggetti"]."\">Oggetti vicini</a>
                                     </div>
+                                    <div class=\"menu_lat_divider ui-corner-top\">GAS</div>
+                                    <div class=\"menu_lat_container ui-corner-bottom\">
+                                        <a href=\"".$RG_addr["ci_gas_oggetti"]."\">Nel mio GAS</a>
+                                    </div>
                                     
                                     <div class=\"menu_lat_divider ui-corner-top\" ".rg_tooltip("Cerca un oggetto tra quelli barattabili con cose(in)utili").">Cerca Oggetti</div>
                                     <div class=\"menu_lat_container ui-corner-bottom\">
@@ -682,13 +691,10 @@ return $h;
 
 private function draw_html_footer($extra_msg = null){
 
-$h  = "<div id=\"pageFooterOuter\">
-       prova di footer  
-       </div>";
-       
-return $h;
         
 }
+
+
 public function initialize_user($user){
 	  $this->user = $user;
 	  $cookie_read = explode("|", base64_decode($this->user));
@@ -899,6 +905,7 @@ $h .='<div id="container">';
         
 	if (in_array("contenuti",$this->sezioni)){      
 		$h .='<div id="content">';
+            
 		if (in_array("menu",$this->sezioni)){
 			$h .='<div id="menu_hor" style="padding-bottom:2em;">
 					<ul class="sf-menu">';
@@ -908,7 +915,20 @@ $h .='<div id="container">';
                             }
                         }
 			$h .='  </ul>
-				  </div><br><hr id="linea_sotto_menu">';
+				  </div>
+                  <br><hr id="linea_sotto_menu">';
+                  //DISQUS
+                    //if($this->disqus_id<>""){
+                    if(false){
+                    $c = "<div style=\"font-size:.92em;width:98%\">";
+                    $c2 .="<a href=\"http://disqus.com\" class=\"dsq-brlink\">Commenti gestiti by <span class=\"logo-disqus\">Disqus</span></a>";
+                    $c .="<p><strong>NB:</strong>I commenti, le opinioni e tutto quello inserito attraverso DISQUS sono da considerarsi pubblici.</p>";
+                    $c .= "<div id=\"disqus_thread\" style=\"height:30em;overflow-y:auto;padding:1em;\"></div>";
+                    $c .= "</div>";    
+                        
+                    $h .= rg_toggable($this->disqus_title."  <a style=\"font-weight:normal;\" class=\"small_link\" href=\"#disqus_thread\" data-disqus-identifier=\"".$this->disqus_id."\"></a>","dsq",$c,false);    
+                                 
+                    }
 		}
 		$h .= $this->content; 
 		$h .='</div>';
@@ -944,6 +964,30 @@ $h .= $debug_html;
 $h2 .= "<script>$('form#rg').submit(function(e){
 $(this).children('input[type=submit]').attr('disabled', true);
 });</script>";
+
+//DISQUS
+if($this->disqus_id<>""){
+    $h .="<script type=\"text/javascript\">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'reteDes'; // required: replace example with your forum shortname
+            var disqus_identifier = '".$this->disqus_id."';
+            var disqus_url = window.location.href+'/#".$this->disqus_id."';
+            console.log(disqus_url);
+             
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+            (function () {
+                var s = document.createElement('script'); s.async = true;
+                s.type = 'text/javascript';
+                s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+                (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+                }());
+        </script>";
+    }    
 $h .= '</body>';
 $h .= '</html>';
 
@@ -1205,6 +1249,8 @@ public $menu_orizzontale = array();
 public $messaggio = null;
 public $contenuto = null;
 public $body_tags = null;
+public $disqus_id = null;
+public $disqus_title =null;
 public $javascripts = array();
 public $javascripts_header = array();
 
@@ -1218,6 +1264,7 @@ $rg->css = $rg->css_standard;
 $rg->has_bookmark = $this->has_bookmark;
 $rg->java_headers = array("rg");
 $rg->body_tags = $this->body_tags;
+$rg->disqus_id = $this->disqus_id;
 
 
 //HEADER  
@@ -1526,6 +1573,7 @@ class rg_form_select{
 public $value="";
 public $size ="";
 public $name="";
+public $selected = "";
 public $name_for_label="";
 public $help="";
 public $label="";

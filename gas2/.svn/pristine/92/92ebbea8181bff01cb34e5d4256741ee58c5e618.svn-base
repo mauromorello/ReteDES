@@ -1,0 +1,1413 @@
+<?php
+
+//Funzionamento menù
+//Il menù è una gerarchia di UL LI
+//Usano Jquery & Superfish per essere trasformati e visualizzati
+//I menù sono divisi in settori, in modo da poter essere chiamati da gruppi di pagine
+//la funzione COSASONO_menu_completo Raggruppa tutti i menù di un tipo di pagine
+//In uscita c'è un array di elementi, che verranno disegnati da retegas->render
+//
+//Invece, ogni singola voce di menù esce come html semplice
+
+
+//-------------------------------------------------CASSA
+ function gas_menu_gestisci_cassa(){
+  
+      global $RG_addr;
+
+      $h_menu .= cassa_mia();
+
+  if(_USER_PERMISSIONS & perm::puo_gestire_la_cassa){     
+
+      
+            $h_menu .= cassa_amministra_cassa();
+            $h_menu .= cassa_amministra_utenti();
+            $h_menu .= cassa_amministra_gas();
+     
+
+  } 
+
+  
+
+  return $h_menu;       
+
+  }
+ 
+ function cassa_mia(){
+    global $RG_addr;
+     
+    if(_USER_USA_CASSA){
+    $h_menu ='<li><a class="medium green awesome" href="#"><b>Mia Cassa</b></a>';
+            $h_menu .='<ul>';
+                
+                $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["movimenti_user_raggr"].'" >Raggruppamento</a></li>';
+                $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["movimenti_cassa_users"].'">Dettaglio</a></li>';
+     
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+    
+    
+    }
+    return $h_menu; 
+ }
+ function cassa_amministra_utenti(){
+    global $RG_addr;
+    
+    
+     
+    if(_USER_PERMISSIONS & perm::puo_gestire_la_cassa){
+    $h_menu ='<li><a class="medium red awesome" href="#"><b>Utenti</b></a>';
+            $h_menu .='<ul>';
+                
+                $h_menu .='<li><a class="medium red awesome" href="'.$RG_addr["add_credits_multi"].'" >Aggiungi credito multiplo</a></li>';
+                $h_menu .='<li><a class="medium red awesome" href="'.$RG_addr["situazione_cassa_users"].'">Saldi Utenti</a></li>';
+     
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+    
+    
+    }
+    return $h_menu; 
+ }
+ function cassa_amministra_gas(){
+    global $RG_addr;
+     
+    if(_USER_PERMISSIONS & perm::puo_gestire_la_cassa){
+    $h_menu ='<li><a class="medium yellow awesome" href="#"><b>Gas</b></a>';
+            $h_menu .='<ul>';
+                
+                $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["movimenti_cassa_gas"].'">Movimenti GAS</a><li>';
+                
+                if(_USER_PERMISSIONS & perm::puo_gestire_retegas){
+                    $h_menu .='<li><a class="medium black awesome" href="'.$RG_addr["movimenti_cassa_gas"].'">Tutti i Movimenti ReteGas</a><li>';
+                    $h_menu .='<li><a class="medium black awesome" href="'.$RG_addr["cassa_del_mov_gas"].'">Cancella tutti i movimenti del tuo GAS</a><li>';
+
+                }
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+    
+    
+    }
+    return $h_menu; 
+ }     
+ function cassa_amministra_cassa(){
+    global $RG_addr;
+     
+    if(_USER_PERMISSIONS & perm::puo_gestire_la_cassa){
+     $h_menu ='<li><a class="medium celeste awesome" href="#"><b>Cassa</b></a>';
+            $h_menu .='<ul>';
+                $h_menu .='<li><a class="medium celeste awesome" href="'.$RG_addr["cassa_gas_panel"].'" >Pannello Cassa</a></li>';
+                $h_menu .='<li><a class="medium celeste awesome" href="'.$RG_addr["cassa_options"].'" >Opzioni Cassa</a></li>';
+                $h_menu .='<li><a class="medium red awesome" href="'.$RG_addr["cassa_movimenti_reg"].'">Movimenti Da Registrare</a><li>';
+                $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["cassa_movimenti_con"].'">Movimenti Da Contabilizzare</a><li>';
+        
+                //$h_menu .='<li><a class="medium celeste awesome" href="">Altro</a><li>';        
+                
+     
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+    
+    
+    } 
+    return $h_menu;
+ } 
+
+
+
+//-------------------------------------------------DES
+function des_menu_completo($id_user){
+
+      $mio_menu[] = des_menu_grafici($id_user); 
+      //$mio_menu[] = des_menu_comunica($id_user);
+      $mio_menu[] = des_menu_partecipazione_ordini($id_user);
+      $mio_menu[] = des_menu_geo($id_user);
+      
+  return $mio_menu;    
+
+};
+function des_menu_grafici($id_user){
+      
+      global $RG_addr;
+
+      if(_USER_PERMISSIONS & perm::puo_vedere_retegas){
+            
+            $h_menu ='<li><a class="medium green awesome"><b>Visualizza</b></a>'; 
+
+            $h_menu .='<ul>'; 
+            $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["gas_table"].'" target="_self">Gas iscritti</a></li>';
+            $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["grafico_global_mon_all"].'" target="_self">Comparativo ordini tutti i GAS</a></li>';                                    
+            
+            $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["retegas_rec_act"].'" target="_self">Attività utenti</a></li>';                                        
+            $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["retegas_perc_ut"].'" target="_self">Attività sito</a></li>';
+            $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["des_dimensione_gas"].'" target="_self">Dimensioni GAS</a></li>';
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+      }
+      
+
+      return $h_menu;
+
+  }
+function des_menu_comunica($id_user){
+      
+      global $RG_addr;
+
+      $id_gas = id_gas_user($id_user);
+      $permission = leggi_permessi_utente($id_user);
+      if($permission & perm::puo_vedere_retegas){
+
+            $h_menu ='<li><a class="medium magenta awesome"><b>Comunica</b></a>'; 
+
+            $h_menu .='<ul>'; 
+            //$h_menu .='<li><a class="medium magenta awesome" href="'.$RG_addr[""].'" >Gruppo Google DES</a></li>';
+            $h_menu .='<li><a class="medium magenta awesome" href="'.$RG_addr["gas_com_prg_des"].'" >Gruppo Retegas DES</a></li>';                                    
+            $h_menu .='<li><a class="medium magenta awesome" href="'.$RG_addr["gas_com_gas"].'" >Tutti gli utenti del tuo GAS</a></li>';
+            $h_menu .='<li><a class="medium magenta awesome" href="'.$RG_addr["gas_com_retegas"].'" >Tutti gli utenti di ReteGas.AP</a></li>';
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+      }
+      
+
+      return $h_menu;
+
+  }
+function des_menu_partecipazione_ordini($id_user){
+      
+      global $RG_addr;
+
+      $icona_grafico = '<img SRC ="'.$RG_addr["img_icona_grafico"].'" width="20px" height="20px" alt="icona grafico" style="padding-right:1em;">';
+      
+      $id_gas = id_gas_user($id_user);
+      
+      if(_USER_PERMISSIONS & perm::puo_vedere_retegas){
+
+            $h_menu ='<li><a class="medium yellow awesome"><b>Ordini</b></a>'; 
+            $h_menu .='<ul>';                                         
+                $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["des_quanti_gestiscono"].'" target="_self">Utenti / Gestori</a></li>';
+                $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["des_quanti_ordini_gas"].'" target="_self">Quanti ordini proposti</a></li>';
+                $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["des_tipologie_acquisti"].'" target="_self">Tipologie di acquisti</a></li>';
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+      }
+      
+
+      return $h_menu;
+
+  }  
+function des_menu_geo($id_user){
+      
+      global $RG_addr;
+            
+            $h_menu ='<li><a class="medium blue awesome"><b>GeoCose</b></a>'; 
+
+                $h_menu .='<ul>'; 
+                    $h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["des_geo_dimensioni_gas"].'" >Dimensioni GAS</a></li>';
+                    $h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["des_geo_ultimi_ordini"].'" >Ultimi ordini</a></li>';
+                $h_menu .='</ul>';
+            $h_menu .='</li>';
+      
+      
+
+      return $h_menu;
+
+  }  
+  
+
+//------------------------------------------------AMMINISTRA
+function amministra_menu_users(){
+    global $RG_addr;
+
+        
+        $h_menu ='<li><a class="medium red awesome"><b>Utenti</b></a>'; 
+            $h_menu.='<ul>';
+                $h_menu .='<li><a class="medium red awesome" href="'.$RG_addr["amministra_ute_tutti"].'" target="_self">Tutti</a></li>';
+                //$h_menu .='<li><a class="medium red awesome" href="'.$RG_addr["amministra_all_users"].'?do=not_act" target="_self">In dolce attesa</a></li>';
+                $h_menu .='<li><a class="medium red awesome" href="'.$RG_addr["amministra_ute_last_act"].'" target="_self">Attivi di recente</a></li>';
+                $h_menu .='<li><a class="medium red awesome" href="'.$RG_addr["amministra_ute_storti"].'" target="_self">Cose strane</a></li>';
+                $h_menu .='<li><a class="medium red awesome" href="'.$RG_addr["amministra_ute_temi"].'" target="_self">Temi</a></li>';
+                $h_menu .='<li><a class="medium red awesome" href="'.$RG_addr["amministra_ute_widg"].'" target="_self">Widgets</a></li>';
+                $h_menu .='<li><a class="medium red awesome" href="'.$RG_addr["amministra_ute_not_act"].'" target="_self">Utenti NON attivi</a></li>';
+            $h_menu .='</ul>';  // Visualizza
+        $h_menu .='</li>';
+        
+        return $h_menu;
+ }
+function amministra_menu_log(){
+global $RG_addr;
+    
+$h_menu .='<li><a class="medium green awesome"><b>LOG</b></a>'; 
+$h_menu .='<ul>';
+     
+     $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["amministra_log_all"].'">Tutti</a></li>';
+     
+$h_menu .='</ul>';
+$h_menu .='</li>';
+return $h_menu;     
+} 
+function amministra_menu_007(){
+    global $RG_addr;
+        $h_menu ='<li><a class="medium black awesome"><b>007</b></a>'; 
+            $h_menu.='<ul>';
+                $h_menu .='<li><a class="medium black awesome" href="'.$RG_addr["amministra_infiltrati"].'" target="_self">Infiltrati</a></li>';
+            $h_menu .='</ul>';  // Visualizza
+        $h_menu .='</li>';    
+
+        return $h_menu;
+}
+function amministra_menu_gas(){
+    global $RG_addr;
+        $h_menu ='<li><a class="medium yellow awesome"><b>GAS</b></a>'; 
+            $h_menu.='<ul>';
+                $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["amministra_nuovo_gas"].'" target="_self">Nuovo GAS</a></li>';
+                $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["amministra_gas_table_opt"].'" target="_self">Opzioni GAS</a></li>';
+
+            $h_menu .='</ul>';  // Visualizza
+        $h_menu .='</li>';    
+
+        return $h_menu;
+}
+function amministra_menu_geocoding(){
+    global $RG_addr;
+        $h_menu ='<li><a class="medium marrone awesome"><b>GEO</b></a>'; 
+            $h_menu.='<ul>';
+                $h_menu .='<li><a class="medium marrone awesome" href="'.$RG_addr["amministra_geocoding"].'" target="_self">Aggiorna id Geocoding</a></li>';
+                $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["gas_form_total"].'" target="_self">Geolocalizzazione</a></li>';
+                $h_menu .='<li><a class="medium brown awesome" href="'.$RG_addr["ci_presentazione"].'" target="_self">Pres Cose(in)Utili</a></li>';
+                $h_menu .='<li><a class="medium brown awesome" href="'.$RG_addr["ci_register"].'" target="_self">Reg Cose(in)Utili</a></li>';
+               // $h_menu .='<li><a class="medium brown awesome" href="'.$RG_addr["amministra_upd_geo"].'?do=gas" target="_self">Aggiorna Geo GAS</a></li>';
+               // $h_menu .='<li><a class="medium brown awesome" href="'.$RG_addr["amministra_upd_geo"].'?do=ditte" target="_self">Aggiorna Geo Ditte</a></li>';
+            $h_menu .='</ul>';  
+        $h_menu .='</li>';    
+
+        return $h_menu;
+}
+function amministra_menu_opt(){
+global $RG_addr;   
+    
+    $h_menu .='<li><a class="medium blue awesome"><b>Opt.</b></a>'; 
+    $h_menu .='<ul>';
+     
+     $h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["amministra"].'?do=m_ON" target="_self">Mailer ON</a></li>';
+     $h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["amministra"].'?do=m_OFF" target="_self">Mailer OFF</a></li>';
+     //$h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["amministra"].'?do=geocode" target="_self">Geocode</a></li>';
+     $h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["amministra"].'?do=d_ON" target="_self">Debug ON</a></li>';
+     $h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["amministra"].'?do=d_OFF" target="_self">Debug OFF</a></li>';
+     $h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["amministra_option_table"].'" >OPZIONI</a></li>';
+    
+$h_menu .='</ul>';
+$h_menu .='</li>'; 
+return $h_menu;
+} 
+function amministra_menu_ordini(){
+global $RG_addr;   
+    
+    $h_menu .='<li><a class="medium beige awesome"><b>Ord.</b></a>'; 
+    $h_menu .='<ul>';
+     
+     $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["amministra_integrita_ordine"].'" target="_self">Integrità Ordini</a></li>';
+     $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["amministra_ordini_tutti"].'" target="_self">Tutti gli ordini</a></li>';
+     $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["amministra_log_ordine_singolo"].'" target="_self">LOG ordine seingolo</a></li>';
+
+ //$h_menu .='<li><a class="medium blue awesome" href="'.$pa.'amministra_options_table.php" target="_self">OPZIONI</a></li>';
+    
+$h_menu .='</ul>';
+$h_menu .='</li>'; 
+return $h_menu;
+}
+function amministra_menu_db(){
+global $RG_addr;   
+    
+    $h_menu .='<li><a class="medium orange awesome"><b>DB</b></a>'; 
+    $h_menu .='<ul>';
+     
+     $h_menu .='<li><a class="medium orange awesome" href="'.$RG_addr["amministra_rel_db"].'?do=dis" >Distribuzione Orfana</a></li>';
+     $h_menu .='<li><a class="medium orange awesome" href="'.$RG_addr["amministra_rel_db"].'?do=o_s_l" >Ordini orfani</a></li>';
+     $h_menu .='<li><a class="medium orange awesome" href="'.$RG_addr["amministra_rel_db"].'?do=art" >Articoli orfani</a></li>';
+     //$h_menu .='<li><a class="medium orange awesome" href="'.$RG_addr["amministra_ordini_tutti"].'" target="_self">Tutti gli ordini</a></li>';
+
+ //$h_menu .='<li><a class="medium blue awesome" href="'.$pa.'amministra_options_table.php" target="_self">OPZIONI</a></li>';
+    
+$h_menu .='</ul>';
+$h_menu .='</li>'; 
+return $h_menu;
+}       
+function amministra_menu_completo(){
+
+  $mio_menu[] = amministra_menu_users(); 
+  $mio_menu[] = amministra_menu_gas();
+  $mio_menu[] = amministra_menu_geocoding();
+  $mio_menu[] = amministra_menu_007();
+  $mio_menu[] = amministra_menu_log();
+  $mio_menu[] = amministra_menu_opt();
+  $mio_menu[] = amministra_menu_ordini();
+  $mio_menu[] = amministra_menu_db();
+  // _USER_PERMISSION E' LETTA IN FASE DI LOGIN (fun_users -> is_logged_in($id_user))
+  
+  if(_USER_PERMISSIONS & perm::puo_gestire_retegas){
+      return $mio_menu;
+  }else{
+      return;
+  }        
+
+};
+
+
+
+//------------------------------------------------STATISTICHE
+
+
+
+function storici_menu_personali(){
+        
+        global $RG_addr;
+  
+     
+        
+        $h_menu ='<li><a class="medium green awesome"><b>Personali</b></a>'; 
+        $h_menu.='<ul>';
+        $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["storici_miei_ordini"].'" target="_self">Ordini effettuati</a></li>';
+        $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["storici_ditte_mie"].'" target="_self">miei ordini su Ditte</a></li>';
+
+        $h_menu .='</ul>';  // Visualizza
+        $h_menu .='</li>';
+
+        return $h_menu;
+    }
+function storici_menu_gas(){
+        //echo "SON IN ESPORTA<br> locatione = $location";
+        global $RG_addr;
+
+        
+        
+            $h_menu ='<li><a class="medium yellow awesome"><b>GAS</b></a>'; 
+            $h_menu.='<ul>';
+            $h_menu.='<li><a class="medium yellow awesome">Storici ditte</a>';
+                $h_menu .='<ul>';
+                $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["storici_ditte_gas"].'" target="_self"><img SRC ="'.$RG_addr["img_icona_scheda"].'" width="20px" height="20px" alt="icona scheda" style="padding-right:1em;">Tabulare</a></li>';
+                $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["storici_ditte_gas_graf"].'" target="_self"><img SRC ="'.$RG_addr["img_icona_grafico"].'" width="20px" height="20px" alt="icona grafico" style="padding-right:1em;">Grafico</a></li>';                
+                $h_menu .='</ul>';
+            $h_menu .='</li>';
+            $h_menu.='<li><a class="medium yellow awesome">Storici famiglie</a>';
+                $h_menu .='<ul>';
+                $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["storici_fam_gas"].'" target="_self"><img SRC ="'.$RG_addr["img_icona_scheda"].'" width="20px" height="20px" alt="icona scheda" style="padding-right:1em;">Tabulare</a></li>';
+                $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["storici_fam_gas_graf"].'" target="_self"><img SRC ="'.$RG_addr["img_icona_grafico"].'" width="20px" height="20px" alt="icona grafico" style="padding-right:1em;">Grafico</a></li>';                
+                $h_menu .='</ul>';
+            $h_menu .='</li>';
+            $h_menu.='<li><a class="medium yellow awesome">Ordini GAS</a>';
+                $h_menu .='<ul>';
+                $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["storici_ordini_gas"].'" target="_self"><img SRC ="'.$RG_addr["img_icona_scheda"].'" width="20px" height="20px" alt="icona scheda" style="padding-right:1em;">Tabulare</a></li>';
+                //$h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["storici_fam_gas_graf"].'" target="_self"><img SRC ="'.$RG_addr["img_icona_grafico"].'" width="20px" height="20px" alt="icona grafico" style="padding-right:1em;">Grafico</a></li>';                
+                $h_menu .='</ul>';
+            $h_menu .='</li>';
+            $h_menu .='</ul>';  // Visualizza
+            $h_menu .='</li>';
+        
+        return $h_menu;
+    }   
+function storici_menu_completo(){
+
+  $mio_menu[] = storici_menu_personali(); 
+  $mio_menu[] = storici_menu_gas();
+  // _USER_PERMISSION E' LETTA IN FASE DI LOGIN (fun_users -> is_logged_in($id_user))
+  
+  if(_USER_PERMISSIONS & perm::puo_vedere_tutti_ordini){
+      return $mio_menu;
+  }else{
+      return;
+  }        
+
+};     
+
+
+//---------------------------------------------------DITTE
+function ditte_menu_visualizza(){
+        //echo "SON IN ESPORTA<br> locatione = $location";
+        global $RG_addr;
+ 
+        $h_menu ='<li><a class="medium green awesome"><b>Visualizza</b></a>'; 
+            $h_menu.='<ul>';
+            $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["tutte_le_ditte"].'" target="_self">Tutte le ditte</a></li>';
+            $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["mie_ditte"].'" target="_self">Mie ditte</a></li>';
+            $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["ditte_geo"].'" target="_self">Mappa ditte</a></li>';
+            $h_menu .='</ul>';  // Visualizza
+        $h_menu .='</li>';
+
+        return $h_menu;
+    }    
+function ditte_menu_statistiche($id_ditta=null){
+    global $RG_addr;
+        
+        if(($id_ditta)<>""){
+            
+            $h_menu ='<li><a class="medium celeste awesome"><b>Statistiche</b></a>'; 
+            $h_menu.='<ul>';
+            $h_menu .='<li><a class="medium celeste awesome" href="'.$RG_addr["ditte_form_stat_listini"].'?id_ditta='.$id_ditta.'" target="_self">Articoli infra-listini</a></li>';
+            $h_menu .='<li><a class="medium celeste awesome" href="'.$RG_addr["ditte_form_stat_ord_s"].'?id_ditta='.$id_ditta.'" target="_self">Valore ordini</a></li>';
+
+            $h_menu .='</ul>';  // Visualizza
+            $h_menu .='</li>';
+        }
+        return $h_menu;
+
+}
+function ditte_menu_modifica($id_ditta=null){
+    global $RG_addr;
+   
+        if(_USER_ID == ditta_user($id_ditta)){
+            $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["mod_ditta"].'?id='.$id_ditta.'"><b>Modifica Ditta</b></a></li>';
+        }
+
+        return $h_menu;    
+}    
+function ditte_menu_nuovo($id_ditta=null){
+    global $RG_addr;
+
+          
+        if((_USER_PERMISSIONS & perm::puo_creare_ditte) AND ($id_ditta=="")){
+            $h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["add_ditta"].'"><b>Nuova Ditta</b></a></li>';
+
+        }
+        if(isset($id_ditta) AND _USER_PERMISSIONS & perm::puo_creare_listini){
+            $h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["add_listino"].'?id='.$id_ditta.'"><b>Nuovo Listino</b></a></li>';
+        }
+        
+        return $h_menu;    
+}
+function ditte_menu_completo($id_ditta=null){
+
+   
+       $mio_menu[] = ditte_menu_visualizza();
+       $mio_menu[] = ditte_menu_statistiche($id_ditta);
+       $mio_menu[] = ditte_menu_nuovo($id_ditta);
+       $mio_menu[] = ditte_menu_modifica($id_ditta);
+
+       
+       
+        return $mio_menu;    
+}
+
+
+
+
+
+//--------------------------------------------------LISTINI
+  function listini_menu($user,$id=null){
+      
+  global $RG_addr;
+      
+  $cookie_read     =explode("|", base64_decode($user));
+    $id_user  =  $cookie_read[0];
+    $usr =       $cookie_read[1]; 
+    $my_user_level = user_level($id_user);
+    $permission = $cookie_read[6];      
+      
+//echo "CICCIA user level = $my_user_level<br>";
+      
+if ($my_user_level>=0){
+      // NUOVA ORDINE
+   
+if($permission AND perm::puo_creare_ordini){
+    if(listino_tipo($id)==0){
+        if(articoli_n_in_listino($id)>0){
+            if(listino_tempo_valido($id)){            
+             $h_menu .='<li><a class="medium beige awesome" href="#"><b>Nuovo ordine !</b></a>';
+             $h_menu .='<ul>';
+                $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["nuovo_ordine_simple"].'?id_listino='.$id.'">Semplice</a></li>';
+                $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["nuovo_ordine_completo"].'?id_listino='.$id.'">Completo</a></li>';      
+             $h_menu .='</ul>';
+             $h_menu .='</li>';
+        }
+        }
+    }
+}
+//NUOVO ORDINE
+
+}
+
+
+// ------------------------------------------------ARTICOLI
+
+if ($my_user_level>=0){
+        if(listino_proprietario($id)==$id_user){        
+            $h_menu .='<li><a class="medium orange awesome"><b>Aggiungi Articoli</b></a>'; 
+            $h_menu .='<ul>';
+                $h_menu .='<li><a class="medium orange awesome" href="../articoli/articoli_form_add.php?id='.$id.'" target="_self">Uno per volta</a></li>';
+                $h_menu .='<li><a class="medium orange awesome" href="'.$RG_addr["select_listino_maga"].'?id_listino='.$id.'" target="_self">Da un listino MAGAZZINO</a></li>';
+                $h_menu .='<li><a class="medium orange awesome">Tutti assieme</a>';
+                    $h_menu .='<ul>';               
+                        $h_menu .='<li><a class="medium orange awesome" href="'.$pa.'listini_form_upload.php?id='.$id.'&tipo_file=XLS" target="_self">File MS EXCEL (.XLS)</a></li>';
+                        $h_menu .='<li><a class="medium orange awesome" href="'.$pa.'listini_form_upload.php?id='.$id.'&tipo_file=CSV" target="_self">File CSV (Tabella di testo)</a></li>';
+                        $h_menu .='<li><a class="medium orange awesome" href="'.$pa.'listini_form_upload.php?id='.$id.'&tipo_file=GOO" target="_self">OnLine (Google Docs)</a></li>';
+                    $h_menu .='</ul></li>';
+               
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+        }   
+}
+// ------------------------------------------------ARTICOLI
+
+
+// ------------------------------------------------Operazioni
+
+if ($my_user_level>=0){
+
+                  
+            $h_menu .='<li><a class="medium yellow awesome"><b>Operazioni</b></a>'; 
+            $h_menu .='<ul>';
+            $h_menu .='<li><a class="medium yellow awesome" href="'.$pa.'listini_form_clone.php?id='.$id.'" target="_self">Clona questo listino</a></li>';
+                 // OPZIONI SCHEDA
+                //$h_menu .='<li><a class="medium beige awesome" href="'.$pa.'listini_form_clone.php?id='.$id.'" target="_self">Clona questo listino</a></li>';
+                //$opt1 .="<a class=\"small yellow awesome destra\" href=\"listini_form_edit.php?id=$id\">Modifica scheda</a>";
+                
+             if(listino_proprietario($id)==$id_user){
+                 $h_menu .='<li><a class="medium yellow awesome" href="'.$pa.'listini_form_edit.php?id_listini='.$id.'" target="_self">Modifica intestazione listino</a></li>';
+
+                 if(articoli_n_in_listino($id)==0){
+                    //$opt2 .="<a class=\"small awesome destra\" href=\"listini_form_delete.php?id=$id\">Elimina scheda</a>";
+                    $h_menu .='<li><a class="medium red awesome" href="'.$pa.'listini_form_delete.php?id_listino='.$id.'" target="_self">Elimina questo listino</a></li>';
+                 }else{
+                     
+                 $h_menu .='<li><a class="medium yellow awesome">Operazioni sugli articoli</a>';
+                    $h_menu .='<ul>';               
+                        $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["delete_articoli"].'?id_listini='.$id.'" target="_self">Cancella alcuni articoli da questo listino</a></li>';
+                        $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["modifica_prz_alc_art"].'?id_listini='.$id.'" target="_self">Modifica i prezzi di alcuni articoli</a></li>';
+                        $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["modifica_dsc_alc_art"].'?id_listini='.$id.'" target="_self">Modifica la descrizione di alcuni articoli</a></li>';
+                        if(quanti_ordini_per_questo_listino($id)==0){
+                            $h_menu .='<li><a class="medium red awesome" href="'.$pa.'listini_form_empty.php?id='.$id.'" target="_self">Svuota questo listino</a></li>';
+                        }
+                    $h_menu .='</ul></li>';    
+                     
+                     
+                     
+                 }
+                 
+                 
+                 
+                 
+
+             }
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+         
+   
+}
+// ------------------------------------------------Esporta
+        
+            $h_menu .='<li><a class="medium silver awesome"><b>Esporta</b></a>'; 
+            $h_menu .='<ul>';
+            $h_menu .='<li><a class="medium silver awesome" href="'.$RG_addr["listini_export"].'?id='.$id.'&type=1" target="_blank">File Excel</a></li>';
+            $h_menu .='<li><a class="medium silver awesome" href="'.$RG_addr["listini_export"].'?id='.$id.'&type=2" target="_blank">Tabella HTML</a></li>';
+            //$h_menu .='<li><a class="medium silver awesome" href="'.$RG_addr["listini_export"].'?id='.$id.'&type=3" target="_blank">File CSV</a></li>';
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+
+
+
+            
+return $h_menu;            
+              
+  }
+  
+  
+  
+//----------------------------------------------------GAS
+  function gas_menu_nuovi_utenti(){
+
+      if((_USER_PERMISSIONS & perm::puo_gestire_utenti)){
+
+            $h_menu ='<li><a class="medium beige awesome" href="gas_utente_add.php"><b>Crea nuovo utente</b></a></li>';
+
+      }
+
+      return $h_menu;
+
+  }
+  function gas_menu_visualizza(){
+      
+      global $RG_addr;
+      
+
+
+            $h_menu ='<li><a class="medium green awesome"><b>Visualizza</b></a>'; 
+
+            $h_menu .='<ul>';
+
+            $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["gas_form"].'" target="_self">Scheda</a>';
+            $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["grafico_global_mon"].'" target="_self">Grafico Spesa</a></li>';
+            $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["gas_users"].'" target="_self">Tabella Utenti</a></li>';
+            $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["gas_composizione"].'" target="_self">Composizione</a></li>';
+
+                    
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+
+      
+
+      return $h_menu;
+
+  }
+  function gas_zeus(){
+
+
+
+      $h_menu ='<li><a class="medium black awesome" href="gas_form_total.php"><b>Geo Utenti</b></a></li>';
+
+
+
+      
+
+      return $h_menu;
+
+  }
+  function gas_menu_gestisci_gas(){
+
+  global $RG_addr;
+
+
+  
+
+  if((_USER_PERMISSIONS & perm::puo_creare_gas)){      
+
+            $h_menu ='<li><a class="medium yellow awesome" href="#"><b>Gestisci GAS</b></a>';   
+
+            $h_menu .='<ul>';
+
+                    $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["gas_modifica"].'" target="_self">Modifica dati</a></li>'; 
+                    $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["gas_perm_new_users"].'" target="_self">Gestisci permessi nuovi utenti</a></li>';
+                    $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["gas_option_sito"].'" target="_self">Gestisci opzioni GAS</a></li>';
+
+            $h_menu .='</ul>';
+
+            $h_menu .='</li>';
+
+  
+
+  } 
+
+  
+
+  return $h_menu;       
+
+  }
+  function gas_menu_gestisci_utenti(){
+      global $RG_addr;
+ 
+      if(_USER_PERMISSIONS & perm::puo_gestire_utenti){     
+
+        $h_menu ='<li><a class="medium beige awesome" href="#"><b>Gestisci Utenti</b></a>';
+        $h_menu .='<ul>';
+            
+            //$h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["gas_users"].'">Utenti tuo GAS</a></li>';
+            $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["gas_users"].'">Utenti Attivi</a>';
+                $h_menu .='<ul>';
+                    //$h_menu .='<li><a class="medium silver awesome" href="'.$RG_addr["gas_users"].'?out=xls">Esporta EXCEL</a></li>';
+                    $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["gas_users"].'?out=csv">Esporta CSV</a></li>';
+                $h_menu .='</ul>';
+            $h_menu .='</li>';
+            
+            $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["user_add"].'">Crea Nuovo utente</a></li>';
+            $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["user_to_activate"].'">Attivazione utenti</a><li>';
+            $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["user_activity"].'">Ultime attività</a><li>';        
+            $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["user_suspended"].'">Utenti sospesi</a></li>';
+            if(_USER_PERMISSIONS & perm::puo_gestire_retegas){
+                $h_menu .='<li><a class="medium red awesome" href="'.$RG_addr["user_deleted"].'">Utenti cancellati</a></li>';
+            }
+        $h_menu .='</ul>';
+        $h_menu .='</li>';
+
+      } 
+      return $h_menu;       
+  } 
+  function gas_menu_completo(){
+
+      $mio_menu[] = gas_menu_visualizza(); 
+      $mio_menu[] = gas_menu_comunica();
+      $mio_menu[] = gas_menu_gestisci_gas();
+      $mio_menu[] = gas_menu_gestisci_utenti(); 
+      //$mio_menu[] = gas_menu_gestisci_cassa();
+
+  return $mio_menu;    
+
+  };
+  function gas_menu_comunica(){
+      global $RG_addr;
+
+      
+
+      if((_USER_PERMISSIONS & perm::puo_postare_messaggi)){ 
+
+            $h_menu ='<li><a class="medium magenta awesome">Comunica</a>'; 
+
+            $h_menu .='<ul>';
+                    $h_menu .='<li><a class="medium magenta awesome" href="gas_comunica_gas.php" target="_self">Al mio GAS</a></li>'; 
+                    $h_menu .='<li><a class="medium magenta awesome" href="gas_comunica_retegas.php" target="_self">a tutta ReteGAS.AP</a></li>';
+                    if(id_proprio_referente_retegas(_USER_ID_GAS)==_USER_ID){
+                        $h_menu .='<li><a class="medium black awesome" href="gas_comunica_gas_hermes.php" target="_self">Al mio GAS (modalità HERMES)</a></li>'; 
+                        $h_menu .='<li><a class="medium black awesome" href="gas_comunica_retegas_hermes.php" target="_self">a tutta ReteGAS.AP (modalità HERMES)</a></li>';
+                    }
+
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+      }
+
+  return $h_menu;           
+
+  }  
+
+
+
+//-------------------------------------------------ARTICOLI
+function articoli_menu_completo($id_articolo){
+
+      $mio_menu[] = articoli_menu_operazioni($id_articolo); 
+      //$mio_menu[] = des_menu_comunica($id_user);
+  
+  return $mio_menu;    
+
+};
+function articoli_menu_operazioni($id_articolo){
+      
+      global $RG_addr;
+
+
+      
+            
+            $h_menu ='<li><a class="medium yellow awesome"><b>Operazioni</b></a>'; 
+
+            $h_menu .='<ul>'; 
+            $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["articoli_edit"].'?id_articoli='.$id_articolo.'" target="_self">Modifica</a></li>';
+            $h_menu .='<li><a class="medium red awesome" href="'.$RG_addr["articoli_delete"].'?id='.$id_articolo.'" target="_self">Elimina</a></li>';                                    
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+      
+      if(articoli_in_ordine($id_articolo)==0){
+        if(articoli_user($id_articolo)==_USER_ID){
+            return $h_menu;
+        }
+     }
+
+  }
+ 
+
+
+//-------------------------------------------------ORDINI
+    //MENU ORDINI
+    function ordini_menu_visualizza($user=null,$id_ordine=null){
+        global $RG_addr;
+ 
+
+        $h_menu ='<li><a class="medium green awesome">Visualizza</a>'; 
+        $h_menu.='<ul>';
+        
+        if(!empty($id_ordine)){
+        $h_menu .='<li><a class="medium green awesome" href="#" target="_self">di questo ordine:</a>'; 
+        $h_menu .='<ul>';
+        $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["ordini_form_new"].'?id_ordine='.$id_ordine.'" >Scheda riepilogativa</a></li>';
+        $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["grafico_1"].'?id_ordine='.$id_ordine.'"  >Grafici</a></li>';
+        $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["ordini_form_contabilita"].'?id_ordine='.$id_ordine.'" >Contabilità</a></li>';
+        $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["ordini_listino_compilabile"].'?id_ordine='.$id_ordine.'" >Scheda Listino</a></li>';
+
+        $h_menu .='</ul>';  // di questo ordine
+        $h_menu .='</li>';
+        }
+        
+        $h_menu .='<li><a class="medium green awesome" href="#" target="_self">di altri ordini:</a>'; 
+        $h_menu .='<ul>';
+        $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["ordini_aperti_new"].'" target="_self">quelli aperti</a></li>';
+        $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["ordini_chiusi"].'" target="_self">quelli chiusi</a></li>';
+        
+        $h_menu .='<li><a class="medium green awesome" href="#" target="_self">una Panoramica :</a>'; 
+        $h_menu .='<ul>';
+        $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["panoramica"].'" target="_self">a breve periodo</a></li>';
+        $h_menu .='<li><a class="medium green awesome" href="'.$RG_addr["panoramica_anno"].'" target="_self">a lungo termine</a></li>';
+        $h_menu .='</ul>'; // Panoramica
+        $h_menu .='</li>';
+        
+        $h_menu .='</ul>';  // di altri ordini
+        $h_menu .='</li>';
+        
+        $h_menu .='</ul>';  // Visualizza
+        $h_menu .='</li>';
+
+        return $h_menu;
+    }
+    function ordini_menu_oa_esporta($user){
+        global $RG_addr;
+        
+        $cookie_read     =explode("|", base64_decode($user));
+        $permission = $cookie_read[6];  
+        
+        
+        $h_menu ='<li><a class="medium silver awesome"><b>Esporta</b></a>'; 
+        $h_menu.='<ul>';
+        $h_menu .='<li><a class="medium silver awesome" href="'.$RG_addr["oa_export_printable"].'" target="_self">Stampabile</a></li>';
+        $h_menu .='<li><a class="medium silver awesome" href="'.$RG_addr["oa_export_pdf"].'" target="_self">Pdf</a></li>';
+        $h_menu .='<li><a class="medium silver awesome" href="'.$RG_addr["oa_export_word"].'" target="_self">Word</a></li>';
+        $h_menu .='<li><a class="medium silver awesome" href="'.$RG_addr["oa_export_excel"].'" target="_self">Excel</a></li>'; 
+        $h_menu .='<li><a class="medium silver awesome" href="'.$RG_addr["oa_export_csv"].'" target="_self">CSV</a></li>';
+
+
+        
+        $h_menu .='</ul>';  // esporta
+        $h_menu .='</li>';
+
+        return $h_menu;
+    }
+    function ordini_menu_report($user,$id_ordine=null){
+        $cookie_read     =explode("|", base64_decode($user));
+        $permission = $cookie_read[6];  
+
+        $h_menu ='<li><a class="medium yellow awesome"><b>Report</b></a>'; 
+        $h_menu.='<ul>';
+        
+        if(!empty($id_ordine)){
+        $h_menu .='<li><a class="medium orange awesome" href="#" target="_self">Mia Spesa</a>';
+            $h_menu.='<ul>';
+            $h_menu .='<li><a class="medium orange awesome" href="#" target="_self">Dettaglio</a></li>';
+            $h_menu .='<li><a class="medium orange awesome" href="#" target="_self">Riepilogo</a></li>';
+        $h_menu .='</ul>';  // Mia spesa
+        $h_menu .='</li>';
+        $h_menu .='<li><a class="medium yellow awesome" href="#" target="_self">Mio Gas</a>';
+            $h_menu.='<ul>';
+            $h_menu .='<li><a class="medium yellow awesome" href="#" target="_self">Dettaglio</a></li>';
+            $h_menu .='<li><a class="medium yellow awesome" href="#" target="_self">Riepilogo</a></li>';
+        $h_menu .='</ul>';  // Mia spesa
+        $h_menu .='</li>';
+        $h_menu .='<li><a class="medium blue awesome" href="#" target="_self">Mio Ordine</a>';
+            $h_menu.='<ul>';
+            $h_menu .='<li><a class="medium blue awesome" href="#" target="_self">Fornitore (S.Piene)</a></li>';
+            $h_menu .='<li><a class="medium blue awesome" href="#" target="_self">Fornitore (Articoli)</a></li>';
+            $h_menu .='<li><a class="medium blue awesome" href="#" target="_self">GAS</a></li>';
+            $h_menu .='<li><a class="medium blue awesome" href="#" target="_self">Riepilogo</a></li>';
+        $h_menu .='</ul>';  // Mia spesa
+        $h_menu .='</li>';
+        }
+
+        
+        $h_menu .='</ul>';  // Visualizza
+        $h_menu .='</li>';
+
+        return $h_menu;
+    }
+    function ordini_menu_pacco($id_ordine){
+    global $RG_addr;
+            if(is_numeric($id_ordine)){
+                $h_menu ='<li><a href="'.$RG_addr["ordini_form_new"].'?id_ordine='.$id_ordine.'"><img src="'.$RG_addr["img_pacco"].'" height="30" width="30" alt="Scheda ordine" title="Torna alla scheda ordine" style="vertical-align:middle;margin-top:-1em;"></a>'; 
+                $h_menu .='</li>';
+            }
+        return $h_menu;
+    }
+    function ordini_menu_gestisci($user,$id_ordine,$id_gas){
+        global $RG_addr;
+        
+        //echo print_r($RG_addr);
+        $cookie_read     =explode("|", base64_decode($user));
+        $permission = $cookie_read[6];  
+        $id_user = $cookie_read[0];
+        
+        //echo "$id_ordine = id ordine, $id_gas = id gas<br>";
+        
+        if($id_user==id_referente_ordine_globale($id_ordine)){$show_all="YES";}else{unset($show_all);};
+        if($id_user==id_referente_ordine_proprio_gas($id_ordine,$id_gas)){$show_gas="YES";}else{unset($show_gas);};
+        
+        //echo "Show  = $show_gas";
+        
+        if( isset($show_all) | isset($show_gas) ){
+        
+        
+        $h_menu ='<li><a class="medium blue awesome"><b>Modifica</b></a>'; 
+        $h_menu .='<ul>';
+        $h_menu .='<li><a class="medium blue awesome" href="#" target="_self">Costi</a>'; 
+        $h_menu .='<ul>';
+        $h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["edit_spese_gas"].'?id_ordine='.$id_ordine.'" target="_self">Riferiti al mio GAS</a></li>';
+        if( isset($show_all)){
+            $h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["edit_costi"].'?id_ordine='.$id_ordine.'" target="_self">Generici</a></li>';
+        }
+        $h_menu .='</ul>';
+        $h_menu .='</li>';
+        if( isset($show_all)){
+            $h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["edit_scadenze"].'?id_ordine='.$id_ordine.'" target="_self">Scadenze</a></li>';
+            $h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["edit_partecipazione"].'?id_ordine='.$id_ordine.'" target="_self">Partecipazione altri GAS</a></li>';
+            $h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["edit_switch_listino"].'?id_ordine='.$id_ordine.'" target="_self">Listino</a></li>';   
+            $h_menu .='<li><a class="medium blue awesome" href="'.$RG_addr["edit_descrizione"].'?id_ordine='.$id_ordine.'" target="_self">Note e Descrizione</a></li>';
+        }
+        $h_menu .='</ul>';
+        $h_menu .='</li>';
+
+        }// Se sono referente ordine oppure referente Gas
+        
+        return $h_menu;
+    }
+    function ordine_menu_gestisci_new($id_user,$id_ordine,$id_gas){
+    
+    global $db;
+    global $RG_addr;
+    
+   
+
+    //OPERAZIONI COMUNI
+    if(id_referente_ordine_globale($id_ordine)==$id_user){
+    
+        //if(is_printable_from_id_ord($id_ordine)){    
+        //    $togli_convalida .='<a class="medium blue awesome"  href="'.$RG_addr["convalida_ordine"].'?id='.$id_ordine.'&do=allow_print" >Togli Convalida</a>';    
+        //}else{
+        if(stato_from_id_ord($id_ordine)==3){
+            $convalida ='<a class="medium celeste awesome"  href="'.$RG_addr["convalida_ordine"].'?id_ordine='.$id_ordine.'">Convalida</a>';             
+            $cambia_costi = '<a class="awesome medium blue"  href="'.$RG_addr["edit_costi"].'?id_ordine='.$id_ordine.'">Costi (Generali)</a>';    
+            $cambia_descrizione ='<a class="awesome medium blue"  href="'.$RG_addr["edit_descrizione"].'?id_ordine='.$id_ordine.'">Descrizioni</a>';
+            $cambia_gas_coinvolti ='<a class="awesome medium blue"  href="'.$RG_addr["edit_partecipazione"].'?id_ordine='.$id_ordine.'">Modifica Gas Coinvolti</a>';
+            $cambia_date ='<a class="awesome medium blue"  href="'.$RG_addr["edit_scadenze"].'?id_ordine='.$id_ordine.'">Date e scadenze</a>';
+            $cambia_listino ='<a class="awesome medium blue"  href="'.$RG_addr["edit_switch_listino"].'?id_ordine='.$id_ordine.'" >Cambia listino</a>';            
+                        
+
+            $rettifica_denaro_totale='<a class="medium blue awesome"  href="'.$RG_addr["rettifica_denaro_totale"].'?id='.$id_ordine.'" >Totale ordine</a>';            
+            $rettifica_totali='<a class="medium blue awesome"  href="'.$RG_addr["rettifica_totali"].'?id_ordine='.$id_ordine.'" >Totali articoli ordine</a>';
+            $rettifica_users='<a class="awesome medium blue"  href="'.$RG_addr["rettifica_users"].'?id='.$id_ordine.'" >Articoli singolo utente</a>';
+            $rettifica_denaro='<a class="awesome medium blue"  href="'.$RG_addr["rettifica_denaro"].'?id='.$id_ordine.'" >Importi singoli articoli</a>';
+            $rettifica_denaro_user ='<a class="awesome medium blue"  href="'.$RG_addr["rettifica_denaro_user"].'?id_ordine='.$id_ordine.'" >Totale per Utente</a>';
+            
+        }
+        //}
+        
+         if (dettagli_ordine($id_ordine)==0){       
+            $delete_ordine ='<li><a class="medium red awesome" href="'.$RG_addr["delete_ordine"].'?id='.$id_ordine.'" target="_self">Elimina Ordine</a></li>';       
+         }        
+        
+        if(stato_from_id_ord($id_ordine)==3){ 
+            //$report_gas = '<a class="medium blue awesome"  href="'.$RG_addr["rep_situazione_gas"].'?id='.$id_ordine.'" >Situazione GAS</a>';        
+            $report_gas = '<a class="medium blue awesome"  href="'.$RG_addr["ordini_gestione_riepgas"].'?id_ordine='.$id_ordine.'" >Situazione GAS</a>';        
+
+            
+            $report_dettaglio_articoli = '<a class="medium blue awesome"  href="'.$RG_addr["rep_dettaglio_articoli_c"].'?id='.$id_ordine.'" >Dettaglio Articoli (tutti i gas)</a>';         
+            $report_riepilogo_articoli = '<a class="medium blue awesome"  href="'.$RG_addr["rep_riepilogo_articoli_c"].'?id='.$id_ordine.'" >Riepilogo Articoli (tutti i gas)</a>';         
+            $avanzo_ammanco ='<a class="medium blue awesome"  href="'.$RG_addr["rep_avanzo_ammanco"].'?id='.$id_ordine.'" >Avanzo-Ammanco</a>';
+            $report_scatole_intere ='<a class="medium blue awesome"  href="'.$RG_addr["rep_scatole_intere"].'?id='.$id_ordine.'" >SOLO Scatole intere</a>';
+        }
+       
+        if(stato_from_id_ord($id_ordine)==2){ 
+            $cambia_costi = '<a class="awesome medium blue"  href="'.$RG_addr["edit_costi"].'?id_ordine='.$id_ordine.'">Costi (Generali)</a>';    
+            $cambia_descrizione ='<a class="awesome medium blue"  href="'.$RG_addr["edit_descrizione"].'?id_ordine='.$id_ordine.'">Descrizioni</a>';
+            $cambia_gas_coinvolti ='<a class="awesome medium blue"  href="'.$RG_addr["edit_partecipazione"].'?id_ordine='.$id_ordine.'">Modifica Gas Coinvolti</a>';
+            $cambia_date ='<a class="awesome medium blue"  href="'.$RG_addr["edit_scadenze"].'?id_ordine='.$id_ordine.'">Date e scadenze</a>';
+            $report_dettaglio_articoli = '<a class="medium blue awesome"  href="'.$RG_addr["rep_dettaglio_articoli_a"].'?id='.$id_ordine.'" >Dettaglio Articoli (tutti i gas)</a>';         
+            $report_riepilogo_articoli = '<a class="medium blue awesome"  href="'.$RG_addr["rep_riepilogo_articoli_a"].'?id='.$id_ordine.'" >Riepilogo Articoli (tutti i gas)</a>';             
+            
+        }
+        if(stato_from_id_ord($id_ordine)==1){ 
+            $cambia_costi = '<a class="awesome medium blue"  href="'.$RG_addr["edit_costi"].'?id_ordine='.$id_ordine.'">Costi (Generali)</a>';    
+            $cambia_descrizione ='<a class="awesome medium blue"  href="'.$RG_addr["edit_descrizione"].'?id_ordine='.$id_ordine.'">Descrizioni</a>';
+            $cambia_gas_coinvolti ='<a class="awesome medium blue"  href="'.$RG_addr["edit_partecipazione"].'?id_ordine='.$id_ordine.'">Modifica Gas Coinvolti</a>';
+            $cambia_date ='<a class="awesome medium blue"  href="'.$RG_addr["edit_scadenze"].'?id_ordine='.$id_ordine.'">Date e scadenze</a>';
+        }
+        
+
+            $aiutanti = '<li><a class="awesome medium blue"  href="'.$RG_addr["ordini_aiutanti_table"].'?id_ordine='.$id_ordine.'">Gestione aiuti</a></li>';
+            $partecipazione_utenti = '<a class="awesome medium blue"  href="'.$RG_addr["partecipat_utenti"].'?id_ordine='.$id_ordine.'">Totali per utente</a>';
+            $cronologia_utenti = '<a class="awesome medium blue"  href="'.$RG_addr["partecipat_cronologia"].'?id_ordine='.$id_ordine.'">Cronologia ordini</a>';
+            $stato_gas_partecipanti = '<a class="awesome medium blue"  href="'.$RG_addr["partecipat_gastable"].'?id_ordine='.$id_ordine.'">Partecipazione GAS</a>';
+            $cambia_gestore ='<li><a class="awesome medium blue"  href="'.$RG_addr["edit_switch_gestore"].'?id_ordine='.$id_ordine.'" >Cambia Referente</a></li>';
+            $pannello_report = '<li><a class="awesome medium blue"  href="'.$RG_addr["ordini_report_panel"].'?id_ordine='.$id_ordine.'" >Pannello Reports</a></li>';
+            
+    $m ='<li><a class="awesome blue medium" href="#">Gestisci</a>';  // PRIMO LIVELLO
+    $m.='<ul>';
+        $m.='<li><a class="awesome blue medium" href="#">Modifica</a>';  // SECONDO LIVELLO 
+        $m.='<ul>';
+              $m.='<li>'.$cambia_costi.'</li>';
+              $m.='<li>'.$cambia_descrizione.'</li>';
+              $m.='<li>'.$cambia_date.'</li>';
+              $m.='<li>'.$cambia_listino.'</li>';
+              $m.='<li>'.$convalida.'</li>';        
+        $m.='</ul>';
+        $m.='</li>'; //SECONDO LIVELLO
+        
+        $m.='<li><a class="awesome blue medium" href="#">Rettifiche</a>';  // SECONDO LIVELLO 
+        $m.='<ul>';
+              $m.='<li>'.$rettifica_denaro_totale.'</li>';
+              $m.='<li>'.$rettifica_totali.'</li>';
+              $m.='<li>'.$rettifica_users.'</li>';
+              $m.='<li>'.$rettifica_denaro.'</li>';
+              $m.='<li>'.$rettifica_denaro_user.'</li>';        
+        $m.='</ul>';
+        $m.='</li>'; //SECONDO LIVELLO
+        
+        $m.='<li><a class="awesome blue medium" href="#">GAS</a>';  // SECONDO LIVELLO 
+        $m.='<ul>';
+              $m.='<li>'.$cambia_gas_coinvolti.'</li>';               
+              $m.='<li>'.$report_gas.'</li>';        
+        $m.='</ul>';
+        $m.='</li>'; //SECONDO LIVELLO
+        
+        $m.='<li><a class="awesome blue medium" href="#">Reports</a>';  // SECONDO LIVELLO 
+        $m.='<ul>';
+              $m.='<li>'.$partecipazione_utenti.'</li>';
+              $m.='<li>'.$report_riepilogo_articoli.'</li>';
+              $m.='<li>'.$report_dettaglio_articoli.'</li>';
+              $m.='<li>'.$report_scatole_intere.'</li>';        
+        $m.='</ul>';
+        $m.='</li>'; //SECONDO LIVELLO
+        
+        $m.='<li><a class="awesome blue medium" href="#">Speciali</a>';  // SECONDO LIVELLO 
+        $m.='<ul>';
+              $m.='<li>'.$avanzo_ammanco.'</li>';        
+        $m.='</ul>';
+        $m.='</li>'; //SECONDO LIVELLO
+        
+        $m.='<li><a class="awesome blue medium" href="#">Partecipazione</a>';  // SECONDO LIVELLO 
+        $m.='<ul>';
+              $m.='<li>'.$cronologia_utenti.'</li>';
+              $m.='<li>'.$stato_gas_partecipanti.'</li>';        
+        $m.='</ul>';
+        $m.='</li>'; //SECONDO LIVELLO
+        
+        $m .= $pannello_report;
+        $m .= $aiutanti;
+        $m .= $delete_ordine;         // CANCELLA ORDINE VUOTO
+        $m .= $cambia_gestore;
+        
+    $m.='</ul>';
+    $m.='</li>';  //PRIMO LIVELLO
+ 
+ 
+     };
+
+    return $m;    
+        
+    }
+    function ordine_menu_cassa($id_user,$id_ordine,$id_gas){
+    
+    global $db;
+    global $RG_addr;
+    $permission = _USER_PERMISSIONS;
+    
+    if($permission & perm::puo_operare_con_crediti){$ok_crediti = true;}
+    if($permission & perm::puo_gestire_la_cassa){$ok_cassiere = true;}
+    if($id_gas=id_gas_user(id_referente_ordine_globale($id_ordine))){$ok_mio_gas = true;} 
+    if(id_referente_ordine_proprio_gas($id_ordine,$id_gas)==$id_user){$ok_gestore = true;}
+
+    $paga_fornitore = '<a class="awesome blue"  href="'.$RG_addr["cassa_paga_ditta"].'?id_ordine='.$id_ordine.'">Anticipa al fornitore</a>';
+    $scala_crediti_utenti = '<a class="awesome celeste"  href="'.$RG_addr["cassa_ordini_sit_ut"].'?id_ordine='.$id_ordine.'">Scala crediti utenti</a>';
+    $registra_movimenti = '<a class="awesome celeste"  href="'.$RG_addr["cassa_movimenti_reg"].'?id_ordine='.$id_ordine.'">Registra Movimenti</a>';   
+    $contabilizza_movimenti = '<a class="awesome celeste "  href="'.$RG_addr["cassa_movimenti_con"].'?id_ordine='.$id_ordine.'">Contabilizza Movimenti</a>';
+    $tutti_i_movimenti = '<a class="awesome celeste"  href="'.$RG_addr["cassa_ordini_tutti_mov"].'?id_ordine='.$id_ordine.'">Visualizza TUTTI Movimenti</a>'; 
+    $elimina_tutti_i_movimenti = '<a class="awesome red"  href="'.$RG_addr["cassa_ordini_del_mov"].'?id_ordine='.$id_ordine.'">Elimina TUTTI i Movimenti di questo ordine</a>';
+    $valori_ordine='<a class="awesome beige"  href="'.$RG_addr["cassa_valori_ordine"].'?id_ordine='.$id_ordine.'">Visualizza gli importi di tutti gli utenti</a>';;
+    
+    if(is_printable_from_id_ord($id_ordine)){
+        //SE PUo' operare con i crediti    
+        if($ok_crediti){
+            //Se è un cassiere oppure un gestore 
+            if($ok_cassiere || $ok_gestore){    
+            $m ='<li><a class="awesome celeste medium" href="#">Cassa</a>';  // PRIMO LIVELLO
+            $m.='<ul>';
+                //Se è cassiere
+                if($ok_cassiere){
+                    //Se è cassiere dello stesso gas del referente ordine
+                    if($ok_mio_gas){
+                        $m.='<li><a class="awesome celeste medium" href="#">Come cassiere:</a>';  // SECONDO LIVELLO 
+                        $m.='<ul>';
+                              $m.='<li>'.$valori_ordine.'</li>';  
+                              //$m.='<li>'.$paga_fornitore.'</li>';
+                              $m.='<li>'.$scala_crediti_utenti.'</li>';
+                              $m.='<li>'.$registra_movimenti.'</li>';
+                              $m.='<li>'.$contabilizza_movimenti.'</li>';
+                              $m.='<li>'.$tutti_i_movimenti.'</li>';
+                              $m.='<li>'.$elimina_tutti_i_movimenti.'</li>';        
+                        $m.='</ul>';
+                        $m.='</li>'; //SECONDO LIVELLO
+                    }
+                }
+                //se è gestore - Tolto
+                if($ok_gestore){
+                    $m2.='<li><a class="awesome celeste medium" href="#">Come Gestore:</a>';  // SECONDO LIVELLO 
+                    $m2.='<ul>';
+                          $m2.='<li>'.$scala_crediti_utenti.'</li>';
+                          $m2.='<li>'.$registra_movimenti.'</li>';        
+                    $m2.='</ul>';
+                    $m2.='</li>'; //SECONDO LIVELLO
+                }
+            $m.='</ul>';
+            $m.='</li>';  //PRIMO LIVELLO
+            }
+        }
+    }
+    return $m;    
+        
+    }
+    function ordine_menu_gas($id_user,$id_ordine,$id_gas){
+    
+    global $db;
+    global $RG_addr;
+    global $class_debug;
+    //$class_debug->debug_msg[]="MENU- IL MIO GAS : id_user = $id_user, id_ordine = $id_ordine, id_gas = $id_gas";
+    
+    
+    $vicini_di_casa ='<li><a class="awesome medium yellow" href="'.$RG_addr["gas_miei_vicini"].'?id_ordine='.$id_ordine.'">Miei Vicini di ordine</a></li>';
+    
+    if(id_referente_ordine_proprio_gas($id_ordine,$id_gas)==$id_user){ 
+        
+        $report_articoli_gas = '<li><a class="awesome medium yellow" href="'.$RG_addr["gas_ordine_riepilogo"].'?id_ordine='.$id_ordine.'">Riepilogo Articoli GAS</a></li>';
+        $report_utenti_gas = '<li><a class="awesome medium yellow" href="'.$RG_addr["gas_ordine_riep_users"].'?id_ordine='.$id_ordine.'">Riepilogo Utenti GAS</a></li>';
+        $report_dettaglio_utenti_gas ='<li><a class="awesome medium yellow" href="'.$RG_addr["gas_ordine_dett_users"].'?id_ordine='.$id_ordine.'">Dettaglio Utenti GAS</a></li>';
+        $report_note_ordine ='<li><a class="awesome medium yellow" href="'.$RG_addr["report_riepilogo_note"].'?id_ordine='.$id_ordine.'">Note Utenti GAS</a></li>'; 
+        
+        //DA RIMETTERE QUANDO E' TUTTO OK'
+        $cambia_spese_gas = '<li><a class="awesome medium yellow" href="'.$RG_addr["edit_spese_gas"].'?id_ordine='.$id_ordine.'">Costi</a></li>';
+
+    }
+    
+
+    $m ='<li><a class="awesome yellow medium" href="#">Gas</a>';  // PRIMO LIVELLO
+    $m.='<ul>'
+      .$vicini_di_casa
+      .$cambia_spese_gas
+      .$report_dettaglio_gas
+      .$report_articoli_gas
+      .$report_articoli_gas_vecchio
+      .$report_utenti_gas
+      .$report_dettaglio_utenti_gas
+      .$report_note_ordine      
+    .'</ul>';
+    $m.='</li>';  //PRIMO LIVELLO
+ 
+    
+   
+         
+        
+    return $m;    
+        
+    }
+    function ordine_menu_mia_spesa($id_user,$id_ordine){
+    
+    global $db;
+    global $RG_addr;
+    
+ 
+    if(n_articoli_ordini_user($id_user,$id_ordine)>0){
+
+     $riepilogo_amici = '<li><a class="medium orange awesome" href="'.$RG_addr["ordini_mia_spesa_riepami"].'?id_ordine='.$id_ordine.'" >Riepilogo amici</a></li>';
+     $dettaglio_articoli_nuovo = '<li><a class="medium orange awesome" href="'.$RG_addr["ordini_mia_spesa_dettaglio"].'?id_ordine='.$id_ordine.'" >Dettaglio Assegnazioni</a></li>';
+     $riepilogo_articoli_mia_spesa_nuovo = '<li><a class="medium orange awesome" href="'.$RG_addr["ordini_mia_spesa_riepilogo"].'?id_ordine='.$id_ordine.'" >Riepilogo articoli</a></li>';
+
+     if(stato_from_id_ord($id_ordine)==2){
+        $cancella_spesa = '<li><a class="medium black awesome" href="'.$RG_addr["ordini_del_all_art"].'?id_ordine='.$id_ordine.'" >Cancella la mia spesa</a></li>';
+     }
+     
+    $m ='<li><a class="awesome orange medium" href="#">La mia spesa</a>';  // PRIMO LIVELLO
+    $m.='<ul>'
+      .$dettaglio_articoli_nuovo
+      .$riepilogo_articoli_mia_spesa_nuovo
+      .$riepilogo_amici
+      .$cancella_spesa     
+    .'</ul>';
+    $m.='</li>';  //PRIMO LIVELLO
+    
+    }
+    
+   
+         
+        
+    return $m;    
+        
+    }
+    function ordine_menu_operazioni_base($id_user,$id_ordine){
+    global $RG_addr;
+    
+    
+    
+        
+        $d37 =  id_referente_ordine_proprio_gas($id_ordine,id_gas_user($id_user));
+
+        if ($d37==0){
+            
+            if(_GAS_PUO_PART_ORD_EST){            
+                $ciccio .="<a id=\"blink_me\" class=\"medium beige awesome\" href=\"".$RG_addr["ordine_diventa_referente"]."?id_ordine=$id_ordine\"><b>Diventa referente</b></a>"; 
+            }
+        
+        }else{
+                $ciccio .="<a class=\"medium beige awesome\" href=\"".$RG_addr["ordine_partecipa"]."?id=$id_ordine#istruzioni\"><b>PARTECIPA</b></a>"; 
+                $caccio .="<a class=\"medium beige awesome\" href=\"".$RG_addr["ordine_partecipa_massivo"]."?id_ordine=$id_ordine\">Molti amici ?</a>";
+        }
+
+
+        if(ordine_partecipabile($id_ordine)){
+            $h_menu .='<li>'.$ciccio;
+                $h_menu .='<ul>';
+                    $h_menu .='<li>'.$caccio;
+                    $h_menu .='</li>';
+                $h_menu .='</ul>';
+            $h_menu .='</li>';
+        }
+   
+        
+return $h_menu;        
+}
+    function ordine_menu_comunica($id_user,$id,$id_gas){
+    global $RG_addr;
+         // ------------------------------------------------MIE COMUNICAZIONI
+    $show=false;
+
+            if(n_articoli_ordini_user($id_user,$id)>0){      
+                 if (id_referente_ordine_proprio_gas($id,id_gas_user($id_user))<>$id_user){     
+                    $com1 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=2" target="_self">Al mio referente GAS</a></li>';
+                    $com_vicini ='<li><a class="medium magenta awesome" href="'.$RG_addr["gas_miei_vicini"].'?id_ordine='.$id.'" target="_self">Vicini di casa</a></li>';
+                    $show = true;
+                 }
+            } // SE HO IN CORSO L?ORDINE        
+                 
+                // Se sono il referente del MIO GAS posso vedere il referente ordine
+                if (id_referente_ordine_proprio_gas($id,id_gas_user($id_user))==$id_user){
+                // ma solo se non sono io il referente ordine
+                    if (id_referente_ordine_globale($id)<>$id_user){ 
+                        $com2 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=1" target="_self">Al referente Ordine</a></li>';
+                        $com3 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=3" target="_self">Ai partecipanti (mio GAS)</a></li>';
+                        $show = true;
+                    }
+                
+                }
+                
+                // Se invece sono il referente ORDINE
+                 if (id_referente_ordine_globale($id)==$id_user){
+                    $com4 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=5" target="_self">Ai referenti GAS</a></li>';   
+                    $com5 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=3" target="_self">Partecipanti (mio GAS)</a></li>';
+                    $com6 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=4" target="_self">Partecipanti (TUTTI)</a></li>';
+                    $com7 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=6" target="_self">Bacino utenti potenziali</a></li>';
+                    $show = true;
+                 }
+
+        
+
+        
+         
+     
+if($show){
+    $h_menu .='<li><a class="medium magenta awesome">Comunica</a>'; 
+    $h_menu .='<ul>';
+    $h_menu .=$com_vicini;
+    $h_menu .=$com1;
+    $h_menu .=$com2;
+    $h_menu .=$com3;
+    $h_menu .=$com4;
+    $h_menu .=$com5;
+    $h_menu .=$com6;
+    $h_menu .=$com7;     
+    $h_menu .='</ul>';
+    $h_menu .='</li>';
+}         
+// ------------------------------------------------FINE MIE COMUNICAZIONI
+
+
+return $h_menu;    
+    
+}
+    function ordine_menu_extra($id_ordine){
+        global $RG_addr;
+        
+            $report_dettaglio_gas = '<li><a class="awesome medium black" href="'.$RG_addr["gas_ordine_dett_users"].'?id_ordine='.$id_ordine.'">Dettaglio Articoli GAS</a></li>';
+            $report_articoli_gas = '<li><a class="awesome medium black" href="'.$RG_addr["gas_ordine_riepilogo"].'?id_ordine='.$id_ordine.'">Riepilogo GAS</a></li>';      
+            $report_gas = '<li><a class="medium black awesome"  href="'.$RG_addr["rep_situazione_gas"].'?id='.$id_ordine.'" >Situazione tutti GAS</a></li>';        
+            $report_dettaglio_articoli = '<li><a class="medium black awesome"  href="'.$RG_addr["rep_dettaglio_articoli_c"].'?id='.$id_ordine.'" >Dettaglio Articoli (tutti i gas)</a></li>';         
+            $report_riepilogo_articoli = '<li><a class="medium black awesome"  href="'.$RG_addr["rep_riepilogo_articoli_c"].'?id='.$id_ordine.'" >Riepilogo Articoli (tutti i gas)</a></li>';         
+            $report_scatole_intere ='<li><a class="medium black awesome"  href="'.$RG_addr["rep_scatole_intere"].'?id='.$id_ordine.'" >SOLO Scatole intere</a></li>';
+            $partecipazione_utenti = '<li><a class="awesome medium blue"  href="'.$RG_addr["partecipat_utenti"].'?id_ordine='.$id_ordine.'">Lista Partecipanti</a></li>';
+            $cronologia_utenti = '<li><a class="awesome medium blue"  href="'.$RG_addr["partecipat_cronologia"].'?id_ordine='.$id_ordine.'">Cronologia ordini</a></li>';
+            $avanzo_ammanco = '<li><a class="awesome medium blue"  href="'.$RG_addr["rep_avanzo_ammanco"].'?id='.$id_ordine.'">Avanzo ammanco (Oleggio)</a></li>';
+        
+        
+        $h_menu ='<li><a class="medium black awesome"><b>EXTRA</b></a>'; 
+        $h_menu .='<ul>';
+        
+        $h_menu .= $report_dettaglio_gas;
+        $h_menu .= $report_articoli_gas;
+        $h_menu .= $report_gas;
+        $h_menu .= $report_dettaglio_articoli;
+        $h_menu .= $report_riepilogo_articoli;
+        $h_menu .= $report_scatole_intere;
+        $h_menu .= $partecipazione_utenti;
+        $h_menu .= $cronologia_utenti;
+        $h_menu .= $avanzo_ammanco;
+        $h_menu .='</ul>';
+        $h_menu .='</li>';
+
+        
+        if(_USER_ID_GAS==id_gas_user(id_referente_ordine_globale($id_ordine))){
+            if(_USER_PERMISSIONS & perm::puo_vedere_tutti_ordini){
+                return $h_menu;     
+            }        
+        }; 
+        
+    }          
+    
+    
+    function ordini_menu_nuovo($user){
+        global $RG_addr;
+        $cookie_read     =explode("|", base64_decode($user));
+        $permission = $cookie_read[6];  
+        if($permission & perm::puo_creare_ordini){      
+            $h_menu ='<li><a class="medium beige awesome"><b>Nuovo ordine</b></a>'; 
+            $h_menu .='<ul>';
+            $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["nuovo_ordine_simple"].'" target="_self">scheda Veloce</a></li>';
+            $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["nuovo_ordine_completo"].'" target="_self">scheda Completa</a></li>';
+            $h_menu .='</ul>';
+            $h_menu .='</li>';
+        }
+        return $h_menu;
+    }
+    function ordini_menu_completo($user,$id_ordine=null,$id_gas=null,$is_exportable=null,$location=null){
+        global $RG_addr;
+        $cookie_read     =explode("|", base64_decode($user));
+        $permission = $cookie_read[6];
+        $id_user = $cookie_read[0];
+        
+        //echo " MENU COMPLETO $id_ordine = id ordine, $id_gas = id gas<br>";
+        $mio_menu[] = ordini_menu_visualizza($user,$id_ordine);
+        $mio_menu[] = ordini_menu_nuovo($user);
+        
+        
+        // Se è una scheda riferita ad un ordine
+        if(isset($id_ordine)){
+            $mio_menu[] = ordini_menu_gestisci($user,$id_ordine,$id_gas);
+            //$mio_menu[] = ordini_menu_report($user,$id_ordine,$id_gas);
+            $mio_menu[]='<li><a class="medium silver awesome" href="'.$RG_addr["pannello_report"].'?id_ordine='.$id_ordine.'"><b>Report</b></a><li>';
+            
+            if(n_articoli_ordini_user($id_user,$id_ordine)>0){
+                $h_menu ='<li><a class="medium orange awesome"><b>La mia Spesa</b></a>'; 
+                $h_menu .='<ul>';
+                     if(stato_from_id_ord($id_ordine)==2){
+                        $h_menu .='<li><a class="medium orange awesome" href="'.$RG_addr["oa_dett_ass"].'?id='.$id_ordine.'" target="_self">Dettaglio Assegnazioni</a></li>';
+                     }
+                     if(stato_from_id_ord($id_ordine)==3){
+                        $h_menu .='<li><a class="medium orange awesome" href="'.$RG_addr["oc_dett_ass"].'?id='.$id_ordine.'" target="_self">Dettaglio Assegnazioni</a></li>';
+                     }
+                     
+                $h_menu .='</ul>';
+                $h_menu .='</li>'; 
+            }
+        
+            $mio_menu[]=$h_menu;
+        
+        
+        
+        
+        }
+        if(isset($is_exportable)){
+            //echo "SONO ESPORTABILE con location : $location";
+            $mio_menu[] = ordini_menu_esporta($user,$id_ordine,$location);
+        }
+        
+        
+        return $mio_menu;    
+    };
+    function ordini_menu_all($id_ordine=null){
+        
+        $m = array();
+        $m[] = ordini_menu_visualizza(null,$id_ordine);
+        $m[] = ordine_menu_operazioni_base(_USER_ID,$id_ordine);
+        $m[] = ordine_menu_mia_spesa(_USER_ID,$id_ordine);
+        $m[] = ordine_menu_gas(_USER_ID,$id_ordine,_USER_ID_GAS);
+        $m[] = ordine_menu_gestisci_new(_USER_ID,$id_ordine,_USER_ID_GAS);
+        $m[] = ordine_menu_cassa(_USER_ID,$id_ordine,_USER_ID_GAS);
+        $m[] = ordine_menu_comunica(_USER_ID,$id_ordine,_USER_ID_GAS);
+        $m[] = ordine_menu_extra($id_ordine);
+        return $m;
+    }
+?>

@@ -33,6 +33,14 @@ if ($do=="do_allow_print"){
     $sql = "UPDATE `my_retegas`.`retegas_ordini` SET `is_printable` = '1' WHERE `retegas_ordini`.`id_ordini` = '$id_ordine' LIMIT 1;";
     $db->sql_query($sql);
     log_me($id_ordine,_USER_ID,"ORD","MOD","Convalidato ordine $id_ordine, ",0);
+
+//CANCELLO LE REFERENZE DI QUESTO ORDINE DEI GAS SENZA REFERENTE
+
+//    $sql_ref = "DELETE FROM retegas_referenze WHERE id_ordine_referenze='$id_ordine' AND id_utente_referenze=0;";
+//    $db->sql_query($sql_ref);
+//    log_me($id_ordine,_USER_ID,"REF","MOD","Cancellate referenze non usate ",0,$sql_ref);
+    
+
     
 //----------------------------------------------------------DA INSERIRE PER SCARICO AUTOMATICO    
 //    // SE IL GAS PERMETTE LO SCARICO IN AUTOMATICO

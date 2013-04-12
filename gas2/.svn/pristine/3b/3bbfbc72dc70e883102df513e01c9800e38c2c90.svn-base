@@ -1,0 +1,75 @@
+<?php
+  if (eregi("ditte_menu_core.php", $_SERVER['SCRIPT_NAME'])) {
+	Header("Location: ../index.php"); die();
+}
+
+// $h_table = Content
+// $id_user = utente
+// $id = ordine
+
+$_parenDir_path = join(array_slice(split( "/" ,dirname($_SERVER['PHP_SELF'])),0,-1),"/").'/'; // returns the full path to the parent dir
+$_parenDir =  basename ($_parenDir_path,"/"); // returns only the name of the pare
+
+if($_parenDir=="bacheca"){
+	$pa = "../";
+}else{
+	$pa="";
+}
+
+
+$h_menu ='
+<div style="padding-bottom:2em;">
+<ul class="sf-menu">';  // INIZIO
+
+
+// NUOVO MESSAGGIO
+	$h_menu .='<li><a class="medium blue awesome" href="'.$pa.'bacheca_form_add.php">Nuovo Messaggio</a></li>';
+//------------------------
+// NUOVO MESSAGGIO
+
+if($id_user==proprietario_messaggio_bacheca($id)){
+	$h_menu .='<li><a class="medium yellow awesome" href="'.$pa.'bacheca_form_edit.php?id='.$id.'">Modifica</a></li>';
+}
+	//------------------------
+
+
+ // ------------------------------------------------VISUALIZZA
+
+
+		   
+	$h_menu .='<li><a class="medium green awesome">Visualizza</a>'; 
+	$h_menu .='<ul>';
+  
+		 
+	$h_menu .='<li><a class="medium green awesome" href="'.$pa.'bacheca_table.php" target="_self">Tutti</a></li>';
+	$h_menu .='<li><a class="medium green awesome" href="'.$pa.'bacheca_table.php?id_visi=0" target="_self">Messaggi Esterni</a></li>';
+	$h_menu .='<li><a class="medium green awesome" href="'.$pa.'bacheca_table.php?id_visi=1"" target="_self">Messaggi RetegasAP</a></li>';
+	$h_menu .='<li><a class="medium green awesome" href="'.$pa.'bacheca_table.php?id_visi=2"" target="_self">Messaggi mio GAS</a></li>';
+	$h_menu .='<li><a class="medium green awesome" href="'.$pa.'bacheca_table.php?id_visi=3"" target="_self">Privati</a></li>';
+	   
+	$h_menu .='</ul>';
+	$h_menu .='</li>';
+   
+
+// ------------------------------------------------VISUALIZZA
+
+
+ 
+
+
+
+$h_menu .=''; 
+$h_menu .=''; 
+$h_menu .='</ul>
+		   </div>
+		   <br />  
+			';                // FINE
+
+
+
+
+
+$h_table=$h_menu;
+
+
+?>

@@ -2646,6 +2646,8 @@ function rg_toggable($title,$target,$content,$open=false){
                     ";
     return $h_table;
 }
+
+
 function rg_tooltip($text,$override=false){
     
     if(_USER_USA_TOOLTIPS OR $override){

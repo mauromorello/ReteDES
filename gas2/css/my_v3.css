@@ -513,5 +513,8 @@ border-bottom: 2px solid  rgba(220,220,220,1);
 .tablesorter-filter{
     width:100%;
         
+}
+tr.tablesorter-filter-row input.disabled {
+    display: none;
 } 
 

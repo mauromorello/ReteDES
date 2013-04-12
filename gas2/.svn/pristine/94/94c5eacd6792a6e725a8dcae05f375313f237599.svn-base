@@ -1,0 +1,33 @@
+<?php
+function des_render_main(){
+$h .= '<div class="rg_widget rg_widget_helper">
+       <h3>Progetto ReteGas.AP</h3>
+        <p>Questa parte del sito include alcune pagine di statistiche al livello di tutta ReteGas.AP. Alcune sono visibili a tutti, altre
+        sono riservate agli utenti che sono coinvolti nel progetto DES.
+        </p>
+        <p>
+            Per ogni informazione sul progetto DES rivolgersi ai rispettivi responsabili del proprio GAS.
+        </p>
+       </div>';    
+
+return $h;    
+}
+function des_render_donate(){
+$h .= '<div class="ui-widget-content ui-corner-all padding_6px">
+       <center>
+       <h3>Supporta ReteGas.AP</h3>
+       <p> 
+       <form action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_s-xclick"><input type="hidden" name="hosted_button_id" value="XHTYVN8N3W3NU"><input type="image" src="https://www.paypalobjects.com/it_IT/IT/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - Il sistema di pagamento online più facile e sicuro!"><img alt="" border="0" src="https://www.paypalobjects.com/it_IT/i/scr/pixel.gif" width="1" height="1"></form>
+       </p>
+       </center>
+       <p>
+       Il Software Gestionale ReteGas.AP è nato nel 2009 come impegno volontario di Mauro Morello, che si è preso in carico (oltre alle ore impegnate per la sua progettazione e realizzazione), anche
+       la parte relativa ai costi per la gestione del sito e per gli strumenti informatici necessari al suo sviluppo, negli anni 2009 e 2010 e 2011.<br>
+       Allo scopo di poter continuare se non lo sviluppo, almeno l\'ordinaria manutenzione del sito stesso, se lo trovate giusto, potete contribuire alle spese.<br>
+       </p>       
+       </div>';    
+
+return $h;    
+}
+  
+?>

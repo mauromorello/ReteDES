@@ -150,6 +150,7 @@ if($db->sql_numrows($result_msg)>0){
         $n++;  
         $ordine = $row["id_ordini"];
         $descrizione = $row["descrizione_ordini"];
+        $data_chiusura =conv_date_from_db($row["data_chiusura"]);
         $messaggio = "Ordine $ordine aperto automaticamente.";
         $msg_twitter = "\"".substr($descrizione,0,50)."..\" APERTO dal ".gas_nome(id_gas_user(id_referente_ordine_globale($ordine)))."!";
         
@@ -205,7 +206,8 @@ if($db->sql_numrows($result_msg)>0){
         
         $da_chi = _SITE_NAME;
         $mail_da_chi = _SITE_MAIL_REAL;
-        $message =  "L'ordine $ordine ($descrizione) è aperto.<br>
+        $message =  "L'ordine $ordine ($descrizione) è aperto,<br>
+                     e lo sarà fino al $data_chiusura (salvo modifiche da parte del referente).<br>
                      Lo puoi vedere nella pagina ORDINI APERTI del sito.<br>
                      oppure cliccando questo <a href=\"".$RG_addr["ordini_form"]."?id_ordine=$ordine\">link</a><br>
                      ------------------------------------------------------ <br>

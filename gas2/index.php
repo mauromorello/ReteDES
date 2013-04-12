@@ -198,7 +198,9 @@ if (_USER_LOGGED_IN){
 	// dico a retegas quali file esterni dovrà caricare
 	$retegas->java_headers = array_merge(array("rg"), $retegas->java_headers);
 									 
-	 
+	//DISQUS
+    $retegas->disqus_id="MAIN";
+    $retegas->disqus_title="Parliamo di ReteDes.it !"; 
 	 
 	 
 	 

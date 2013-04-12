@@ -1,0 +1,101 @@
+<?php
+
+if (eregi("amministra_main.php", $_SERVER['SCRIPT_NAME'])) {
+	Header("Location: ../index.php"); die();
+}
+
+include_once ("../rend.php");
+
+if (is_logged_in($user)){
+	  $cookie_read     =explode("|", base64_decode($user));
+	  $id_user  =$cookie_read[0];
+	  
+	  //sono io
+	  if(user_level($id_user)<1){
+		pussa_via();  
+		exit;   
+	  }
+	  
+	  
+	  // HEADER HTML
+	  $h  = c1_header();
+	  $h .= "<meta http-equiv=\"refresh\" content=\"120\">";
+	  $h .= c1_ext_stylesheets();
+	 // $h .="<link type=\"text/css\" href=\"/gas2/css/qtip.css\" rel=\"Stylesheet\" />
+	//		";
+	  
+	  $h .= c1_ext_javascript();
+	  $h .= java_head_jquery_qtip();
+	  //$h .= c1_ext_javascript_tooltip($tt_5_id,$tt_5_class);
+	  //$h .= c1_ext_javascript_tooltip($tt_6_id,$tt_6_class);
+	  $h .= c1_javascript($menu_aperto);
+	  if(!empty($tabella_da_ordinare)){ 
+		$h .= java_head_jquery_tablesorter();
+
+	  }
+	  $h .= c1_close_header();
+	  $h .= '<body>';
+	  if(!empty($tabella_da_ordinare)){
+			$h    .= java_tablesorter($tabella_da_ordinare);
+		
+			
+	  }
+	  $h .= c1_open_div("container");
+	  $h    .= c1_open_div("header");
+	  $h        .=c1_header_page($username,$gas_name,$menu);
+	  $h    .= c1_close_div();
+	  $h    .= c1_open_div("navigation");
+	  
+	  if (is_logged_in($user))
+			{
+	  $h        .= c1_navigation_2($id_user);
+	  $h        .= '<div class="ui-widget-content ui-corner-all padding_6px" style="margin-top:10px;">
+					<b>User OnLine :</b>
+					'.crea_lista_user_attivi(2).'
+					</div>';
+			}else{
+	  $h        .= c1_navigation_1();          
+			}
+	  
+	   
+	  $h    .= c1_close_div();
+	  if(!empty($msg)){
+	  $h    .= "<div id=\"dialog-message\" title=\"ReteGas A.P.\">
+		<p>
+			<span class=\"ui-icon ui-icon-circle-check\" style=\"float:left; margin:0 7px 50px 0;\"></span>
+			$msg
+		</p>
+
+	</div>";
+	  }
+	  
+
+	  
+	  $h    .= c1_open_div("content");  
+	  $h    .= $h_table;                    // RENDER TABELLA	 
+	  //$h .= footer_user();
+	  $h    .= '</div>
+				</div>
+				<script type="text/javascript"> 
+					$("#content a[title]").qtip({   style: { name: "light", tip: true },position: { adjust: { screen: true } } ,show: { effect: "none" }
+					}); 
+				</script>
+				';
+		 
+		$h    .= '</body>
+				</html>';
+	   
+	   $conversion_chars = array (    "à" => "&agrave", 
+							   "è" => "&egrave", 
+							   "é" => "&egrave", 
+							   "ì" => "&igrave", 
+							   "ò" => "&ograve", 
+							   "ù" => "&ugrave"); 
+
+$h= str_replace (array_keys ($conversion_chars), array_values 
+($conversion_chars), $h);
+	   echo $h;
+}else{
+	c1_go_away("?q=no_permission");
+} 
+?>

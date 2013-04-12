@@ -1,0 +1,120 @@
+<?php
+# includo la mail
+include("../rend.php");
+
+
+if(!isset($code)){
+	echo"Not Allowed";
+	die;
+}
+
+if(!isset($extra_info)){
+	$extra_info = "AUTOMATICO-setcronjob";
+}
+
+switch ($code){
+	case "1001" : $tablename = "retegas_options"; break;
+	case "1002" : $tablename = "maaking_users"; break;
+	case "1003" : $tablename = "retegas_amici"; break;
+	case "1004" : $tablename = "retegas_articoli"; break;
+	//case "1005" : $tablename = "retegas_bacheca"; break;
+	case "1006" : $tablename = "retegas_dettaglio_ordini"; break; 
+	case "1007" : $tablename = "retegas_distribuzione_spesa"; break; 
+	case "1008" : $tablename = "retegas_ditte"; break;
+	case "1009" : $tablename = "retegas_gas"; break;
+	case "10010" : $tablename = "retegas_listini"; break;
+	case "10011" : $tablename = "retegas_messaggi"; break;
+	case "10012" : $tablename = "retegas_ordini"; break;
+	case "10013" : $tablename = "retegas_postino"; break;
+	case "10014" : $tablename = "retegas_referenze"; break;
+	case "10016" : $tablename = "retegas_tipologia"; break; 
+	
+	default: echo "Not Allowed"; die();
+		
+	
+}
+
+
+
+# Creo la funzione datadump
+function datadump ($table) {
+
+  # Creo la variabile $result
+  $result .= "# Dump of $table \n";
+  $result .= "# Dump DATE : " . date("d-M-Y") ."\n\n";
+
+  # Conto i campi presenti nella tabella
+  $query = mysql_query("select * from $table");
+  $num_fields = @mysql_num_fields($query);
+
+  # Conto il numero di righe presenti nella tabella
+  $numrow = mysql_num_rows($query);
+
+  # Passo con un ciclo for tutte le righe della tabella
+  for ($i =0; $i<$numrow; $i++)
+  {
+	$row = mysql_fetch_row($query);
+
+	# Ricreo la tipica sintassi di un comune Dump
+	$result .= "INSERT INTO ".$table." VALUES(";
+
+	# Con un secondo ciclo for stampo i valori di tutti i campi
+	# trovati in ogni riga
+	for($j=0; $j<$num_fields; $j++) {
+	  $row[$j] = addslashes($row[$j]);
+	  $row[$j] = ereg_replace("\n","\\n",$row[$j]);
+	  if (isset($row[$j])) $result .= "\"$row[$j]\"" ; else $result .= "\"\"";
+	  if ($j<($num_fields-1)) $result .= ",";
+	}
+
+	# Chiudo l'istruzione INSERT
+	$result .= ");\n";
+  }
+
+  return $result . "\n\n\n";
+}
+
+
+sanitize($tablename);
+$table1 = datadump($tablename);
+
+$file_name = $tablename."_".date("Y_m_d_h_i_s").".sql";
+
+$fp = fopen('temp/'.$file_name, 'w');
+fwrite($fp, $table1);
+fclose($fp);
+
+$msg .="Creato $file_name e riempito con $tablename<br>";
+
+$archivia = new ZipArchive();
+$nome_file = $tablename."_".date("Y_m_d_h_i_s").".zip";
+
+if ($archivia->open('temp/'.$nome_file, ZIPARCHIVE::CREATE)!==TRUE) 
+{
+    
+    @exit("Impossibile aprire <$nome_file>\n");
+}
+
+$archivia->addFile('temp/'.$file_name);
+$archivia->close();
+
+
+$msg .="Creato $nome_file e riempito con $file_name<br>";
+
+if(manda_mail_retegas_allegato($nome_file,$file_name." ".$extra_info)<>"OK"){
+	echo "Errore nell'invio della mail";
+    $msg .= "ERRORE INVIO MAIL";
+}else{
+	echo "Backup $nome_file $extra_info OK a "._SITE_MAIL_LOG;
+    $msg .= "Mail con allegato$nome_file $extra_info inviata a". _SITE_MAIL_LOG."<br>";
+	unlink('temp/'.$file_name);
+    unlink('temp/'.$nome_file);
+    $msg .= "Eliminati $file_name e $nome_file";
+     
+};
+
+log_me(0,0,"BCK","CRO","Eseguito backup Codice $code",0,$msg);
+
+exit;
+
+?>
