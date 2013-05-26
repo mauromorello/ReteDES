@@ -705,7 +705,7 @@ return $h_menu;
 
                     $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["gas_modifica"].'" target="_self">Modifica dati</a></li>'; 
                     $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["gas_option_sito"].'" target="_self">Gestisci opzioni GAS</a></li>';
-
+                    $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["gas_nuovo_gas"].'" target="_self">Crea nuovo GAS</a></li>';
             $h_menu .='</ul>';
 
             $h_menu .='</li>';
@@ -734,12 +734,14 @@ return $h_menu;
                     $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["gas_users"].'?out=csv">Esporta CSV</a></li>';
                 $h_menu .='</ul>';
             $h_menu .='</li>';
+            $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["gas_sposta_utenti"].'" target="_self">Sposta utenti</a></li>';
+
             $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["gas_perm_new_users"].'" target="_self">Permessi nuovi utenti</a></li>';
             $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["user_add"].'">Crea Nuovo utente</a></li>';
             $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["user_to_activate"].'">Attivazione utenti</a><li>';
             $h_menu .='<li><a class="medium beige awesome" href="'.$RG_addr["user_activity"].'">Ultime attività</a><li>';        
             $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["user_suspended"].'">Utenti sospesi</a></li>';
-
+            $h_menu .='<li><a class="medium yellow awesome" href="'.$RG_addr["utenti_chifacosa"].'">Chi può fare cosa</a></li>';
             
             
             if(_USER_PERMISSIONS & perm::puo_gestire_retegas){
@@ -1373,13 +1375,13 @@ function articoli_menu_operazioni($id_articolo){
     if($id_gas=id_gas_user(id_referente_ordine_globale($id_ordine))){$ok_mio_gas = true;} 
     if(id_referente_ordine_proprio_gas($id_ordine,$id_gas)==$id_user){$ok_gestore = true;}
 
-    $paga_fornitore = '<a class="awesome blue"  href="'.$RG_addr["cassa_paga_ditta"].'?id_ordine='.$id_ordine.'">Anticipa al fornitore</a>';
-    $scala_crediti_utenti = '<a class="awesome celeste"  href="'.$RG_addr["cassa_ordini_sit_ut"].'?id_ordine='.$id_ordine.'">Scala crediti utenti</a>';
-    $registra_movimenti = '<a class="awesome celeste"  href="'.$RG_addr["cassa_movimenti_reg"].'?id_ordine='.$id_ordine.'">Registra Movimenti</a>';   
-    $contabilizza_movimenti = '<a class="awesome celeste "  href="'.$RG_addr["cassa_movimenti_con"].'?id_ordine='.$id_ordine.'">Contabilizza Movimenti</a>';
-    $tutti_i_movimenti = '<a class="awesome celeste"  href="'.$RG_addr["cassa_ordini_tutti_mov"].'?id_ordine='.$id_ordine.'">Visualizza TUTTI Movimenti</a>'; 
-    $elimina_tutti_i_movimenti = '<a class="awesome red"  href="'.$RG_addr["cassa_ordini_del_mov"].'?id_ordine='.$id_ordine.'">Elimina TUTTI i Movimenti di questo ordine</a>';
-    $valori_ordine='<a class="awesome beige"  href="'.$RG_addr["cassa_valori_ordine"].'?id_ordine='.$id_ordine.'">Visualizza gli importi di tutti gli utenti</a>';;
+    $paga_fornitore = '<a class="awesome medium blue"  href="'.$RG_addr["cassa_paga_ditta"].'?id_ordine='.$id_ordine.'">Anticipa al fornitore</a>';
+    $scala_crediti_utenti = '<a class="awesome medium celeste"  href="'.$RG_addr["cassa_ordini_sit_ut"].'?id_ordine='.$id_ordine.'">Scala crediti utenti</a>';
+    $registra_movimenti = '<a class="awesome medium celeste"  href="'.$RG_addr["cassa_movimenti_reg"].'?id_ordine='.$id_ordine.'">Registra Movimenti</a>';   
+    $contabilizza_movimenti = '<a class="awesome medium celeste "  href="'.$RG_addr["cassa_movimenti_con"].'?id_ordine='.$id_ordine.'">Contabilizza Movimenti</a>';
+    $tutti_i_movimenti = '<a class="awesome medium celeste"  href="'.$RG_addr["cassa_ordini_tutti_mov"].'?id_ordine='.$id_ordine.'">Visualizza TUTTI Movimenti</a>'; 
+    $elimina_tutti_i_movimenti = '<a class="awesome medium red"  href="'.$RG_addr["cassa_ordini_del_mov"].'?id_ordine='.$id_ordine.'">Elimina TUTTI i Movimenti di questo ordine</a>';
+    $valori_ordine='<a class="awesome medium beige"  href="'.$RG_addr["cassa_valori_ordine"].'?id_ordine='.$id_ordine.'">Visualizza gli importi di tutti gli utenti</a>';;
     
     if(is_printable_from_id_ord($id_ordine)){
         //SE PUo' operare con i crediti    
@@ -1630,7 +1632,7 @@ function articoli_menu_operazioni($id_articolo){
                 // ma solo se non sono io il referente ordine
                     if (id_referente_ordine_globale($id)<>$id_user){ 
                         $com2 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=1" target="_self">Al referente Ordine</a></li>';
-                        $com3 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=3" target="_self">Ai partecipanti (mio GAS)</a></li>';
+                        $com3 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=3" target="_self">A coloro i quali hanno comprato qualcosa, nel mio GAS</a></li>';
                         $show = true;
                     }
                 
@@ -1639,16 +1641,16 @@ function articoli_menu_operazioni($id_articolo){
                 // Se invece sono il referente ORDINE
                  if (id_referente_ordine_globale($id)==$id_user){
                     $com4 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=5" target="_self">Ai referenti GAS</a></li>';   
-                    $com5 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=3" target="_self">Partecipanti (mio GAS)</a></li>';
-                    $com6 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=4" target="_self">Partecipanti (TUTTI)</a></li>';
+                    $com5 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=3" target="_self">A coloro i quali hanno comprato qualcosa (mio GAS)</a></li>';
+                    $com11 ='<li><a class="medium magenta awesome" href="'.$RG_addr["comunica_alcuni_articoli"].'?id_ordine='.$id.'">A coloro i quali hanno comprato specifici articoli</a></li>';
+                    $com6 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=4" target="_self">A coloro i quali hanno comprato qualcosa, di tutti i GAS</a></li>';
                     $com7 ='<li><a class="medium magenta awesome" href="'.$RG_addr["ordini_comunica"].'?id='.$id.'&mail_type=6" target="_self">Bacino utenti potenziali</a></li>';
                     $com9 ='<li><a class="medium magenta awesome" href="'.$RG_addr["opinione_referente"].'?id_ordine='.$id.'" target="_self">Recensisci il fornitore come gestore</a></li>';
 
                     $show = true;
                  }
 
-        
-
+                
         
          
      
@@ -1663,8 +1665,9 @@ if($show){
     $h_menu .=$com5;
     $h_menu .=$com6;
     $h_menu .=$com7;
-    $h_menu .=$com8;
-    $h_menu .=$com9;     
+    $h_menu .=$com11;
+    //$h_menu .=$com8;
+    //$h_menu .=$com9;     
     $h_menu .='</ul>';
     $h_menu .='</li>';
 }         
@@ -1688,17 +1691,18 @@ return $h_menu;
             $partecipazione_utenti = '<li><a class="awesome medium blue"  href="'.$RG_addr["partecipat_utenti"].'?id_ordine='.$id_ordine.'">Lista Partecipanti</a></li>';
             $cronologia_utenti = '<li><a class="awesome medium blue"  href="'.$RG_addr["partecipat_cronologia"].'?id_ordine='.$id_ordine.'">Cronologia ordini</a></li>';
             $avanzo_ammanco = '<li><a class="awesome medium blue"  href="'.$RG_addr["rep_avanzo_ammanco"].'?id='.$id_ordine.'">Avanzo ammanco (Oleggio)</a></li>';
-        
+            $dashboard ='<li><a class="awesome medium black"  href="'.$RG_addr["extra_dashboard"].'?id_ordine='.$id_ordine.'">Pannello reports</a></li>';
         
         $h_menu ='<li><a class="medium black awesome"><b>EXTRA</b></a>'; 
         $h_menu .='<ul>';
         
-        $h_menu .= $report_dettaglio_gas;
-        $h_menu .= $report_articoli_gas;
-        $h_menu .= $report_gas;
-        $h_menu .= $report_dettaglio_articoli;
-        $h_menu .= $report_riepilogo_articoli;
-        $h_menu .= $report_scatole_intere;
+        $h_menu .= $dashboard;
+        //$h_menu .= $report_dettaglio_gas;
+        //$h_menu .= $report_articoli_gas;
+        //$h_menu .= $report_gas;
+        //$h_menu .= $report_dettaglio_articoli;
+        //$h_menu .= $report_riepilogo_articoli;
+        //$h_menu .= $report_scatole_intere;
         $h_menu .= $partecipazione_utenti;
         $h_menu .= $cronologia_utenti;
         $h_menu .= $avanzo_ammanco;
@@ -1719,6 +1723,43 @@ return $h_menu;
         } 
         
     }          
+    function ordine_menu_feedback($id_ordine){
+    global $RG_addr;
+         // ------------------------------------------------MIE COMUNICAZIONI
+    $show=false;
+   
+   
+    //SE l'ordine è chiuso e convalidato 
+    if(stato_from_id_ord($id_ordine)==3){            
+        // Se invece sono il referente ORDINE
+         if (id_referente_ordine_globale($id_ordine)==_USER_ID){
+
+            $com9 ='<li><a class="medium amaranto awesome" href="'.$RG_addr["opinione_referente"].'?id_ordine='.$id_ordine.'" target="_self">Recensisci il fornitore come gestore</a></li>';
+            $show = true;
+         }
+         
+         if(n_articoli_ordini_user(_USER_ID,$id_ordine)>0){
+            $com8 ='<li><a class="medium amaranto awesome" href="'.$RG_addr["opinione_partecipante"].'?id_ordine='.$id_ordine.'" target="_self">Recensisci il fornitore come partecipante</a></li>';
+            $show = true;
+         }
+     }
+        
+         
+     
+if($show){
+    $h_menu .='<li><a class="medium amaranto awesome">FeedBack</a>'; 
+    $h_menu .='<ul>';
+    $h_menu .=$com8;
+    $h_menu .=$com9;     
+    $h_menu .='</ul>';
+    $h_menu .='</li>';
+}         
+// ------------------------------------------------FINE MIE COMUNICAZIONI
+
+
+return $h_menu;    
+    
+}
     
     
     function ordini_menu_nuovo($user){
@@ -1790,6 +1831,7 @@ return $h_menu;
         $m[] = ordine_menu_gestisci_new(_USER_ID,$id_ordine,_USER_ID_GAS);
         $m[] = ordine_menu_cassa(_USER_ID,$id_ordine,_USER_ID_GAS);
         $m[] = ordine_menu_comunica(_USER_ID,$id_ordine,_USER_ID_GAS);
+        $m[] = ordine_menu_feedback($id_ordine);
         $m[] = ordine_menu_extra($id_ordine);
         return $m;
     }

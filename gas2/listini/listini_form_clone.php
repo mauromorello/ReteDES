@@ -168,7 +168,7 @@ if ($do=="clone"){
 			exit;  
 		}else{
 			$nome_ditta = ditta_nome($data_5);
-			log_me(0,$id_user,"LIS","CLN","CLONATO il listino ($data_2) riferito alla ditta ($nome_ditta)",0,$my_query);
+			log_me(0,_USER_ID,"LIS","CLN","CLONATO il listino ($data_2) riferito alla ditta ($nome_ditta)",0,$my_query);
 			$msg = "Listino clonato aggiunto";
 			$id = $data_5;
 			include("../ditte/ditte_form.php");

@@ -150,6 +150,7 @@ if($db->sql_numrows($result_msg)>0){
         $n++;  
         $ordine = $row["id_ordini"];
         $descrizione = $row["descrizione_ordini"];
+        $data_chiusura =conv_date_from_db($row["data_chiusura"]);
         $messaggio = "Ordine $ordine aperto automaticamente.";
         $msg_twitter = "\"".substr($descrizione,0,50)."..\" APERTO dal ".gas_nome(id_gas_user(id_referente_ordine_globale($ordine)))."!";
         
@@ -205,7 +206,8 @@ if($db->sql_numrows($result_msg)>0){
         
         $da_chi = _SITE_NAME;
         $mail_da_chi = _SITE_MAIL_REAL;
-        $message =  "L'ordine $ordine ($descrizione) è aperto.<br>
+        $message =  "L'ordine $ordine ($descrizione) è aperto,<br>
+                     e lo sarà fino al $data_chiusura (salvo modifiche da parte del referente).<br>
                      Lo puoi vedere nella pagina ORDINI APERTI del sito.<br>
                      oppure cliccando questo <a href=\"".$RG_addr["ordini_form"]."?id_ordine=$ordine\">link</a><br>
                      ------------------------------------------------------ <br>
@@ -445,6 +447,9 @@ function controlla_integrita_ordine_totale($id_ordine){
     function schedina_ordine($id_ordine){
     global $db,$RG_addr;
     
+    
+    
+    
     if(isset($id_ordine)){
     $query = "SELECT * FROM retegas_ordini WHERE id_ordini='$id_ordine' LIMIT 1";
     $res = $db->sql_query($query);
@@ -474,7 +479,8 @@ function controlla_integrita_ordine_totale($id_ordine){
         }
     }
     
-    
+    $id_listino = $row["id_listini"];
+    $id_ditta = ditta_id_from_listino($id_listino);
     
     
     $h = '<table>
@@ -506,11 +512,11 @@ function controlla_integrita_ordine_totale($id_ordine){
                     <tbody>
                         <tr class="odd sinistra">
                             <th>Ditta</th>
-                            <td>'.ditta_nome(ditta_id_from_listino($row["id_listini"])).'</td>
+                            <td><a href="'.$RG_addr["form_ditta"].'?id_ditta='.$id_ditta.'">'.ditta_nome(ditta_id_from_listino($row["id_listini"])).'</a></td>
                         </tr>
                         <tr class="odd sinistra">
                             <th>Listino</th>
-                            <td>'.listino_nome($row["id_listini"]).'</td>
+                            <td><a href="'.$RG_addr["listini_scheda"].'?id_listino='.$id_listino.'">'.listino_nome($row["id_listini"]).'</a></td>
                         </tr>
                     
                     </tbody>
@@ -3108,6 +3114,7 @@ HAVING (((retegas_ordini.id_ordini)=$ord));";
   return $ret;
 
 }
+
 
 Function ordine_bacino_utenti($ord){
 $sql="SELECT

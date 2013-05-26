@@ -139,7 +139,7 @@ $data_xls->read($upload_dir."/".$file_name);
 //print_r($data_xls->formatRecords);
 
 
-if($data_xls->sheets[0]['numRows']>100){
+if($data_xls->sheets[0]['numRows']>1000){
     $erro_troppi++;
 }
 
@@ -167,10 +167,10 @@ for ($i_x = 2; $i_x <= $data_xls->sheets[0]['numRows']; $i_x++) {
         if ($data_xls->sheets[0]['cells'][$i_x][11]<>""){$articolo_composto= true;}else{$articolo_composto=false;};
         
         
-        if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][1])>0){$warn_string++;}  //codice
-        if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][2])>0){$warn_string++;}
-        if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][4])>0){$warn_string++;}
-        if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][6])>0){$warn_string++;}
+        //if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][1])>0){$warn_string++;}  //codice
+        //if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][2])>0){$warn_string++;}
+        //if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][4])>0){$warn_string++;}
+        //if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][6])>0){$warn_string++;}
 
         
         if (!is_numeric(trim(str_replace(array(","),array("."),$data_xls->sheets[0]['cells'][$i_x][8])))){$erro_num++;} 
@@ -184,7 +184,7 @@ for ($i_x = 2; $i_x <= $data_xls->sheets[0]['numRows']; $i_x++) {
         
         $data_xls->sheets[0]['cells'][$i_x][9]=sanitize($data_xls->sheets[0]['cells'][$i_x][9]);
         
-        if (trim($data[9])=="UNICO"){$unici++;}
+        if (trim($data[9])<>""){$unici++;}
         
         if (!$data_xls->sheets[0]['cells'][$i_x][1]==""){
         $result = $db->sql_query("SELECT retegas_articoli.id_articoli
@@ -314,10 +314,10 @@ for ($i_x = 2; $i_x <= $data_xls->sheets[0]['numRows']; $i_x++) {
         
         if ($erro_doppi>0){if (in_array($data_xls->sheets[0]['cells'][$i_x][1],$doppi)){$bg[1] = "class=\"articoli_doppi\"";}}// e' uno dei doppi
         
-        if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][1])>0){$bg[1] = "class=\"punteggiatura\"";}// Cod art. COntiene caratteri insulsi
-        if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][2])>0){$bg[2] = "class=\"punteggiatura\"";}// Descriz COntiene caratteri insulsi  
-        if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][4])>0){$bg[4] = "class=\"punteggiatura\"";}// U mis caratteri insulsi  
-        if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][6])>0){$bg[6] = "class=\"punteggiatura\"";}// Ingombro caratteri insulsi  
+        //if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][1])>0){$bg[1] = "class=\"punteggiatura\"";}// Cod art. COntiene caratteri insulsi
+        //if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][2])>0){$bg[2] = "class=\"punteggiatura\"";}// Descriz COntiene caratteri insulsi  
+        //if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][4])>0){$bg[4] = "class=\"punteggiatura\"";}// U mis caratteri insulsi  
+        //if (ereg("[^אטלעשA-Za-z0-9.,-_!$%()= ]",  $data_xls->sheets[0]['cells'][$i_x][6])>0){$bg[6] = "class=\"punteggiatura\"";}// Ingombro caratteri insulsi  
         
         if (!is_numeric(trim(str_replace(array(","),array("."),$data_xls->sheets[0]['cells'][$i_x][8])))){$bg[8] = "class=\"non_riconosciuto\"";}else{$bg[8] = "";} 
         if (!is_numeric(trim(str_replace(array(","),array("."),$data_xls->sheets[0]['cells'][$i_x][7])))){$bg[7] = "class=\"non_riconosciuto\"";}else{$bg[7] = "";}
@@ -375,5 +375,4 @@ $r->contenuto = listini_form($id).$h_table;
 //Mando all'utente la sua pagina
 echo $r->create_retegas();
 //Distruggo l'oggetto r    
-unset($r)   
-?>
+unset($r);

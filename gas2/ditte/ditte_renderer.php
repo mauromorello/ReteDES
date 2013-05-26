@@ -535,6 +535,49 @@ function ditte_render_form_2($id_ditta){
       $n_listini_attivi =  listini_ditte($id_ditta);
       $n_listini_totali =  listini_ditte_totali($id_ditta);
       
+      //Ordini su questa ditta
+      $sql = "SELECT
+                Count(retegas_ordini.id_ordini)
+                FROM
+                retegas_listini
+                Inner Join retegas_ordini ON retegas_ordini.id_listini = retegas_listini.id_listini
+                WHERE
+                retegas_listini.id_ditte =  '$id_ditta'";
+      $res = $db->sql_query($sql);
+      $row = $db->sql_fetchrow($res);
+      $n_ordini_fatti = $row[0];
+      
+      
+      //Gas su questa ditta
+      $sql="SELECT
+            Count(maaking_users.id_gas),
+            maaking_users.id_gas
+            FROM
+            retegas_ordini
+            Inner Join maaking_users ON retegas_ordini.id_utente = maaking_users.userid
+            Inner Join retegas_listini ON retegas_ordini.id_listini = retegas_listini.id_listini
+            WHERE
+            retegas_listini.id_ditte =  '$id_ditta'
+            GROUP BY
+            maaking_users.id_gas";
+      $res = $db->sql_query($sql);
+      $row = $db->sql_fetchrow($res);
+      $n_gas_ordinanti = $db->sql_numrows($res);
+       
+      //Gestori su questa ditta :
+      $sql ="SELECT
+        retegas_ordini.id_utente
+        FROM
+        retegas_ordini
+        Inner Join retegas_listini ON retegas_ordini.id_listini = retegas_listini.id_listini
+        WHERE
+        retegas_listini.id_ditte =  '$id_ditta'
+        GROUP BY
+        retegas_ordini.id_utente";
+      $res = $db->sql_query($sql);
+      $row = $db->sql_fetchrow($res);
+      $n_gestori = $db->sql_numrows($res);
+      
       $my_query="SELECT * FROM retegas_ditte WHERE  (id_ditte='$id_ditta') LIMIT 1";
       // COSTRUZIONE TABELLA  -----------------------------------------------------------------------
       global $db;
@@ -745,12 +788,16 @@ function ditte_render_form_2($id_ditta){
                                         <td $class_certificazioni>$n_listini_totali</td>
                                     </tr>
                                     <tr class=\"scheda\">
+                                        <th $col_1>Ordini fatti con questo fornitore</th>
+                                        <td $class_certificazioni>$n_ordini_fatti</td>
+                                    </tr>
+                                    <tr class=\"scheda\">
                                         <th $col_1>Gas che ordinano da lui</th>
-                                        <td $col_2>Test</td>
+                                        <td $class_certificazioni>$n_gas_ordinanti</td>
                                     </tr>
                                     <tr class=\"scheda\">
                                         <th $col_1>Totale Gestori</th>
-                                        <td $col_2>Test</td>
+                                        <td $class_certificazioni>$n_gestori</td>
                                     </tr>
                                     
                                 </table>

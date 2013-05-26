@@ -437,9 +437,3 @@ $ret = mysql_query($sql);
 //Valore ARR ORDINE MAGGIORAZIONE GAS   Parametri   : Ordine
 //Valore ARR ORDINE COSTI TOTALI ORDINE Parametri   : Ordine
 //Valore ARR ORDINE TOTALI ORDINE :     Parametri   : Ordine
-
-
-
-
-
-?>

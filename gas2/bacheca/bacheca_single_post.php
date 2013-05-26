@@ -56,6 +56,7 @@ if(_USER_HAVE_MSG){
 
 //Contenuto
 
+$h = bacheca_render_fullwidth_messaggio($id_messaggio);
 
 //Questo ?? il contenuto della pagina
 $r->contenuto = $h;

@@ -14,17 +14,27 @@ include_once ("utenti_render.php");
           
           
               
-          $username = sanitize($username);    
+          //$username = sanitize($username);    
           if(is_empty($username)){
               $err_empty++;
               $msg .= "Manca il nome utente<br>";
           }
+          
+          //if(!isValid($username)){
+          //   $err_log++;
+          //   $msg .= "L'username scelto contiene caratteri non validi<br>"; 
+          //}
           
           
           if(is_empty($password)){
               $err_empty++;
               $msg .= "Manca la prima password<br>";
           }
+          //if(!isValid($password)){
+          //   $err_log++;
+          //   $msg .= "La password scelta contiene caratteri non validi<br>"; 
+          //}
+          
           
           if(is_empty($password2)){
               $err_empty++;
@@ -101,7 +111,7 @@ include_once ("utenti_render.php");
           
           if($err_tot==0){
           
-            $messaggio_referente = sanitize($messaggio_referente);
+            
           
           
             // USer non ancora attivato
@@ -115,9 +125,11 @@ include_once ("utenti_render.php");
             $gasappartenenza = intval($gasappartenenza); 
             $consenso=intval($consenso);
             $permessi = leggi_permessi_default($gasappartenenza);
-          
+            
+            
+            $messaggio_referente_q = sanitize($messaggio_referente);
             $result = $db->sql_query("INSERT INTO maaking_users (username,password,email,fullname,regdate,isactive,code,id_gas,consenso,tel,user_permission,profile) "
-                                                       ."  VALUES('$username','$md5_password','$email','$fullname',NOW(),'$isactive','$code','$gasappartenenza','$consenso','$tel','$permessi','$messaggio_referente');");
+                                                       ."  VALUES('$username','$md5_password','$email','$fullname',NOW(),'$isactive','$code','$gasappartenenza','$consenso','$tel','$permessi','$messaggio_referente_q');");
             if (!$result) {
                 die('Errore interno: ' . mysql_error().";");
             }

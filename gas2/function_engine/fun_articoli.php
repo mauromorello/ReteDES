@@ -106,4 +106,18 @@ $row = mysql_fetch_assoc($ret);
 return $row["codice"];    
 
 }
+function qta_ord_ordine_articolo($id_ordine,$id_articolo){
+    global $db;
+    $sql = "SELECT
+                Sum(retegas_dettaglio_ordini.qta_ord)
+                FROM
+                retegas_dettaglio_ordini
+                WHERE
+                retegas_dettaglio_ordini.id_articoli =  '$id_articolo'
+                AND
+                id_ordine = '$id_ordine'; ";
+    $res = $db->sql_query($sql);
+    $row = $db->sql_fetchrow($res);
+    return $row[0];
+}
 	        

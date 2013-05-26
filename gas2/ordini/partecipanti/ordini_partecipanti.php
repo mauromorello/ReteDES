@@ -9,17 +9,7 @@ include_once ("../ordini_renderer.php");
 (int)$id_ordine;
 
 // controlla se l'user ha effettuato il login oppure no
-if (is_logged_in($user)){
-
-    // estraggo dal cookie le informazioni su chi ? che sta vedendo la pagina
-    $cookie_read     =explode("|", base64_decode($user));
-    $id_user  =  $cookie_read[0];
-    $usr =       $cookie_read[1]; 
-                                
-    // e poi scopro di che gas ? l'user
-    $id_gas = id_gas_user($id_user);
-    
-}else{
+if (!_USER_LOGGED_IN){
     pussa_via();
     exit;     
 }    
@@ -56,7 +46,16 @@ if (is_logged_in($user)){
       
       $retegas->java_scripts_header[] = java_accordion(null,1); // laterale    
       $retegas->java_scripts_header[] = java_superfish();       
-      $retegas->java_scripts_header[]=  java_tablesorter($ref_table);
+      $retegas->java_scripts_bottom_body[]=  '<script type="text/javascript">                
+                        $(document).ready(function() 
+                            {
+                                $("#lista_utenti").tablesorter({widgets: [\'zebra\',\'saveSort\',\'filter\'],
+                                                        cancelSelection : true,
+                                                        dateFormat : \'ddmmyyyy\',                                                               
+                                                        }); 
+                                } 
+                            );
+</script>';
       // assegno l'eventuale messaggio da proporre
       if(isset($msg)){ 
         $retegas->messaggio=$msg;
@@ -72,8 +71,4 @@ if (is_logged_in($user)){
       echo $html;
       exit;
 
-      unset($retegas);      
-      
-      
-      
-?>
+      unset($retegas); 

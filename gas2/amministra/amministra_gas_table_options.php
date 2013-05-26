@@ -148,6 +148,4 @@ if (!(_USER_PERMISSIONS & perm::puo_gestire_retegas)){
       //distruggo retegas per recuperare risorse sul server
       unset($retegas);      
       
-      
-      
-?>
+        

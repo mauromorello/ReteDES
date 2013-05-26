@@ -114,8 +114,4 @@ go("sommario",_USER_ID,"Nuova configurazione salvata");
       echo $html;
       exit;
 
-      unset($retegas);      
-      
-      
-    
-?>
+      unset($retegas);

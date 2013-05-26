@@ -29,7 +29,7 @@ if(isset($do)AND $do=="req"){
                                Ricordati che c'è differenza tra lettere maiuscole e minuscole.
                                </p>";
 
-                manda_mail("ReteGas",_SITE_MAIL_LOG,$fullname,$email,"[RETEDES.IT] Username persa",$messaggio);
+                manda_mail("["._SITE_NAME."]",_SITE_MAIL_LOG,$fullname,$email,"["._SITE_NAME."] - Username persa",$messaggio);
                 sleep(1);
                 //unlink("temp/pwd_$password.jpg");
                 go("sommario",null,"","?q=44");
@@ -55,13 +55,7 @@ $r = new rg_simplest();
 $r->title = "Username Dimenticata";
 
 $r->messaggio = $msg; 
-
-    $mio_menu[]='<li><a class="medium yellow awesome" href="'.$RG_addr["sommario"].'?do=cosa_gas">Cosa sono i GAS</a></li>';
-    $mio_menu[]='<li><a class="medium green awesome" href="'.$RG_addr["sommario"].'?do=chi_partecipa">Chi partecipa</a></li>';
-    $mio_menu[]='<li><a class="medium red awesome" href="'.$RG_addr["sommario"].'?do=progetto_retegas">Progetto ReteGas.AP</a></li>';
-    $mio_menu[]='<li><a class="medium beige awesome" href="'.$RG_addr["sommario"].'?do=progetto_des">Progetto D.E.S</a></li>';
-
-$r->menu_orizzontale = $mio_menu;    
+    
 
 //Questo è il contenuto della pagina
 $r->contenuto = '<div class="ui-widget-content ui-state-error padding_6px ui-corner-all">

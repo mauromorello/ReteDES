@@ -87,7 +87,7 @@ if (is_logged_in($user)){
       $retegas->java_scripts_header[] = java_superfish();
       $retegas->java_scripts_bottom_body[] = java_tablesorter("output");       
       
-      
+      /*
               $retegas->java_scripts_bottom_body[] = "<script src=\"js/protoclass.js\"></script>
                                                  <script src=\"js/box2d.js\"></script>
                                                  
@@ -124,7 +124,7 @@ if (is_logged_in($user)){
                                                  </script>
                                                  
         <script src=\"js/Main.js\"></script>";
-      
+      */
       // assegno l'eventuale messaggio da proporre
       if(isset($msg)){ 
         $retegas->messaggio=$msg;
@@ -139,7 +139,7 @@ if (is_logged_in($user)){
                 background-color: #ffffff;
             }
       </style>
-      <div id="canvas"></div>'.tutti_gli_amici($id_user, $ref_table,$id_ordine,$go_back);
+      <div id="canvasa"></div>'.tutti_gli_amici($id_user, $ref_table,$id_ordine,$go_back);
       
         
       $html = $retegas->sito_render();

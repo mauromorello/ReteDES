@@ -763,7 +763,7 @@ $h3        .= '<div class="" style="margin-top:10px; padding:2px;font-size:.9em"
 //se amministro
 if(_USER_PERMISSIONS & perm::puo_gestire_retegas){
 $h3        .= '<div class="" style="margin-top:10px; padding:2px;font-size:.9em">
-                    <b>User OnLine (Tutta Retegas.AP):<br></b>
+                    <b>User OnLine (Tutta '._SITE_NAME.'):<br></b>
                     '.crea_lista_user_attivi_pubblica(2).'
                     </div>';
 }
@@ -813,40 +813,9 @@ return $h;
 
 }
 
+//RGW04 : BACHECA
+include ("widget_04.php");
 
-function rgw_bacheca($site,$gas){
-
-// Nel caso non ci fossero altri widget inietto il comando per caricare il css dei widget nell'array della classe retegas
-//array_push($site->css,"widgets_ui");
-
-// Nome id del widget
-$w_name = "rgw_4";
-
-
-// Negli array dei comandi java a fondo pagina inserisco le cose necessarie al widget
-//$site->java_scripts_bottom_body[]='<script type="text/javascript">$("#'.$w_name.'").draggable({});</script>';
- 
-// istanzio un nuovo oggetto widget
-$w = new rg_widget();
-
-// Imposto le proprietà del widget
-$w->name = $w_name;
-$w->title="Bacheca Messaggi";
-$w->toggle_state ="hide";
-$w->content = main_render_quick_messaggi_coda($gas);
-$w->footer = "Scheda con tutti i messaggi della bacheca visibili dal ".gas_nome($gas).".<br>";       
-$w->use_handler =false;
-// Eseguo il rendering        
-$h = $w->rgw_render();
-
-// Distruggo il widget
-unset($w);    
-    
-//Ritorno l'HTML    
-return $h;
-
-
-}
 
 //SERVIZIO
 function rgw_retegas_comunica($site,$id_user){
@@ -1000,7 +969,7 @@ for($s=0;$s<50;$s++){
       $res = $db->sql_query($sql1);
       //{ name: 'Firefox', y: 44.2, color: '#4572A7' },
       while ($row = mysql_fetch_array($res)){
-            $data_activity_1 .="{ name: '".$row["descrizione_gas"]."', y: ".$row["Contgas"].", color:'#".$colo[$row["id_gas"]]."'}, 
+            $data_activity_1 .="{ name: '".str_replace("'","&apos;",$row["descrizione_gas"])."', y: ".$row["Contgas"].", color:'#".$colo[$row["id_gas"]]."'}, 
             ";
       }
       $data_activity_1 = rtrim($data_activity_1,", ");
@@ -1021,7 +990,7 @@ for($s=0;$s<50;$s++){
       $res = $db->sql_query($sql2);
       //{ name: 'Firefox', y: 44.2, color: '#4572A7' },
       while ($row = $db->sql_fetchrow($res)){
-            $data_activity_2 .="{ name: '".$row["descrizione_gas"]."', y: ".$row["Contgas"].", color: '#".$colo[$row["id_gas"]]."'}, 
+            $data_activity_2 .="{ name: '".str_replace("'","&apos;",$row["descrizione_gas"])."', y: ".$row["Contgas"].", color: '#".$colo[$row["id_gas"]]."'}, 
             ";
  
       }

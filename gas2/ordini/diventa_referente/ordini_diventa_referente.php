@@ -100,7 +100,7 @@ if(id_gas_user(id_referente_ordine_globale($id_ordine,_USER_ID_GAS))== _USER_ID_
 
         }// END WHILE
 
-        $soggetto = "[RETEGAS AP] - [HABEMUS REFERENTEM] $da_chi per ordine $id_ordine ($descrizione_ordine)";
+        $soggetto = "["._SITE_NAME."] - [HABEMUS REFERENTEM] $da_chi per ordine $id_ordine ($descrizione_ordine)";
         $msg_mail = "L'utente $da_chi si è offerto come REFERENTE GAS per questo ordine.<br>
                      Grazie al suo spirito d'iniziativa ora potrete acquistare merce tramite un'altro GAS.<br>
                      Egli si occuperà di recuperare il materiale una volta arrivato e per quanto riguarda la distribuzione ed il pagamento vi fornirà precise indicazioni<br>

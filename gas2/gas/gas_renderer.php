@@ -70,7 +70,7 @@ $h_table .=  "<table class=\"sinistra\">
 
 		<tr class=\"odd\">
 
-			<th $col_1>Referente Retegas.AP</th>
+			<th $col_1>Referente ReteDES.it</th>
 
 			<td $col_2>$c7</td>
 
@@ -493,7 +493,8 @@ return $h_table;
 		<th>Ordini come referente</th>
 		<th>Ordini come partecipante</th>
         <th>GG inattività</th>
-        <th>Cassa</th> 
+        <th>Cassa</th>
+        <th>Mail</th>  
 		</tr>
 
 		 </thead>
@@ -520,10 +521,13 @@ return $h_table;
             $date2 = date("Y-m-d");
             $date1 = $row["last_activity"];
             $reg = conv_date_from_db($row["regdate"]);
+            $mail = _USER_OPT_SEND_MAIL;
             
             
-            $diff = abs(strtotime($date2) - strtotime($date1));
-            $gg_ina = _nf((int)floor($diff/(60*60*24)));
+                                       
+            $gg_ina = number_format((int)floor(abs(strtotime($date2) - strtotime($date1))/(60*60*24)),0,"","");
+            
+            if($gg_ina>999){$gg_ina="Troppi...";}
     
             if(read_option_text($id_utente,"_USER_USA_CASSA ")=="SI"){
                 $pal_cas="SI";
@@ -559,6 +563,7 @@ return $h_table;
             <td>$part_ordine</td>   
             <td>$gg_ina</td>
             <td>$pal_cas</td>
+            <td>$mail</td>
             </tr>";
     
             if ($row["isactive"]<>1){

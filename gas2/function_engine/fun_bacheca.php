@@ -369,7 +369,8 @@ function bacheca_render_fullwidth_messaggio($id_messaggio){
     
     $id_ordine = CAST_TO_INT($row["id_ordine"],0);
     if($id_ordine>0){
-          $ordine =" (Ordine #".$row["id_ordine"]." del ".conv_date_from_db(db_val_q("id_ordini",$id_ordine,"data_chiusura","retegas_ordini")).") ";
+        $cosa = descrizione_ordine_from_id_ordine($row["id_ordine"]);  
+        $ordine =" (Ordine #".$row["id_ordine"]." [$cosa] del ".conv_date_from_db(db_val_q("id_ordini",$id_ordine,"data_chiusura","retegas_ordini")).") ";
     }
 
     if($row["bacheca_address"]<>""){$indirizzo=", commento geolocato in <cite>".$row["bacheca_address"]."</cite>";}
@@ -389,12 +390,17 @@ function bacheca_render_fullwidth_messaggio($id_messaggio){
         $show_commands ="";
     }
     
-    $h  =  "<div class=\"rg_widget rg_widget_helper\">";
+    $h  =  "<div class=\"rg_widget rg_widget_helper\" style=\"padding:0.2em;\">";
     $h .=  "<h4 style=\"margin-bottom:.4em;\">".$row["titolo_messaggio"].", di ".fullname_from_id($row["id_utente"])."</h4>";
     $h .=  "<span class=\"small_link\">[<a href=\"#\" onclick=\"$('#msg_".$row["id_bacheca"]."').toggle();return false;\">INFO</a>] $show_commands</span>";
+    if($row["messaggio"]<>""){
+        $h .=  "<span class=\"small_link\">[<a href=\"#\" onclick=\"$('#msgread_".$row["id_bacheca"]."').toggle();return false;\">LEGGI TUTTO</a>]</span>";
+    }
     $h .=  $info_div;
-    $h .=  "<br>
-            <div style=\"height:6em;overflow:auto; border-left:2px solid #ccc; margin-left:2em; padding:.5em;\">".$row["messaggio"]."</div>";
+    $h .=  "<br>";
+    if($row["messaggio"]<>""){
+        $h .=  "<div id=\"msgread_".$row["id_bacheca"]."\"  style=\"display:none;height:6em;overflow:auto; border-left:2px solid #ccc; margin-left:2em; padding:.5em;\">".$row["messaggio"]."</div>";
+    }
     $h .=  "</div>";
     
     return $h;    

@@ -89,12 +89,9 @@ if (_USER_LOGGED_IN){
     }	
 	
     // QUA METTO I MENU PRIVATI
-    $mio_menu[]='<li><a class="medium silver awesome" href="#"><strong>Personalizza</strong></a>
-                    <ul>
-                       <li><a class="medium silver awesome" href="'.$RG_addr["pag_users_form_widgets"].'">Elementi visualizzati</a></li>
-                       <li><a class="medium silver awesome" href="'.$RG_addr["user_help_pers"].'">Aiuto rapido</a></li> 
-                    </ul>
-                 </li>';
+    $mio_menu[]='<li><a class="medium silver awesome" href="'.$RG_addr["pag_users_form_widgets"].'">Elementi visualizzati</a></li>
+                    <li><a class="medium silver awesome" href="'.$RG_addr["user_help_pers"].'">Aiuto rapido</a></li> 
+    ';
     
     //CONTROLLO I BOOKMARK DELL'UTENTE
     $sql_book = "SELECT * FROM retegas_options WHERE id_user='"._USER_ID."' AND chiave LIKE 'BOOK_%';";
@@ -198,7 +195,9 @@ if (_USER_LOGGED_IN){
 	// dico a retegas quali file esterni dovrà caricare
 	$retegas->java_headers = array_merge(array("rg"), $retegas->java_headers);
 									 
-	 
+	//DISQUS
+    $retegas->disqus_id="MAIN";
+    $retegas->disqus_title="Parliamo di ReteDes.it !"; 
 	 
 	 
 	 
@@ -207,7 +206,7 @@ if (_USER_LOGGED_IN){
 	  $retegas->java_scripts_header[]=java_accordion(); // laterale      
 	  
     
-      $retegas->java_scripts_bottom_body[]= java_auto_close_accordion(5000);
+      //$retegas->java_scripts_bottom_body[]= java_auto_close_accordion(5000);
       $retegas->java_scripts_bottom_body[]='<script>
        
       

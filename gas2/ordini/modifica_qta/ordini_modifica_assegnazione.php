@@ -632,7 +632,12 @@ if($do=="save_mods"){
             $log .="Dovrei fare UPDATE CASSA<br>";
             if(read_option_prenotazione_ordine($id_ordine,_USER_ID)<>"SI"){
                 $log .="PRENOTAZIONE ? NO, eseguo update cassa<br>";
-                cassa_update_ordine_utente($id_ordine,_USER_ID);
+                if(_USER_USA_CASSA){
+                    $log .="Utente Con CASSA ATTIVA<br>";
+                    cassa_update_ordine_utente($id_ordine,_USER_ID);
+                }else{
+                    $log .="Utente senza CASSA, nessun UPDATE<br>";
+                }
             }else{
                 $log .="PRENOTAZIONE ? SI, salto update cassa<br>";
             } 

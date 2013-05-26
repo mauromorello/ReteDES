@@ -82,7 +82,4 @@ if (is_logged_in($user)){
 	  
 	  //distruggo retegas per recuperare risorse sul server
 	  unset($retegas);	  
-	  
-	  
-	  
-?>
+	                                 

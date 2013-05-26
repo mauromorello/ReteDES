@@ -128,7 +128,7 @@ if($do=="change_user_permissions_zeus"){
 		  $verso_chi = fullname_from_id($id); 
 		  $mail_verso_chi = id_user_mail($id);
 			
-		  $soggetto = "[RETEGAS AP] - da $da_chi - Comunicazione";
+		  $soggetto = "["._SITE_NAME."] - da $da_chi - Comunicazione";
 		  manda_mail($da_chi,$mail_da_chi,$verso_chi,$mail_verso_chi,$soggetto,$msg_mail);
 			
 		  $msg="Mail inviata a $verso_chi";
@@ -138,7 +138,7 @@ if($do=="change_user_permissions_zeus"){
 	  }
 	  
 	  // MENU APERTO
-	  $menu_aperto=2;
+	  $menu_aperto=menu_lat::user;
 		
 	  // QUERY
 	  (int)$id;

@@ -5,6 +5,8 @@ include_once ("../../retegas.class.php");
 include_once ("../ordini_renderer.php");
 //include_once ("../Swift-4.0.6/mailer.php");
 
+
+
 if (is_logged_in($user)){
 		$cookie_read = explode("|", base64_decode($user));
 		$id_user = $cookie_read[0];
@@ -231,7 +233,9 @@ if (is_logged_in($user)){
 		$result = $db->sql_query($qry);
 		$lista_destinatari ="";
 		while ($row = mysql_fetch_array($result)){
-			if($row[2] & opti::aggiornami_nuovi_ordini){ 
+			
+            $uosm = read_option_text($row[5],"_USER_OPT_SEND_MAIL");
+            if($uosm<>"NO"){ 
 				$verso_chi[] = $row[0] ;
 				$mail_verso_chi[] = $row[1] ;
 				$lista_destinatari .= $row[0]." (".$row[4]."); <br>";
@@ -407,12 +411,15 @@ switch ($mail_type){
 				Inner Join maaking_users ON retegas_referenze.id_gas_referenze = maaking_users.id_gas
 				Inner Join retegas_gas ON retegas_referenze.id_gas_referenze = retegas_gas.id_gas
 				WHERE
-				retegas_ordini.id_ordini =  '$id'";
+				retegas_ordini.id_ordini =  '$id'
+                AND
+                maaking_users.isactive = 1;";
 
 		$result = $db->sql_query($qry);
 		$lista_destinatari ="";
 		while ($row = mysql_fetch_array($result)){
-			if($row[3] & opti::aggiornami_nuovi_ordini){
+			$uosm = read_option_text($row[4],"_USER_OPT_SEND_MAIL");
+            if($uosm<>"NO"){ 
 				$lista_destinatari .= " ".$row[0]."; ";
 			}
 		}

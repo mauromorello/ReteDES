@@ -61,6 +61,13 @@ padding-right :.5em;
 padding-bottom:1em;
 }
 
+.rg_widget .rg_w_body li {
+    font-size:100%;
+}
+.rg_widget .rg_w_body li:hover {
+    font-size:140%;
+}
+
 .rg_widget .rg_w_footer{
 padding-top : .5em;
 padding-left: 10px;

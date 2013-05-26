@@ -56,7 +56,7 @@ $sql2 = "SELECT
       while ($row = mysql_fetch_array($res2)){                            
       
           $jd .= "
-                gas_map['".$row["descrizione_gas"]."'] = {
+                gas_map['".str_replace("'","\'",$row["descrizione_gas"])."'] = {
                 center: new google.maps.LatLng(".$row["gas_gc_lat"].", ".$row["gas_gc_lng"]."),
                 users: ".$row["user_totali"]."
                 };
@@ -115,7 +115,7 @@ $r->javascripts[]='<script type="text/javascript">
                         var mapOptions = {
                           center: new google.maps.LatLng('.db_val_q("id_des",_USER_ID_DES,"des_lat","retegas_des").',
                                                          '.db_val_q("id_des",_USER_ID_DES,"des_lng","retegas_des").'),
-                          zoom: 9,
+                          zoom: '.db_val_q("id_des",_USER_ID_DES,"des_zoom","retegas_des").',
                           mapTypeId: google.maps.MapTypeId.TERRAIN
                         };
                         var map = new google.maps.Map(document.getElementById("map_canvas"),

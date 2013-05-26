@@ -581,7 +581,7 @@ function db_splat_table($table,$filter=null,$lenght = 10){
     
     $t .="<strong>";
     for($i=0;$i<$fields;$i++){
-            $t .= $db->sql_fieldname($i,$res)." - ";     
+            $t .= $db->sql_fieldname($i,$res).", ";     
         } 
     $t .="</strong>
             <br>";
@@ -589,7 +589,8 @@ function db_splat_table($table,$filter=null,$lenght = 10){
     while ($row = mysql_fetch_array($res)){
     
         for($i=0;$i<$fields;$i++){
-            $t .= strip_tags(myTruncate($row[$i],$lenght," "))." - ";      
+            //$t .= strip_tags(myTruncate($row[$i],$lenght," "))." - ";
+            $t .= strip_tags($row[$i]).", ";      
         }    
         $t .="<br>";
     }

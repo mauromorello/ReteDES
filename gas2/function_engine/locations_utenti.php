@@ -19,6 +19,7 @@ $locations_utenti=Array(// USERS
                           "user_forgotten_usn"      =>$root."utenti/utenti_forgotten_username.php",
                           "utenti_nuova_password"   =>$root."utenti/utenti_nuova_password.php",
                           "utenti_superpoteri"      =>$root."utenti/utenti_superpoteri.php",
+                          "utenti_chifacosa"        =>$root."utenti/utenti_chifacosa.php",
                           "user_help_pers"          =>$root."utenti/utenti_spiegazione_personalizza.php",
                           "user_suspended"          =>$root."gas/gas_users_suspended.php",
                           "user_note_suspended"     =>$root."utenti/utenti_suspended_notes.php",

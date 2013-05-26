@@ -58,7 +58,7 @@ if(isset($do)AND $do=="req"){
                 
                 imagedestroy($im);
                 //TODO: URL RELATIVA !!!
-                $messaggio .= "<p>La tua nuova password per Retegas.AP è :</p>
+                $messaggio .= "<p>La tua nuova password per ReteDES.it è :</p>
                                <p>
                                <img SRC=\"http://retegas.altervista.org/gas2/utenti/temp/pwd_$password.jpg\">
                                </p>
@@ -67,7 +67,7 @@ if(isset($do)AND $do=="req"){
                                </p>";
                                
                 
-                manda_mail("ReteGas","retegas@altervista.org",$username,$email,"[RETEGAS.AP] Nuova password",$messaggio);
+                manda_mail("["._SITE_NAME."]","retegas@altervista.org",$username,$email,"["._SITE_NAME."] - Nuova password",$messaggio);
                 sleep(1);
                 //unlink("temp/pwd_$password.jpg");
                 go("sommario",null,"","?q=43");
@@ -93,13 +93,7 @@ $r = new rg_simplest();
 $r->title = "Password Dimenticata";
 
 $r->messaggio = $msg; 
-
-    $mio_menu[]='<li><a class="medium yellow awesome" href="'.$RG_addr["sommario"].'?do=cosa_gas">Cosa sono i GAS</a></li>';
-    $mio_menu[]='<li><a class="medium green awesome" href="'.$RG_addr["sommario"].'?do=chi_partecipa">Chi partecipa</a></li>';
-    $mio_menu[]='<li><a class="medium red awesome" href="'.$RG_addr["sommario"].'?do=progetto_retegas">Progetto ReteGas.AP</a></li>';
-    $mio_menu[]='<li><a class="medium beige awesome" href="'.$RG_addr["sommario"].'?do=progetto_des">Progetto D.E.S</a></li>';
-
-$r->menu_orizzontale = $mio_menu;    
+    
 
 //Questo è il contenuto della pagina
 $r->contenuto = '<div class="ui-widget-content ui-state-error padding_6px ui-corner-all">

@@ -22,6 +22,7 @@ if($do=="do_login"){
         break;
     case 2:
         $msg = "Username o password vuoti";
+        $go="#2"; 
         unset($q);
         unset($username);
         unset($password);
@@ -30,6 +31,7 @@ if($do=="do_login"){
         $msg = "Username o Password non riconosciuti :<br> ".
                '<a class="" href="'.$RG_addr["user_forgotten_pwd"].'">Password dimenticata ?</a>  <a class="" href="'.$RG_addr["user_forgotten_usn"].'">Username dimenticato ?</a>';
                break;
+        $go="#2";       
         unset($q);
         unset($username);
         unset($password);
@@ -637,7 +639,7 @@ if($do=="do_register"){
                                 <li>Versione per dispositivi mobili (beta), visibile su m.retegas.info</li>
                                 <li>Si basa su software autoprodotto artigianalmente in cantina.</li>
                                 <li>Codice libero e gratuito consultabile su <a style=\"color:#800000\" target=\"_blank\" href=\"https://github.com/mauromorello/ReteDES\">GitHUB</a></li>
-                                
+                                <li>Adotta le più recenti tecnologie in ambito di \"iterazione emozionale\" (c)</li>
                                 </ul>
                                 
                             </section>
@@ -646,7 +648,7 @@ if($do=="do_register"){
                             <section>
                             <h2 class=\"title\" >LOGIN</h2>
                                 
-                                <form method=\"POST\" action=\"index_start.php\">
+                                <form method=\"POST\" action=\"index_start.php#2\">
                                     <div class=\"container_3\">
                                         
                                         <div class=\"grid_3\" style=\"color:#800000; font-size:1.3em; text-align:center; margin:1em; background-color:rgba(200,30,30,.2);\">

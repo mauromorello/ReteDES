@@ -17,7 +17,7 @@ if($do=="do_site_logo"){
     $msg="Logo modificato correttamente";
 }
 if($do=="do_site_inattivita"){
-    write_option_gas_text(_USER_ID_GAS,"_GAS_SITE_INATTIVITA",CAST_TO_INT($site_inattivita,0,60));
+    write_option_gas_text(_USER_ID_GAS,"_GAS_SITE_INATTIVITA",CAST_TO_INT($site_inattivita,0,90));
     sleep(1);
     $msg="Giorni inattività modificati correttamente";
 }
@@ -31,6 +31,8 @@ if($do=="do_gas_cassa"){
         $gas_usa_cassa = "NO";
     }
     write_option_gas_text(_USER_ID_GAS,"_GAS_USA_CASSA",$gas_usa_cassa);
+    write_option_gas_text_new(_USER_ID_GAS,"_GAS_USA_CASSA",$gas_usa_cassa);
+
     sleep(1);
     $msg="Impostazione CASSA modificata.";
     log_me(0,_USER_ID,"OPT","GAS","GAS "._USER_ID_GAS." _GAS_USA_CASSA : $gas_usa_cassa",_USER_ID_GAS,null);
@@ -40,7 +42,7 @@ if($do=="do_gas_puo_partecipare_ordini_esterni"){
     if(sanitize($gas_puo_partecipare_ordini_esterni)<>"SI"){
         $gas_puo_partecipare_ordini_esterni = "NO";
     }
-    write_option_gas_text(_USER_ID_GAS,"_GAS_PUO_PART_ORD_EST",$gas_puo_partecipare_ordini_esterni);
+    //write_option_gas_text(_USER_ID_GAS,"_GAS_PUO_PART_ORD_EST",$gas_puo_partecipare_ordini_esterni);
     write_option_gas_text_new(_USER_ID_GAS,"_GAS_PUO_PART_ORD_EST",$gas_puo_partecipare_ordini_esterni);
 
     sleep(1);
@@ -51,7 +53,7 @@ if($do=="do_gas_condivisione_propri_ordini"){
     if(sanitize($gas_condivisione_propri_ordini)<>"SI"){
         $gas_condivisione_propri_ordini = "NO";
     }
-    write_option_gas_text(_USER_ID_GAS,"_GAS_PUO_COND_ORD_EST",$gas_condivisione_propri_ordini);
+    //write_option_gas_text(_USER_ID_GAS,"_GAS_PUO_COND_ORD_EST",$gas_condivisione_propri_ordini);
     write_option_gas_text_new(_USER_ID_GAS,"_GAS_PUO_COND_ORD_EST",$gas_condivisione_propri_ordini);
 
     sleep(1);

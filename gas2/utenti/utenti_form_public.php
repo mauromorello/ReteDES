@@ -54,6 +54,7 @@ if (is_logged_in($user)){
         $id_utente = CAST_TO_INT(($id_utente));
         $sql = "UPDATE maaking_users SET isactive=2 WHERE userid='$id_utente' LIMIT 1;";
         $res = $db->sql_query($sql);
+        
         go("user_note_suspended",_USER_ID,"Inserisci un messaggio per avvisarlo quando si collega","?id_utente=".mimmo_encode($id_utente));
         }
       }
@@ -63,6 +64,7 @@ if (is_logged_in($user)){
         $sql = "UPDATE maaking_users SET isactive=1, last_activity=NOW()  WHERE userid='$id_utente' LIMIT 1;";
         $res = $db->sql_query($sql);
         $msg = "Utente attivato";
+        log_me(0,_USER_ID,"USR","ACT","Attivato user $id_utente",$id_utente);
         }
       }
       if($do=="del"){
@@ -71,6 +73,7 @@ if (is_logged_in($user)){
         $sql = "UPDATE maaking_users SET isactive=3 WHERE userid='$id_utente' LIMIT 1;";
         $res = $db->sql_query($sql);
         $msg = "Utente eliminato";
+        log_me(0,_USER_ID,"USR","DEL","Eliminato user $id_utente",$id_utente);
         }
       }
       if($do=="stb"){
@@ -79,6 +82,7 @@ if (is_logged_in($user)){
         $sql = "UPDATE maaking_users SET isactive=0 WHERE userid='$id_utente' LIMIT 1;";
         $res = $db->sql_query($sql);
         $msg = "Utente rimesso in attesa di accettazione.";
+        log_me(0,_USER_ID,"USR","NEW","Reincarnato user $id_utente",$id_utente);
         }
       }
       

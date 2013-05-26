@@ -328,7 +328,7 @@ if (!_USER_LOGGED_IN){
 $check = utente_attivo_partecipa_ordine($id_ordine);
 if($check<>"OK"){
     log_me($id_ordine,_USER_ID,"CHK","ORD","Check : false",0,$check); 
-    go("sommario",_USER_ID,$check);
+    go("ordini_form",_USER_ID,$check,"?id_ordine=$id_ordine");
     die();
 }
     
@@ -534,17 +534,30 @@ if($check<>"OK"){
       
       $retegas->java_scripts_header[] = java_accordion(null,1); // laterale    
       $retegas->java_scripts_header[] = java_superfish();       
-      $retegas->java_scripts_header[] = java_tablesorter($ref_table);
+      //$retegas->java_scripts_header[] = java_tablesorter($ref_table);
+      $retegas->java_scripts_header[]='<script type="text/javascript">                
+                        $(document).ready(function() 
+                            {
+                                $("#'.$ref_table.'").tablesorter({widgets: [\'zebra\',\'saveSort\',\'filter\'],
+                                                        cancelSelection : true,
+                                                        dateFormat : \'ddmmyyyy\',                                                               
+                                                        }); 
+                                } 
+                            );
+</script>';
       $retegas->java_scripts_header[] = java_head_fg_menu();
-      //$retegas->java_scripts_header[] = java_head_jquery_dirtyform();
+      
       
       //Jgrowl  CSS
       $retegas->java_scripts_header[] = "<link type=\"text/css\" href=\"".$RG_addr["css_jgrowl"]."\" media=\"screen\" rel=\"stylesheet\">\n";
+      //Breadcumb CSS
+      //$retegas->java_scripts_header[] = "<link type=\"text/css\" href=\"".$RG_addr["css_fg_menu"]."\" media=\"screen\" rel=\"stylesheet\">\n";
+      
       
       $retegas->css_body[] = fg_css();
       
       
-      $retegas->java_scripts_bottom_body[] = java_qtip_ajax($RG_addr["ajax_articoli_note"]);
+      $retegas->java_scripts_bottom_body[] = java_qtip_ajax($RG_addr["ajax_articoli_note"],null,null,$id_ordine);
       $retegas->java_scripts_bottom_body[] = java_qtip();
       
       

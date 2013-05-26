@@ -67,10 +67,10 @@ if($do=="check_data"){
             for ($i=6; $i<=7; $i++){if(is_null($data[$i]) or ($data[$i]=="")){$erro_vuoti++;}} // Se i campi sono vuoti saltano l'ingombro 
             
             //WARNING CARATTERI STRANI
-            if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[0])>0){$warn_string++;}  //codice
-            if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[1])>0){$warn_string++;}  //descrizione
-            if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[3])>0){$warn_string++;}  //u misura
-            if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[5])>0){$warn_string++;}  //ingombro
+            //if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[0])>0){$warn_string++;}  //codice
+            //if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[1])>0){$warn_string++;}  //descrizione
+            //if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[3])>0){$warn_string++;}  //u misura
+            //if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[5])>0){$warn_string++;}  //ingombro
             
             //NUMERI ?
             if (!is_numeric(trim(str_replace(array(","),array("."),$data[7])))){$erro_num++;} 
@@ -204,10 +204,10 @@ if($do=="check_data"){
             }   
             if ($erro_doppi>0){if (in_array($data[0],$doppi)){$bg[0] = "class=\"articoli_doppi\"";}}// e' uno dei doppi
         
-            if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[0])>0){$bg[0] = "class=\"punteggiatura\"";}// Cod art. COntiene caratteri insulsi
-            if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[1])>0){$bg[1] = "class=\"punteggiatura\"";}// Descriz COntiene caratteri insulsi  
-            if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[3])>0){$bg[3] = "class=\"punteggiatura\"";}// U mis caratteri insulsi  
-            if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[5])>0){$bg[5] = "class=\"punteggiatura\"";}// Ingombro caratteri insulsi  
+            //if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[0])>0){$bg[0] = "class=\"punteggiatura\"";}// Cod art. COntiene caratteri insulsi
+            //if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[1])>0){$bg[1] = "class=\"punteggiatura\"";}// Descriz COntiene caratteri insulsi  
+            //if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[3])>0){$bg[3] = "class=\"punteggiatura\"";}// U mis caratteri insulsi  
+            //if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[5])>0){$bg[5] = "class=\"punteggiatura\"";}// Ingombro caratteri insulsi  
             
             if (!is_numeric(trim(str_replace(array(","),array("."),$data[7])))){$bg[7] = "class=\"non_riconosciuto\"";} 
             if (!is_numeric(trim(str_replace(array(","),array("."),$data[6])))){$bg[6] = "class=\"non_riconosciuto\"";}
@@ -286,5 +286,4 @@ $r->contenuto = $h;
 //Mando all'utente la sua pagina
 echo $r->create_retegas();
 //Distruggo l'oggetto r    
-unset($r)   
-?>
+unset($r);

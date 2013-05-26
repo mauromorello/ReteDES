@@ -657,7 +657,7 @@ function java_qtip_old($ref=null,$style=null){
                 </script>";
             
 }
-function java_qtip_ajax($file_input,$ref=null,$style=null){
+function java_qtip_ajax($file_input,$ref=null,$style=null,$id_ordine=null){
     
     if(empty($ref)){
         $ref=".display_full_message";    
@@ -672,8 +672,8 @@ function java_qtip_ajax($file_input,$ref=null,$style=null){
                                         text: 'Loading...', // The text to use whilst the AJAX request is loading
                                         ajax: {
                                             url: '".$file_input."', // URL to the local file
-                                            type: 'GET', // POST or GET
-                                            data: {vid_link: myvar}, // Data to pass along with your request
+                                            type: 'POST', // POST or GET
+                                            data: {vid_link: myvar, id_ordine: ".$id_ordine."}, // Data to pass along with your request
                                             success: function(data, status) {
                                                 // Process the data
                                  
@@ -2155,7 +2155,7 @@ function main_render_quick_messaggi_coda($gas){
                     '.$c9.', <b>'.$c8.'</b> ('.$c11.')
                     </div>
                     <div style="text-align:left;">
-                    <a href="'.$RG_addr["bacheca_form"].'?id='.$c1.'" rel="'.$c1.'"><b>'.$c2.'</b></a>
+                    <a href="'.$RG_addr["bacheca_single_post"].'?id_messaggio='.$c1.'" rel="'.$c1.'"><b>'.$c2.'</b></a>
                     </div>
                     </td>
                     </tr>
@@ -2646,6 +2646,8 @@ function rg_toggable($title,$target,$content,$open=false){
                     ";
     return $h_table;
 }
+
+
 function rg_tooltip($text,$override=false){
     
     if(_USER_USA_TOOLTIPS OR $override){

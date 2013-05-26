@@ -480,8 +480,18 @@ function utente_attivo_partecipa_ordine($id_ordine){
             if(!is_printable_from_id_ord($id_ordine)){
                     //UTENTE GESTORE ORDINI
                     if(_USER_PERMISSIONS & perm::puo_vedere_tutti_ordini){
-                         return "OK";
-                         die();
+                         
+                        //MA SOLO DEL PROPRIO GAS
+                        if(_USER_ID_GAS<>id_gas_user(id_referente_ordine_globale($id_ordine))){
+                            return "Hai i superpoteri per gestire tutti gli ordini, ma solo se sono partiti dal tuo GAS.";
+                            die(); 
+                         }else{
+                            return "OK";
+                            die();    
+                         }
+                        
+                        
+                         
                     }else{
                          
                         if(id_referente_ordine_globale($id_ordine)==_USER_ID){
@@ -502,3 +512,7 @@ function utente_attivo_partecipa_ordine($id_ordine){
     }
     
 } 
+
+function isValid($str) {
+    return !preg_match('/[^A-Za-z0-9.#\\-$]/', $str);
+}

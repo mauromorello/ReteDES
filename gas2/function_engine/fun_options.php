@@ -1275,7 +1275,7 @@ function load_user_options($id_user){
             }
           break;
           
-          case"_GAS_PUO_PART_ORD_EST";
+          /*case"_GAS_PUO_PART_ORD_EST";
           if($row["valore_text"]=="SI"){
                 define("_GAS_PUO_PART_ORD_EST",true);    
             }else{
@@ -1290,7 +1290,7 @@ function load_user_options($id_user){
                 define("_GAS_PUO_COND_ORD_EST",false);
             }
           break;
-          
+         */ 
           case"_GAS_COPERTURA_CASSA";
           if(CAST_TO_INT($row["valore_text"],0,100)>0){
                 define("_GAS_COPERTURA_CASSA",CAST_TO_INT($row["valore_text"],0,100));    
@@ -1338,8 +1338,8 @@ function load_user_options($id_user){
    
    //GAS
    if(!defined("_GAS_USA_CASSA")){define("_GAS_USA_CASSA",false);}
-   if(!defined("_GAS_PUO_PART_ORD_EST")){define("_GAS_PUO_PART_ORD_EST",false);}
-   if(!defined("_GAS_PUO_COND_ORD_EST")){define("_GAS_PUO_COND_ORD_EST",false);}
+   //if(!defined("_GAS_PUO_PART_ORD_EST")){define("_GAS_PUO_PART_ORD_EST",false);}
+   //if(!defined("_GAS_PUO_COND_ORD_EST")){define("_GAS_PUO_COND_ORD_EST",false);}
    if(!defined("_GAS_SITE_LOGO")){define("_GAS_SITE_LOGO","");}    
    if(!defined("_GAS_COPERTURA_CASSA")){define("_GAS_COPERTURA_CASSA",0);}
    if(!defined("_GAS_CASSA_MIN_LEVEL")){define("_GAS_CASSA_MIN_LEVEL",0);}
@@ -1347,6 +1347,10 @@ function load_user_options($id_user){
    
    define("_USER_ID_DES",db_val_q("id_gas",_USER_ID_GAS,"id_des","retegas_gas"));
    define("_USER_DES_NAME",db_val_q("id_des",_USER_ID_DES,"des_descrizione","retegas_des"));
+   
+   define("_USER_DES_LAT",db_val_q("id_des",_USER_ID_DES,"des_lat","retegas_des"));
+   define("_USER_DES_LNG",db_val_q("id_des",_USER_ID_DES,"des_lng","retegas_des"));
+   define("_USER_DES_ZOOM",db_val_q("id_des",_USER_ID_DES,"des_zoom","retegas_des"));
    
    if(check_option_des_exist(_USER_ID_DES,"_DES_SITE_LOGO")>0){
        define("_DES_SITE_LOGO",read_option_des_text(_USER_ID_DES,"_DES_SITE_LOGO"));
@@ -1360,6 +1364,17 @@ function load_user_options($id_user){
        define("_GAS_CASSA_CHECK_MIN_LEVEL",false);
    }
    
+   if(read_option_gas_text(_USER_ID_GAS,"_GAS_PUO_PART_ORD_EST")=="SI"){
+       define("_GAS_PUO_PART_ORD_EST",true);
+   }else{
+       define("_GAS_PUO_PART_ORD_EST",false);
+   }
+   
+   if(read_option_gas_text(_USER_ID_GAS,"_GAS_PUO_PART_ORD_EST")=="SI"){
+       define("_GAS_PUO_COND_ORD_EST",true);
+   }else{
+       define("_GAS_PUO_COND_ORD_EST",false);
+   }
 
 }
 

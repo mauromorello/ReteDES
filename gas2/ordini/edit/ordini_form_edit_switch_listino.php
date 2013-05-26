@@ -75,7 +75,7 @@ if (!_USER_LOGGED_IN){
                             $lista_destinatari .= $row[0]."<br>"; 
                         }
 
-                        $soggetto = "[ReteDes.it] - [REFERENTE ORDINE] ATTENZIONE !! Cambio listino ordine $id_ordine ($descrizione_ordine)";
+                        $soggetto = "["._SITE_NAME."] - [REFERENTE ORDINE] ATTENZIONE !! Cambio listino ordine $id_ordine ($descrizione_ordine)";
                         
                         manda_mail_multipla_istantanea($da_chi,$mail_da_chi,$verso_chi,$mail_verso_chi,$soggetto,null,"MAN",$id_ordine,_USER_ID,$note_switch);
                             

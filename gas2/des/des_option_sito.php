@@ -32,7 +32,27 @@ if($do=="do_des_nome"){
     $msg="Nome modificato";
     go("des_option_sito",_USER_ID,$msg);
 }
-
+if($do=="do_des_lat"){
+    $sql = "UPDATE retegas_des SET des_lat='".CAST_TO_FLOAT($des_lat)."' WHERE id_des='"._USER_ID_DES."' LIMIT 1;";
+    $res = $db->sql_query($sql);
+    sleep(1);
+    $msg="Latitudine modificata";
+    go("des_option_sito",_USER_ID,$msg);
+}
+if($do=="do_des_lng"){
+    $sql = "UPDATE retegas_des SET des_lng='".CAST_TO_FLOAT($des_lng)."' WHERE id_des='"._USER_ID_DES."' LIMIT 1;";
+    $res = $db->sql_query($sql);
+    sleep(1);
+    $msg="Longitudine modificata";
+    go("des_option_sito",_USER_ID,$msg);
+}
+if($do=="do_des_zoom"){
+    $sql = "UPDATE retegas_des SET des_zoom='".CAST_TO_INT($des_zoom,0,15)."' WHERE id_des='"._USER_ID_DES."' LIMIT 1;";
+    $res = $db->sql_query($sql);
+    sleep(1);
+    $msg="Zoom modificato";
+    go("des_option_sito",_USER_ID,$msg);
+}
 
 //Creazione della nuova pagina uso un oggetto rg_simplest
 $r = new rg_simplest();
@@ -85,7 +105,37 @@ $h .= "<div class=\"rg_widget rg_widget_helper\">
         <input type=\"submit\" value=\"salva\"></input>
         </form>        
       </div>";
-
+//DES LAT
+$h .= "<div class=\"rg_widget rg_widget_helper\">
+        <form method=\"post\" action=\"\" class=\"retegas_form\">
+        <h3>Latitudine</h3>
+        <label for=\"des_lat\">per centrare la mappa des, ricavarla da googlemaps</label>
+        <input type=\"text\" id=\"des_lat\"  name=\"des_lat\" value=\""._USER_DES_LAT."\" size=\"50\" ></input>
+        <input type=\"hidden\" name=\"do\" value=\"do_des_lat\"></inupt>
+        <input type=\"submit\" value=\"salva\"></input>
+        </form>        
+      </div>";
+//DES LNG
+$h .= "<div class=\"rg_widget rg_widget_helper\">
+        <form method=\"post\" action=\"\" class=\"retegas_form\">
+        <h3>Longitudine</h3>
+        <label for=\"des_lng\">per centrare la mappa des, ricavarla da googlemaps</label>
+        <input type=\"text\" id=\"des_lng\"  name=\"des_lng\" value=\""._USER_DES_LNG."\" size=\"50\" ></input>
+        <input type=\"hidden\" name=\"do\" value=\"do_des_lng\"></inupt>
+        <input type=\"submit\" value=\"salva\"></input>
+        </form>        
+      </div>";
+//DES ZOOM
+$h .= "<div class=\"rg_widget rg_widget_helper\">
+        <form method=\"post\" action=\"\" class=\"retegas_form\">
+        <h3>Longitudine</h3>
+        <label for=\"des_zoom\">Quantità di zoom (1 lontano <--> 15 vicino)</label>
+        <input type=\"text\" id=\"des_zoom\"  name=\"des_zoom\" value=\""._USER_DES_ZOOM."\" size=\"50\" ></input>
+        <input type=\"hidden\" name=\"do\" value=\"do_des_zoom\"></inupt>
+        <input type=\"submit\" value=\"salva\"></input>
+        </form>        
+      </div>";            
+      
  //DES CODICE
 $h2 .= "<div class=\"rg_widget rg_widget_helper\">
         <form method=\"post\" action=\"\" class=\"retegas_form\">
@@ -99,20 +149,7 @@ $h2 .= "<div class=\"rg_widget rg_widget_helper\">
       
       
       
-//Uso cassa
-$h2 .= "<div class=\"rg_widget rg_widget_helper\">
-        
-        <h2>Gestione cassa</h2>
-        
-        <form method=\"post\" action=\"\" class=\"retegas_form\">
-        <h3>Il tuo gas usa la cassa ?</h3>
-        <label for=\"site_cassa\">Imposta in questo campo il valore (SI/NO) che serve a retegas per far comparire o nascondere tutti i menù della cassa.</label>
-        <input id=\"site_cassa\"  name=\"gas_usa_cassa\" value=\"".read_option_gas_text(_USER_ID_GAS,"_GAS_USA_CASSA")."\" size=\"10\" ></input>
-        <input type=\"hidden\" name=\"do\" value=\"do_gas_cassa\"></inupt>
-        <input type=\"submit\" value=\"salva\"></input>
-        </form>
       
-      </div>";      
 
 
 

@@ -31,7 +31,7 @@ function utenti_render_register_form(){
         
         <p>Tutti i campi sono obbligatori</p>
 
-        <form id="register" name="scheda_registrazione" method="POST" action="" >
+        <form id="register" name="scheda_registrazione" method="POST" action="index_start.php#3" >
 
         
         <div>
@@ -1003,7 +1003,7 @@ function utenti_gestione_widgets($id_user){
 $wi = array (1 => "Ordini Chiusi",
              2 => "Ordini Aperti",
              3 => "Ordini Futuri",
-             4 => "Bacheca Messaggi",
+             4 => "Feedback fornitori",
              5 => "Grafico distribuzione utilizzo sito",
              6 => "Utenti OnLine in tempo reale",
              7 => "Messaggi di servizio da ReteGas.AP",
@@ -1101,8 +1101,8 @@ if(!in_array($i,$user_widgets)){
  
  
 $h_table .='
-<div class="ui-widget-header ui-corner-all padding-6px">
-<div style="margin-bottom:16px;">Gestione elementi HomePage</div>
+<div class="rg_widget rg_widget_helper">
+<h3>Gestione elementi HomePage</h3>
 <div style=""><h5>L\'aggiunta di molti elementi alla propria homepage può influire sul suo tempo di caricamento. Ogni elemento ha delle caratteristiche preimpostate,
 tra le quali il fatto di comparire aperto oppure chiuso. Alcuni elementi non possono essere rimossi (ad esempio i messaggi di servizio ReteGas.AP).<br>
 <strong>Il servizio è sperimentale, in caso di malfunzionamenti contattarmi a retegas.ap@gmail.com</strong></h5></div>
@@ -1112,7 +1112,7 @@ tra le quali il fatto di comparire aperto oppure chiuso. Alcuni elementi non pos
 
 foreach ($h as $position => $item) : $h_table .= $item; endforeach; 
    
-$h_table .='<table>
+$h_table .='</table>
 
  
 <input type="hidden" name="do"  value="change_widgets">

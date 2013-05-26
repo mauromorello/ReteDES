@@ -35,8 +35,12 @@ if($ok<>"OK"){
 }
 
 if($do=="del_all"){
+        
+        $verso_chi = fullname_referente_ordine_globale($id_ordine); 
+        $mail_verso_chi = mail_referente_ordine_globale($id_ordine);
     
-        $nomordine = descrizione_ordine_from_id_ordine($id_ordine);      
+        $nomordine = descrizione_ordine_from_id_ordine($id_ordine);
+              
         $msg = "";    
         
         
@@ -121,8 +125,7 @@ if($do=="del_all"){
         $da_chi = fullname_from_id(_USER_ID);
         $mail_da_chi = id_user_mail(_USER_ID);
         
-        $verso_chi = fullname_referente_ordine_globale($id_ordine); 
-        $mail_verso_chi = mail_referente_ordine_globale($id_ordine);
+        
 
         $soggetto = "["._SITE_NAME."] - da $da_chi - ELIMINAZIONE ORDINE";
         
@@ -131,8 +134,8 @@ if($do=="del_all"){
                     Questa mail che ricevi contiene TUTTI i dati riguardanti quest'ordine che ad oggi sono presenti su
                     www.retedes.it<br><br>";
         
-        $msg.="Mail correttamente inviata a $verso_chi";
-        manda_mail($da_chi,$mail_da_chi,$verso_chi,$mail_verso_chi,$soggetto,null,"MAN",$id,$id_user,$testata.$h_table);
+        $msg.="Mail correttamente inviata a $verso_chi (ref. ordine)<br>";
+        manda_mail($da_chi,$mail_da_chi,$verso_chi,$mail_verso_chi,$soggetto,"","MAN",$id_ordine,_USER_ID,$testata.$h_table);
         sleep(1);
 
         $verso_chi = _USER_FULLNAME;
@@ -141,8 +144,8 @@ if($do=="del_all"){
                     L'ordine $id_ordine (TUTTO o alcune sue parti) è stato eliminato definitivamente dal sito da "._USER_FULLNAME.".<br>
                     Questa mail che ricevi contiene TUTTI i dati riguardanti quest'ordine che ad oggi sono presenti su
                     www.retedes.it<br><br>";
-        manda_mail($da_chi,$mail_da_chi,$verso_chi,$mail_verso_chi,$soggetto,null,"MAN",$id,$id_user,$testata.$h_table);
-        $msg.="Mail correttamente inviata a $verso_chi";
+        manda_mail($da_chi,$mail_da_chi,$verso_chi,$mail_verso_chi,$soggetto,"","MAN",$id_ordine,_USER_ID,$testata.$h_table);
+        $msg.="Mail correttamente inviata a $verso_chi (autore operazione)";
         
         
         

@@ -32,6 +32,7 @@ $locations_ordini=Array(  "ordini_aperti"           =>$root."ordini/aperti/ordin
                           "ordine_partecipa_massivo"=>$root."ordini/partecipa/ordini_partecipa_massivo.php",           
                           "ordine_partecipa_out_csv"=>$root."ordini/partecipa/output_csv_massivo.php",           
                           "ordini_comunica"         =>$root."ordini/comunica/ordini_comunica.php", 
+                          "comunica_alcuni_articoli"=>$root."ordini/comunica/comunica_alcuni_articoli.php",
                           "ordine_diventa_referente"=>$root."ordini/diventa_referente/ordini_diventa_referente.php", 
                           "ordini_form"             =>$root."ordini/scheda/ordini_form_main.php",
                           "ordini_form_new"         =>$root."ordini/scheda/ordini_form_main.php",

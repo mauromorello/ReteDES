@@ -173,7 +173,7 @@ font-weight:bold;
 .rg_widget{
 background-color : rgba(255,255,255,.6);
 color : rgba(40,40,40,1);
-/*font-size: 1em;*/ 
+font-size: 0.90em;
 margin-bottom:1em;
 /*margin-right:1em;*/
 padding:0;
@@ -218,7 +218,10 @@ padding-top : .5em;
 padding-left: .5em;
 padding-right :.5em;
 padding-bottom:1em;
+
 }
+
+
 
 .rg_widget .rg_w_footer{
 padding-top : .5em;
@@ -513,5 +516,8 @@ border-bottom: 2px solid  rgba(220,220,220,1);
 .tablesorter-filter{
     width:100%;
         
+}
+tr.tablesorter-filter-row input.disabled {
+    display: none;
 } 
 

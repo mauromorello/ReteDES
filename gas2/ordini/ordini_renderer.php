@@ -1494,9 +1494,14 @@
 
     //STATO Dell'ordine
             if(gas_mktime($data_chiusura)<=gas_mktime(date("d/m/Y H:i"))){
+                //SE E' CHIUSO
                 $stato_ordine=3; 
             }else{
-                $stato_ordine=2; 
+                if(gas_mktime($data_apertura)<=gas_mktime(date("d/m/Y H:i"))){
+                    $stato_ordine=2;
+                }else{                
+                    $stato_ordine=1;
+                } 
             }
   
 
@@ -1520,7 +1525,8 @@
              
              $result = $db->sql_query($query);
              if($result){$msg="OK";}else{$msg="ERRORE QUERY";}                    
-
+             log_me($id_ordine,_USER_ID,"ORD","MOD","Modificate DATE: ".$msg,0,$query);
+             
         }else{
 
             unset($do);    
@@ -2576,8 +2582,12 @@
         
 
       global $db;
+      
+      
+      
       $h .= " <div class=\"rg_widget rg_widget_helper\">
                 <h3>Lista partecipanti</h3>
+                <div class=\"rg_widget ui-state-error rg_widget-helper\"><h4>Attenzione : le somme non sono ricalcolate se si filtra la tabella.</h4></div>
                 <table id=\"$ref_table\">
                     <thead>     
                         <tr class=\"destra\"> 
@@ -2680,15 +2690,24 @@
          $totalone_articoli = number_format($totalone_articoli,2,",","");
          $totalone = number_format($totalone,2,",","");
          
+         $netto_totale = (valore_totale_ordine_qarr($id_ordine));
+         $trasporto_totale = (valore_trasporto($id_ordine,100));
+         $gestione_totale = (valore_gestione($id_ordine,100));
+         $pubblico_totale = _nf($netto_totale + $trasporto_totale+ $pubblico_totale);
+         
+         $netto_totale = _nf($netto_totale);
+         $trasporto_totale = _nf($trasporto_totale);
+         $gestione_totale = _nf($gestione_totale);
+         
          $h.= "</tbody>
                <tfoot>
                 <tr class=\"total destra\">
                     <th>&nbsp;</th>
                     <th class=\"sinistra\">Somme:</th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
+                    <th class=\"destra soldi\">$netto_totale</th>
+                    <th class=\"destra soldi\">$trasporto_totale</th>
+                    <th class=\"destra soldi\">$gestione_totale</th>
+                    <th class=\"destra soldi\">$pubblico_totale</th>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
@@ -2973,15 +2992,15 @@
         
                          
         $output_html .="    
-                            <th width=\"7%\">Cod. Art. Fornitore</th>
-                            <th>Descrizione</th>
+                            <th width=\"7%\" data-placeholder=\"Filtra\">Cod. Art. Fornitore</th>
+                            <th data-placeholder=\"Filtra\">Descrizione</th>
                             
-                            <th width=\"13%\">Prezzo x quantità</th>
-                            <th width=\"5%\">Q.<br>Scat.</th>  
-                            <th width=\"5%\">Q.<br>Min </th>  
+                            <th width=\"13%\" class=\" filter-false\">Prezzo x quantità</th>
+                            <th width=\"5%\" class=\" filter-false\">Q.<br>Scat.</th>  
+                            <th width=\"5%\" class=\" filter-false\">Q.<br>Min </th>  
                             
-                            <th width=\"16%\" class=\"destra\">Ordinativi</th>
-                            <th>T.Riga</th>
+                            <th width=\"16%\" class=\"destra filter-false\">Ordinativi</th>
+                            <th class=\" filter-false\">T.Riga</th>
                          </tr>
                          </thead>
                          <tbody>
