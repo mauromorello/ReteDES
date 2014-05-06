@@ -181,7 +181,7 @@ function storici_ditte_gas($id_user,$filter = null,$arg1 = null ,$arg2 = null){
    $query = "SELECT
                 retegas_ditte.descrizione_ditte,
                 retegas_ditte.id_ditte,
-                Sum(retegas_dettaglio_ordini.qta_arr * retegas_articoli.prezzo) as PRZ,
+                Sum(retegas_dettaglio_ordini.qta_arr * retegas_dettaglio_ordini.prz_dett_arr) as PRZ,
                 Sum(retegas_dettaglio_ordini.qta_arr) as QTA
                 FROM
                 retegas_ordini
@@ -305,7 +305,7 @@ function storici_ditte_gas_grafico($id_user,$filter = null,$arg1 = null ,$arg2 =
    $query = "SELECT
                 retegas_ditte.descrizione_ditte,
                 retegas_ditte.id_ditte,
-                Sum(retegas_dettaglio_ordini.qta_arr * retegas_articoli.prezzo) as PRZ,
+                Sum(retegas_dettaglio_ordini.qta_arr * retegas_dettaglio_ordini.prz_dett_arr) as PRZ,
                 Sum(retegas_dettaglio_ordini.qta_arr) as QTA
                 FROM
                 retegas_ordini
@@ -323,7 +323,7 @@ function storici_ditte_gas_grafico($id_user,$filter = null,$arg1 = null ,$arg2 =
                 GROUP BY
                 retegas_ditte.id_ditte,
                 retegas_ditte.descrizione_ditte
-                ORDER BY Sum(retegas_dettaglio_ordini.qta_arr * retegas_articoli.prezzo) DESC";
+                ORDER BY Sum(retegas_dettaglio_ordini.qta_arr * retegas_dettaglio_ordini.prz_dett_arr) DESC";
                 
    $result = $db->sql_query($query);
    
@@ -380,7 +380,7 @@ function storici_ditte_des($id_user,$filter = null,$arg1 = null ,$arg2 = null){
    $query = "SELECT
                 retegas_ditte.descrizione_ditte,
                 retegas_ditte.id_ditte,
-                Sum(retegas_dettaglio_ordini.qta_arr * retegas_articoli.prezzo) as PRZ,
+                Sum(retegas_dettaglio_ordini.qta_arr * retegas_dettaglio_ordini.prz_dett_arr) as PRZ,
                 Sum(retegas_dettaglio_ordini.qta_arr) as QTA
                 FROM
                 retegas_ordini
@@ -482,7 +482,7 @@ function storici_ditte_mie($id_user){
    
    $query = "SELECT
 retegas_ditte.descrizione_ditte,
-Sum(retegas_dettaglio_ordini.qta_arr * retegas_articoli.prezzo) as PRZ,
+Sum(retegas_dettaglio_ordini.qta_arr * retegas_dettaglio_ordini.prz_dett_arr) as PRZ,
 Sum(retegas_dettaglio_ordini.qta_arr)
 FROM
 retegas_ordini
@@ -595,11 +595,10 @@ maaking_users.fullname,
 maaking_users.userid,
 Count(retegas_dettaglio_ordini.id_dettaglio_ordini),
 Sum(retegas_dettaglio_ordini.qta_arr),
-Sum(retegas_dettaglio_ordini.qta_arr*retegas_articoli.prezzo) AS PRZ
+Sum(retegas_dettaglio_ordini.qta_arr * retegas_dettaglio_ordini.prz_dett_arr) AS PRZ
 FROM
 maaking_users
 Right Join retegas_dettaglio_ordini ON maaking_users.userid = retegas_dettaglio_ordini.id_utenti
-Inner Join retegas_articoli ON retegas_dettaglio_ordini.id_articoli = retegas_articoli.id_articoli
 WHERE
 maaking_users.id_gas =  '$id_gas'
 $filter_sql
@@ -724,11 +723,11 @@ function storici_famiglie_gas_grafico($filter = null,$arg1 = null ,$arg2 = null)
             maaking_users.userid,
             Count(retegas_dettaglio_ordini.id_dettaglio_ordini),
             Sum(retegas_dettaglio_ordini.qta_arr),
-            Sum(retegas_dettaglio_ordini.qta_arr*retegas_articoli.prezzo) AS PRZ
+            Sum(retegas_dettaglio_ordini.qta_arr * retegas_dettaglio_ordini.prz_dett_arr) AS PRZ
             FROM
             maaking_users
             Inner Join retegas_dettaglio_ordini ON maaking_users.userid = retegas_dettaglio_ordini.id_utenti
-            Inner Join retegas_articoli ON retegas_dettaglio_ordini.id_articoli = retegas_articoli.id_articoli
+            
             WHERE
             maaking_users.id_gas =  '$id_gas'
             $filter_sql

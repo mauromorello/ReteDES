@@ -22,6 +22,8 @@ color : rgba(120,40,40,1);
 font-weight: bold;    
 }
 
+
+
 .rg_widget .rg_w_header{
 
 font-size:1.3em;
@@ -65,7 +67,7 @@ padding-bottom:1em;
     font-size:100%;
 }
 .rg_widget .rg_w_body li:hover {
-    font-size:140%;
+    font-size:100%;
 }
 
 .rg_widget .rg_w_footer{

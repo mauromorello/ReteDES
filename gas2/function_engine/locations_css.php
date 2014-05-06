@@ -13,7 +13,8 @@ $locations_css=Array(//CSS
                           "css_tabelle_ie"          =>$root."css/tables_ie.css",
                           "css_awesome"             =>$root."css/awesome.css",
                           "css_jquery_mobile"       =>$root."mobile/jquery.mobile-1.0a3/jquery.mobile-1.0a3.min.css",
-                          "css_superfish"           =>$root."js/superfish-1.4.8/css/superfish.css",                     
+                          "css_superfish"           =>$root."js/superfish-1.4.8/css/superfish.css",
+                          "css_handsomtable"        =>$root."js/handsomtable/dist/jquery.handsontable.full.css",
                           "css_fg_menu"             =>$root."js/fg/fg.menu.css",
                           "css_qtip"                =>$root."css/qtip.css",
                           "css_rateit"              =>$root."js/rateit/rateit.css",
@@ -22,5 +23,5 @@ $locations_css=Array(//CSS
                           "css_jcarousel"           =>$root."js/jcarousel/skins/tango/skin.css");
 }
 
-  
+
 ?>

@@ -30,6 +30,9 @@ if (is_logged_in($user)){
     exit;     
 }    
 
+    
+
+
 
     // se l'id dell'ordine non esiste allora esco
     if(ordine_inesistente($id)){
@@ -57,7 +60,7 @@ if (is_logged_in($user)){
         $sql = $db->sql_query("delete from  retegas_referenze where retegas_referenze.id_ordine_referenze='$id';");
             
         $msg = "Eliminazione riuscita";    
-        log_me($id,$id_user,"ORD","MOD","Eliminazione ordine $id",0,"");
+        log_me($id,$id_user,"ORD","MOD","Eliminazione tutti articoli dall'ordine $id",0,"");
     
         header("Location: ".$RG_addr["ordini_aperti"]."?msg=1"); 
         exit;     

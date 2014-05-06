@@ -66,16 +66,17 @@ if($do=="do_add"){
          $vc = cassa_utente_tutti_movimenti(_USER_ID);
          
          //se il credito non basta
-         if(($vc-$vo)< _GAS_CASSA_MIN_LEVEL){
-             $log .= "Credito insuff.<br>";
-             $msg  = "Credito insufficiente per questo acquisto;<br>
-                        Ricorda che è contemplata una percentuale del "._GAS_COPERTURA_CASSA."% di spese accessorie che vanno a sommarsi all'importo dell'ordine.<br>
-                        Vi è inoltre una soglia minima di "._GAS_CASSA_MIN_LEVEL." Eu. (decisa dal tuo GAS) sotto la quale non si può ordinare.<br>
-                        I totali effettivi saranno modificati o confermati ad ordine chiuso dal gestore o dal cassiere.";   
-             $dove_vai = "ordini_mod_uni_new";
-             go($dove_vai,_USER_ID,$msg,"?id_ordine=$id_ordine&id_articolo=$id_articolo");
+         if(_GAS_CASSA_CHECK_MIN_LEVEL){
+             if(($vc-$vo)< _GAS_CASSA_MIN_LEVEL){
+                 $log .= "Credito insuff.<br>";
+                 $msg  = "Credito insufficiente per questo acquisto;<br>
+                            Ricorda che è contemplata una percentuale del "._GAS_COPERTURA_CASSA."% di spese accessorie che vanno a sommarsi all'importo dell'ordine.<br>
+                            Vi è inoltre una soglia minima di "._GAS_CASSA_MIN_LEVEL." Eu. (decisa dal tuo GAS) sotto la quale non si può ordinare.<br>
+                            I totali effettivi saranno modificati o confermati ad ordine chiuso dal gestore o dal cassiere.";   
+                 $dove_vai = "ordini_mod_uni_new";
+                 go($dove_vai,_USER_ID,$msg,"?id_ordine=$id_ordine&id_articolo=$id_articolo");
+             }
          }
-         
      
      
      }
@@ -98,6 +99,9 @@ if($do=="do_add"){
                             //INSERISCO DETTAGLIO con Qmin
                             $code = CAST_TO_INT(random_string(6,"1234567890"));
                             $log .= "Articolo $id_articolo Univoco<br>";
+                            
+                            $prezzo = articolo_suo_prezzo($id_articolo);
+                            
                             //LA QUANTITA' VECCHIA E' ZERO, DEVO INSERIRE L'ARTICOLO NUOVO
                             $query_inserimento_articolo = "INSERT INTO retegas_dettaglio_ordini ( 
                                                             id_utenti,
@@ -107,7 +111,9 @@ if($do=="do_add"){
                                                             qta_ord,
                                                             id_amico,
                                                             id_ordine,
-                                                            qta_arr) 
+                                                            qta_arr,
+                                                            prz_dett,
+                                                            prz_dett_arr) 
                                                             VALUES (
                                                                 '"._USER_ID."',
                                                                 '$id_articolo',
@@ -116,7 +122,9 @@ if($do=="do_add"){
                                                                 '$q_min',
                                                                 '0',
                                                                 '$id_ordine',
-                                                                '$q_min'
+                                                                '$q_min',
+                                                                '$prezzo',
+                                                                '$prezzo'
                                                                 );";
                             $result = $db->sql_query($query_inserimento_articolo);
                             $log .= "Inserito DETTAGLIO<br>";
@@ -164,8 +172,10 @@ if($do=="do_add"){
                 //Fine se ? maggiore di 0
                     
                     //SE USER USA CASSA
-                    if(_USER_USA_CASSA){
-                        cassa_update_ordine_utente($id_ordine,_USER_ID);    
+                    if(read_option_prenotazione_ordine($id_ordine,_USER_ID)<>"SI"){
+                        if(_USER_USA_CASSA){
+                            cassa_update_ordine_utente($id_ordine,_USER_ID);    
+                        }
                     }
                     
                     //SE NON C'E' NULLA DA INSERIRWE

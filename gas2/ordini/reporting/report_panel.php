@@ -67,6 +67,14 @@ $h .="<a class=\"awesome large blue\" href=\"".$RG_addr["report_articoli_per_cod
 $h .="<p>Report con articoli raggruppati per CODICE; Ogni codice poi ha indicata la quantità che va ad ogni gas</p>";
 $h .="</div>";
 $h .="<hr>";
+
+//REPORT ARTICOLI 1 quater
+$h .="<br>";
+$h .="<div>";
+$h .="<a class=\"awesome large blue\" href=\"".$RG_addr["report_scatole_intere"]."?id_ordine=$id_ordine\">ARTICOLI RAGGRUPPATI PER CODICE <b>SOLO SCATOLE INTERE</b></a>";
+$h .="<p>Report con articoli raggruppati per CODICE; Sono considerate SOLO le quantità ORDINATE (e non arrivate) che compongono SCATOLE INTERE; Questo report è utile nel caso si voglia comunicare al fornitore l'ordine già 'tagliato' degli articoli che non chiudono le scatole, anche se non si è ancora rettificato.</p>";
+$h .="</div>";
+$h .="<hr>";
     
 //REPORT ARTICOLI 2
 $h .="<br>";

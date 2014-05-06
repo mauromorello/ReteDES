@@ -52,6 +52,11 @@ if($do=="do_opinione"){
     
     bacheca_write_commento_ordine_partecipante(_USER_ID,$id_ordine,$titolo,$commento);
     $msg = "OK";
+    if($submit<>"Salva il tuo commento (e torna alla home)"){
+        go("ordini_form",_USER_ID,$msg,"?id_ordine=$id_ordine");
+    }else{
+        go("sommario",_USER_ID,$msg,null);
+    }
 }
 
 
@@ -122,7 +127,7 @@ $i = rg_toggable("ISTRUZIONI","istr",$i,false);
 
 $h .= "<div class=\"rg_widget rg_widget_helper\">";
 
-$h .= "<form class=\"\" method=\"POST\" action=\"\">";
+$h .= "";
 $h .= "<table><tr><td style=\"width:50%;vertical-align:top;\">";
 $h .= "<h4>Condividi le tue opinioni,<br> cliccando sulle stelline</h4>
         <span>Qualità della merce</span>
@@ -148,16 +153,20 @@ $h .= " <span>Rapporto Qualità/Prezzo</span>
        </div>";
 $h .= "</td><td style=\"width:50%;vertical-align:top;\">";
 $h .='  
-        <h4>Scrivi un commento</h4>
+        <h4>Scrivi un commento (Basta anche solo il titolo)</h4>
+        <form class="" method="POST" action="">
         <label for="titolo">Titolo</label>
-        <input type="text" id="titolo" name="titolo" size="50" value="'.bacheca_read_titolo_commento_ordine_partecipante(_USER_ID,$id_ordine).'">
+        <input style="font-size:1.2em;padding:4px;margin:10px;" type="text" id="titolo" name="titolo" size="50" value="'.bacheca_read_titolo_commento_ordine_partecipante(_USER_ID,$id_ordine).'">
+        <br>
         <textarea type="text" id="commento" class="ckeditor" name="commento">'.bacheca_read_commento_ordine_partecipante(_USER_ID,$id_ordine).'</textarea>
         <input type="hidden" name="id_ordine" value="'.$id_ordine.'">
         <input type="hidden" name="do" value="do_opinione"><br>
-        <input type="submit" class="awesome large green" name="submit" value="Salva il tuo commento">      
+        <input type="submit" class="awesome large green" name="submit" value="Salva il tuo commento (e torna all\'ordine)">      
+        <input type="submit" class="awesome large green" name="submit" value="Salva il tuo commento (e torna alla home)">      
+        </form>
       ';                    
 $h .= "</td></tr></table>";       
-$h .= "</form>";
+$h .= "";
 $h .= "</div>";
 
 //Questo ?? il contenuto della pagina

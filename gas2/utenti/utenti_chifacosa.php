@@ -97,7 +97,8 @@ if(_USER_HAVE_MSG){
 
 $sql = "SELECT * from maaking_users WHERE id_gas='"._USER_ID_GAS."'";
 $res = $db->sql_query($sql);
-
+$h .="<div class=\"rg_widget rg_widget_helper\">";
+$h .="<h3>Cosa possono fare gli utenti di questo GAS</h3>";
 $h .="<table id=\"user_table\">";
 $h .="<thead>";
 $h .="<tr>";
@@ -123,6 +124,7 @@ while ($row = $db->sql_fetchrow($res)){
 
 $h .="</tbody>";
 $h .="</table>";
+$h .="</div>";
 
 //Questo ?? il contenuto della pagina
 $r->contenuto = $h;

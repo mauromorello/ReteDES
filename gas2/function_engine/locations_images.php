@@ -18,8 +18,8 @@ $locations_images=Array(// Posizione  immagini
                           "Map-Marker-Ball-Chartreuse-icon-16"=>$iroot."images/icons/Map-Marker-Ball-Chartreuse-icon-16.png",
                           
  //Vecchio logo           "img_logo"                =>$iroot."images/".read_option_text(0,"IMG_LOGO"),
-                          "img_logo"                =>$iroot."images/rg_18.png",
-                          "img_logo_retedes"        =>$iroot."images/logo_retedes_v11_200x200.png",
+                          "img_logo"                =>$iroot."images/RD_v3_320.png",
+                          "img_logo_retedes"        =>$iroot."images/RD_v3_320.png",
                           "birra_1"                 =>$iroot."images/Boccale.png",
                           "birra_2"                 =>$iroot."images/Boccale_2.png",
                           "birra_3"                 =>$iroot."images/Boccale_3.png",

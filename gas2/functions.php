@@ -1,39 +1,39 @@
 <?php
 
 
-if (preg_match('/functions.php/i',$_SERVER['SCRIPT_NAME'])){ 
-	Header("Location: index.php"); die();
+if (preg_match('/functions.php/i',$_SERVER['SCRIPT_NAME'])){
+    Header("Location: index.php"); die();
 }
 
 
-function _clean($str){ 
-return is_array($str) ? array_map('_clean', $str) : str_replace("\\", "\\\\", htmlspecialchars((get_magic_quotes_gpc() ? stripslashes($str) : $str), ENT_QUOTES)); 
+function _clean($str){
+return is_array($str) ? array_map('_clean', $str) : str_replace("\\", "\\\\", htmlspecialchars((get_magic_quotes_gpc() ? stripslashes($str) : $str), ENT_QUOTES));
 }
 
 
 // Disable magic_quotes_runtime
 if(get_magic_quotes_runtime())
 {
-	// Deactivate
-	set_magic_quotes_runtime(false);
+    // Deactivate
+    set_magic_quotes_runtime(false);
 }
 
 
 
 if (!ini_get("register_globals")) {
-	import_request_variables('GPC');
+    import_request_variables('GPC');
 }
 
 $phpver = phpversion();
 if ($phpver < '4.1.0') {
-	$_GET = $HTTP_GET_VARS;
-	$_POST = $HTTP_POST_VARS;
-	$_SERVER = $HTTP_SERVER_VARS;
+    $_GET = $HTTP_GET_VARS;
+    $_POST = $HTTP_POST_VARS;
+    $_SERVER = $HTTP_SERVER_VARS;
 }
 $phpver = explode(".", $phpver);
 $phpver = "$phpver[0]$phpver[1]";
 if ($phpver >= 41) {
-	$PHP_SELF = $_SERVER['PHP_SELF'];
+    $PHP_SELF = $_SERVER['PHP_SELF'];
 }
 
 
@@ -49,7 +49,7 @@ _clean($_GET);
 //_clean($_REQUEST);// and so on..
 
 foreach ($_GET as $sec_key => $secvalue) {
-    
+
     if(is_array($secvalue)){
          foreach ($secvalue as $thirdvalue) {
          //echo "GET: Third:".$thirdvalue."<br>";
@@ -68,42 +68,42 @@ foreach ($_GET as $sec_key => $secvalue) {
                 }
          }
     }else{
-    
-	if ((eregi("<[^>]*script*\"?[^>]*>", $secvalue)) ||
-	(eregi("<[^>]*object*\"?[^>]*>", $secvalue)) ||
-	(eregi("<[^>]*iframe*\"?[^>]*>", $secvalue)) ||
-	(eregi("<[^>]*applet*\"?[^>]*>", $secvalue)) ||
-	(eregi("<[^>]*meta*\"?[^>]*>", $secvalue)) ||
-	(eregi("<[^>]*style*\"?[^>]*>", $secvalue)) ||
-	(eregi("<[^>]*form*\"?[^>]*>", $secvalue)) ||
-	(eregi("<[^>]*img*\"?[^>]*>", $secvalue)) ||
-	(eregi("<[^>]*onmouseover*\"?[^>]*>", $secvalue)) ||
-	(eregi("\([^>]*\"?[^)]*\)", $secvalue)) ||
-	(eregi("\"", $secvalue))) {
-		die ("not allowed");
-	}
+
+    if ((eregi("<[^>]*script*\"?[^>]*>", $secvalue)) ||
+    (eregi("<[^>]*object*\"?[^>]*>", $secvalue)) ||
+    (eregi("<[^>]*iframe*\"?[^>]*>", $secvalue)) ||
+    (eregi("<[^>]*applet*\"?[^>]*>", $secvalue)) ||
+    (eregi("<[^>]*meta*\"?[^>]*>", $secvalue)) ||
+    (eregi("<[^>]*style*\"?[^>]*>", $secvalue)) ||
+    (eregi("<[^>]*form*\"?[^>]*>", $secvalue)) ||
+    (eregi("<[^>]*img*\"?[^>]*>", $secvalue)) ||
+    (eregi("<[^>]*onmouseover*\"?[^>]*>", $secvalue)) ||
+    (eregi("\([^>]*\"?[^)]*\)", $secvalue)) ||
+    (eregi("\"", $secvalue))) {
+        die ("not allowed");
+    }
     }
 }
 foreach ($_POST as $secvalue) {
-	//echo "POST: Sec: ".$secvalue."<br>";
-	if(is_array($secvalue)){
-		 foreach ($secvalue as $thirdvalue) {
-			 //echo "POST: Third:".$thirdvalue."<br>";
-		 if ((eregi("<[^>]*onmouseover*\"?[^>]*>", $thirdvalue)) ||
-				(eregi("<[^>]script*\"?[^>]*>", $thirdvalue)) ||
-				(eregi("<[^>]meta*\"?[^>]*>", $thirdvalue)) ||
-				(eregi("<[^>]style*\"?[^>]*>", $thirdvalue))) {
-				die ("not allowed");
-			}
-		 }
-	}else{
-		if ((eregi("<[^>]*onmouseover*\"?[^>]*>", $secvalue)) ||
-			(eregi("<[^>]script*\"?[^>]*>", $secvalue)) ||
-			(eregi("<[^>]meta*\"?[^>]*>", $secvalue)) ||
-			(eregi("<[^>]style*\"?[^>]*>", $secvalue))) {
-			die ("not allowed");
-		}
-	}
+    //echo "POST: Sec: ".$secvalue."<br>";
+    if(is_array($secvalue)){
+         foreach ($secvalue as $thirdvalue) {
+             //echo "POST: Third:".$thirdvalue."<br>";
+         if ((eregi("<[^>]*onmouseover*\"?[^>]*>", $thirdvalue)) ||
+                (eregi("<[^>]script*\"?[^>]*>", $thirdvalue)) ||
+                (eregi("<[^>]meta*\"?[^>]*>", $thirdvalue)) ||
+                (eregi("<[^>]style*\"?[^>]*>", $thirdvalue))) {
+                die ("not allowed");
+            }
+         }
+    }else{
+        if ((eregi("<[^>]*onmouseover*\"?[^>]*>", $secvalue)) ||
+            (eregi("<[^>]script*\"?[^>]*>", $secvalue)) ||
+            (eregi("<[^>]meta*\"?[^>]*>", $secvalue)) ||
+            (eregi("<[^>]style*\"?[^>]*>", $secvalue))) {
+            die ("not allowed");
+        }
+    }
 }
 
 //set root path
@@ -119,27 +119,27 @@ define("_ROOOT_",$ROOT_DIR);
 include ("$ROOT_DIR/config.php");
 include ("$ROOT_DIR/mysql.class.php");
 //include ("$ROOT_DIR/lang/italian.php");
-include ("$ROOT_DIR/function_engine/structures.class.php"); 
+include ("$ROOT_DIR/function_engine/structures.class.php");
 
 
-if ($php_debug=="ON"){    
-    error_reporting(E_ERROR | E_WARNING | E_PARSE);       
+if ($php_debug=="ON"){
+    error_reporting(E_ERROR | E_WARNING | E_PARSE);
 }else{
-	//echo "OFF";   
-	error_reporting(0);
+    //echo "OFF";
+    error_reporting(0);
 }
 
 
 $db = new sql_db($db_host, $db_username, $db_password, $databse_name, false);
 if(!$db->db_connect_id) {
-	  
 
-	  echo "<br><font color=\"red\"><h5><br><center>Error:</b><br><hr><br>
-			<b>Il database è morto<br>
-			chiama l'assistenza</center><hr>";
-			echo mysql_error();
 
-	  die();
+      echo "<br><font color=\"red\"><h5><br><center>Error:</b><br><hr><br>
+            <b>Il database è morto<br>
+            chiama l'assistenza</center><hr>";
+            echo mysql_error();
+
+      die();
 }
 
 
@@ -170,7 +170,7 @@ if(in_array("gphpchart",$_FUNCTION_LOADER)){
 // ----------------------------------------------- POSTA
 if(in_array("swift",$_FUNCTION_LOADER)){
     require_once "lib/Swift-4.1.6/lib/swift_required.php";
-}    
+}
 if(in_array("posta",$_FUNCTION_LOADER)){
     include ("function_engine/fun_posta.php");
 }
@@ -192,12 +192,12 @@ if(in_array("gas",$_FUNCTION_LOADER)){
 }
 //-----------------------------------------------LISTINI
 if(in_array("listini",$_FUNCTION_LOADER)){
-    include ("function_engine/fun_listini.php"); 
+    include ("function_engine/fun_listini.php");
 }
 //-----------------------------------------------DITTE
 if(in_array("ditte",$_FUNCTION_LOADER)){
     include ("function_engine/fun_ditte.php");
-} 
+}
 //----------------------------------------------TIPOLOGIE
 if(in_array("tipologie",$_FUNCTION_LOADER)){
     include ("function_engine/fun_tipologie.php");
@@ -280,22 +280,22 @@ public $debug_start;
 
 public function __construct() {
 
-	  $this->debug_state = read_option_text(0,"DEBUG");
-	  $this->debug_start = array_sum(explode(' ', microtime()));;
-	   
+      $this->debug_state = read_option_text(0,"DEBUG");
+      $this->debug_start = array_sum(explode(' ', microtime()));;
+
 
    }
-	
+
 public function render_debug(){
 
-	unset($h_d);
-	
+    unset($h_d);
+
 foreach ($this->debug_msg as $v) {
-	$h_d .='<div class="sub_debug">'.$v.'</div>';
+    $h_d .='<div class="sub_debug">'.$v.'</div>';
 }
 
 return $h_d;
 }
-	
+
 }
 

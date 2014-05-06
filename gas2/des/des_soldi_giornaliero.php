@@ -26,7 +26,7 @@ $r->javascripts_header[]=java_head_highstocks();
 //Messaggio popup;
 //$r->messaggio = "Pagina di test"; 
 //Dico quale menù orizzontale dovrà essere associato alla pagina.
-$r->menu_orizzontale = des_menu_completo(_USER_ID);
+//$r->menu_orizzontale = des_menu_completo(_USER_ID);
 
 
        $sql1 = "SELECT
@@ -90,7 +90,7 @@ $r->javascripts[]="
         },
         
         series: [{
-            name: 'Spesa ReteDes Giornaliera',
+            name: 'Spesa ReteDes',
             type: 'column',
             data: [".$data_activity_1."]
         }]
@@ -104,9 +104,9 @@ $r->javascripts[]="
 
 
 //Questo è il contenuto della pagina
-$r->contenuto = '<div style="position:relative; width: 100%; display:table;">
+$r->contenuto = '<div class="rg_widget rg_widget_helper"><div style="position:relative; width: 100%; display:table;">
                              <div id="container_chart" style="width: 100%; height: 30em;   display:table-cell"></div>
-                             </div>';
+                             </div></div>';
 //Mando all'utente la sua pagina
 echo $r->create_retegas();
 //Distruggo l'oggetto r    

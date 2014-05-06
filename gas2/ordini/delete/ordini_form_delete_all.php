@@ -18,13 +18,13 @@ if(!isset($id_ordine)){
 
 $ok="";
 //CONTROLLI
-     
-// SE E' DELLO STESSO GAS e PUO' VEDERE TUTTI GLI ORDINI
-if(_USER_ID_GAS==id_gas_user(id_referente_ordine_globale($id_ordine))){          
-    if(_USER_PERMISSIONS & perm::puo_vedere_tutti_ordini){
-        $ok="OK";     
-    }        
+
+$id_ordine=CAST_TO_INT($id_ordine);
+
+if(posso_gestire_ordine_full($id_ordine,_USER_ID)){
+    $ok="OK";
 }
+
 //SE PUO' GESTIRE RETEGAS    
 if ((_USER_PERMISSIONS & perm::puo_gestire_retegas)){
     $ok="OK";

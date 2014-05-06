@@ -217,6 +217,9 @@ if($amici_controllati<>($amici_aggiunti)){
                         
                         if($do=="insert_db"){
                                     
+                                    //PREZZO ARTICOLO ATTUALE
+                                    $prezzo_attuale = articolo_suo_prezzo($data[0]);
+                            
                                     $query_inserimento_articolo = "INSERT INTO retegas_dettaglio_ordini ( 
                                                                     id_utenti,
                                                                     id_articoli,             
@@ -224,7 +227,9 @@ if($amici_controllati<>($amici_aggiunti)){
                                                                     qta_ord,
                                                                     id_amico,
                                                                     id_ordine,
-                                                                    qta_arr) 
+                                                                    qta_arr,
+                                                                    prz_dett,
+                                                                    prz_dett_arr) 
                                                                     VALUES (
                                                                         '"._USER_ID."',
                                                                         '".$data[0]."',
@@ -232,7 +237,9 @@ if($amici_controllati<>($amici_aggiunti)){
                                                                         '$somma_riga',
                                                                         '0',
                                                                         '$id_ordine',
-                                                                        '$somma_riga'
+                                                                        '$somma_riga',
+                                                                        '$prezzo_attuale',
+                                                                        '$prezzo_attuale'
                                                                         );";
 
                                     $result = $db->sql_query($query_inserimento_articolo);

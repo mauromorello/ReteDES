@@ -11,13 +11,13 @@ include_once ("../storici_renderer.php");
 // controlla se l'user ha effettuato il login oppure no
 if (is_logged_in($user)){
 
-	// estraggo dal cookie le informazioni su chi è che sta vedendo la pagina
+	// estraggo dal cookie le informazioni su chi ? che sta vedendo la pagina
 	$cookie_read     =explode("|", base64_decode($user));
 	$id_user  =  $cookie_read[0];
 	$usr =       $cookie_read[1]; 
 	$permission = $cookie_read[6];
 										
-	// e poi scopro di che gas è l'user
+	// e poi scopro di che gas ? l'user
 	$id_gas = id_gas_user($id_user);
 	
 }else{
@@ -30,30 +30,30 @@ if (is_logged_in($user)){
    
 		 
 	// ISTANZIO un nuovo oggetto "retegas"
-	// Prenderà come variabile globale $user, nel caso di user loggato
+	// Prender? come variabile globale $user, nel caso di user loggato
 	// allora visualizza la barra info ed il menu verticale,
 	// nel caso di user non loggato visualizza la pagina con "benvenuto" e
-	//nel menù verticale i campi per il login
+	//nel men? verticale i campi per il login
 	$retegas = new sito; 
 	 
-	// assegno la posizione che sarà indicata nella barra info 
+	// assegno la posizione che sar? indicata nella barra info 
 	$retegas->posizione = "Distribuzione spesa";
 	  
-	// Dico a retegas come sarà composta la pagina, cioè da che sezioni è composta.
+	// Dico a retegas come sar? composta la pagina, cio? da che sezioni ? composta.
 	// Queste sono contenute in un array che ho chiamato HTML standard
 	
 	$retegas->sezioni = $retegas->html_standard;
 	  
-	// Il menu' orizzontale è pronto ma è vuoto. Con questa istruzione lo riempio con un elemento
+	// Il menu' orizzontale ? pronto ma ? vuoto. Con questa istruzione lo riempio con un elemento
     $retegas->menu_sito = storici_menu_completo();
 
 	
-	// dico a retegas quali sono i fogli di stile che dovrà usare
+	// dico a retegas quali sono i fogli di stile che dovr? usare
 	// uso quelli standard per la maggior parte delle occasioni
 	$retegas->css = $retegas->css_standard;
 	 
 	  
-	// dico a retegas quali file esterni dovrà caricare
+	// dico a retegas quali file esterni dovr? caricare
 	$retegas->java_headers = array("rg","highcharts","datepicker_loc");
 	
 		  
@@ -167,7 +167,7 @@ if (is_logged_in($user)){
        </div>';
 		
           // qui ci va la pagina vera e proria  
-	  $retegas->content  =  $h;
+	  $retegas->content  =  "<div class=\"rg_widget rg_widget_helper\"><h3>Storico Famiglie</h3>".$h."</div>";
 	  
 	  
 	  //  Adesso ho tutti gli elementi per poter costruire la pagina, che metto nella variabile "html"

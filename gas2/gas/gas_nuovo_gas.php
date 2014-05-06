@@ -1,5 +1,5 @@
 <?php
-   
+
 // immette i file che contengono il motore del programma
 include_once ("../rend.php");
 include_once ("../retegas.class.php");
@@ -7,32 +7,36 @@ include_once ("../retegas.class.php");
 
 // controlla se l'user ha effettuato il login oppure no
 if (!_USER_LOGGED_IN){
-     pussa_via(); 
-}    
+     pussa_via();
+}
 
 //controlla se l'utente ha i permessi necessari
 if(!(_USER_PERMISSIONS & perm::puo_creare_gas)){
      pussa_via();
 }
 
+if(read_option_gas_text_new(_USER_ID_GAS,"PUO_CREARE_GAS")=="NO"){
+    go("gas_form",_USER_ID,"Il DES al quale appartieni non te lo permette");
+}
+
 
 //-------------------------------------------------Check
 if($do=="add"){
-    
-    $descrizione_gas = sanitize($descrizione_gas);
+
+    $descrizione_gas_q = sanitize($descrizione_gas);
     (int)$default_permission = 283;//DEFAULT
     (int)$gas_permission = 7; //DEFAULT
     (int)$id_referente_gas;
     (int)$id_des = _USER_ID_DES;
     if($id_referente_gas>0){
-    
-    $my_query="INSERT INTO retegas_gas 
+
+    $my_query="INSERT INTO retegas_gas
                 (descrizione_gas,
                  default_permission,
                  gas_permission,
                  id_referente_gas,
                  id_des) VALUES (
-                 '$descrizione_gas',
+                 '$descrizione_gas_q',
                  '$default_permission',
                  '$gas_permission',
                  '$id_referente_gas',
@@ -42,11 +46,11 @@ if($do=="add"){
             $res = mysql_query("SELECT LAST_INSERT_ID();");
             $row = mysql_fetch_array($res);
             $last_id=$row[0];
-            
+
     if (is_null($result)){
             $msg = "Errore nell'inserimento del record";
             pussa_via();
-            exit;  
+            exit;
         }else{
             $act_perm = leggi_permessi_utente($id_referente_gas);
             $new_perm = $act_perm |  perm::puo_eliminare_messaggi;
@@ -59,17 +63,17 @@ if($do=="add"){
                                                                             USER ID : $id_referente_gas<br>
                                                                             OLD : $act_perm<br>
                                                                             NEW : $new_perm");
-            
-            
+
+
             $query_update = "UPDATE maaking_users SET id_gas='".$last_id."', user_permission = '$new_perm' WHERE userid='".$id_referente_gas."' LIMIT 1;";
             $result = $db->sql_query($query_update);
-            
+
               $da_chi = _USER_FULLNAME;
               $mail_da_chi = id_user_mail(_USER_ID);
-            
-              $verso_chi = fullname_from_id($id_referente_gas); 
+
+              $verso_chi = fullname_from_id($id_referente_gas);
               $mail_verso_chi = email_from_id($id_referente_gas);
-              
+
               $msg_mail ="<h3>$descrizione_gas</h3>
                           <p>Ciao $a_chi, $descrizione_gas è stato creato da $da_chi, e tu sembra allo stato attuale delle cose che sia la persona più indicata per guidarlo responsabilmente.</p>
                           <p>Come potrai notare dal tuo prossimo accesso a <a href=\"http://www.retedes.it\">www.retedes.it</a>, ti ritrovi solo soletto.</p>
@@ -81,26 +85,26 @@ if($do=="add"){
                           <li>Da : Il mio gas -> gestisci gas -> Opzioni potrai settare le caratteristiche del tuo gas.</li>
                           <li>RICORDATI di salvare ogni valore singolarmente !!</li>
                           <li>Una raccomandazione : Se attivi la cassa, leggi BENE tutto il materiale informativo su wiki.retedes.it</li>
-                          
+
                           </ul>
                           </p>
                           <p>Mi sembra di averti detto tutto, buona fortuna (e buon lavoro)</p>
                           <p><strong>$da_chi</strong></p>";
-                
-                
+
+
               $soggetto = "["._SITE_NAME." $descrizione_gas] - da $da_chi - E' nato, E' nato !!";
               manda_mail($da_chi,$mail_da_chi,$verso_chi,$mail_verso_chi,$soggetto,strip_tags($msg_mail),"MAN",0,_USER_ID,$msg_mail);
 
             $msg = "Nuovo Gas Aggiunto, referenze aggiornate.";
             go("gas_table",_USER_ID,$msg);
         };
-    
+
     }else{
         $msg = "Scegliere il referente GAS";
-    } 
-    
-    
-    
+    }
+
+
+
 }
 
 
@@ -119,7 +123,7 @@ $r->voce_mv_attiva = menu_lat::user;
 $r->title = "Inserimento Nuovo Gas";
 
 //Messaggio popup;
-$r->messaggio = $msg; 
+$r->messaggio = $msg;
 //Dico quale menÃ¹ orizzontale dovrÃ  essere associato alla pagina.
 $r->menu_orizzontale =  gas_menu_completo();
 
@@ -132,16 +136,20 @@ $r->menu_orizzontale =  gas_menu_completo();
         $query_users = "SELECT * FROM maaking_users WHERE id_gas="._USER_ID_GAS.";";
         $res_users = $db->sql_query($query_users);
 
+        $owner = gas_owner_from_id(_USER_ID_GAS);
+
         while ($row = $db->sql_fetchrow($res_users)){
 
             if(isset($id_referente_gas)){
-                if($id_referente_gas==$row["userid"]){$selected = " SELECTED ";}else{$selected="";}    
-            }  
-            $user_select .= '<option value="'.$row["userid"].'" '.$selected.'>'.$row["fullname"].'</option>\\n';     
+                if($id_referente_gas==$row["userid"]){$selected = " SELECTED ";}else{$selected="";}
+            }
+            if($row["userid"]<>$owner){
+                $user_select .= '<option value="'.$row["userid"].'" '.$selected.'>'.$row["fullname"].'</option>\\n';
+            }
         }
-        
-        
-        
+
+
+
         $h = '<div class="rg_widget rg_widget_helper">
         <h3>Crea un nuovo GAS (sei sicuro?)</h3>
 
@@ -154,13 +162,13 @@ $r->menu_orizzontale =  gas_menu_completo();
         <li>Il nuovo gas comparirà nella lista dei gas disponibili al momento dell\'iscrizione dei nuovi utenti</li>
         <li>Appena creato il nuovo gas sarà inviata una mail con le istruzioni "base" al nuovo referente.</li>
         <li>All\'utente referente del nuovo gas verranno automaticamente appioppati nuovi superpoteri.</li>
- 
+
         </ul>
         </div>
-        
+
         <form name="nuovo_gas" method="POST" action="" class="retegas_form">
 
-        
+
         <div>
         <h4>1</h4>
         <label for="descrizione_gas">Scrivi il nome del nuovo GAS</label>
@@ -174,22 +182,22 @@ $r->menu_orizzontale =  gas_menu_completo();
         <label for="id_referente_gas">Utente referente</label>
         <select id="id_referente_gas" name="id_referente_gas">
         <option value="0">Nessun utente selezionato</OPTION>
-        '.$user_select.'        
+        '.$user_select.'
         </select>
         <h5 title="'.$help_id_referente_gas.'">Inf.</h5>
         </span>
 
         </div>
-        
-        
-                       
+
+
+
         <div>
         <h4>3</h4>
         <label for="submit">e infine... </label>
         <input type="submit" name="submit" value="Crea un nuovo GAS !" align="center" >
         <input type="hidden" name="do" value="add">
         <h5 title="'.$help_partenza.'">Inf.</h5>
-        </div> 
+        </div>
 
 
         </form>
@@ -205,5 +213,5 @@ $r->menu_orizzontale =  gas_menu_completo();
 $r->contenuto = $h;
 //Mando all'utente la sua pagina
 echo $r->create_retegas();
-//Distruggo l'oggetto r    
-unset($r);  
+//Distruggo l'oggetto r
+unset($r);

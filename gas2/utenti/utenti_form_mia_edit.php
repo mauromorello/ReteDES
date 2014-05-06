@@ -88,14 +88,16 @@ if ($do=="mod"){
               maaking_users.country = '$indirizzo',
               maaking_users.city = '$citta',
               maaking_users.email = '$mail',
-              maaking_users.tel = '$telefono'
+              maaking_users.tel = '$telefono',
+              user_gc_lat ='$lat',
+              user_gc_lng ='$lng'
               WHERE 
               maaking_users.userid = $id_user LIMIT 1;";
               
         $result = $db->sql_query($sql);
         
-        $res_geocode = geocode_users_table("SELECT * FROM maaking_users WHERE (userid='$id_user')");
-        log_me(0,$id_user,"USR","MOD","Modificati dati personali",null,$res_geocode."<br>".$sql);
+        //$res_geocode = geocode_users_table("SELECT * FROM maaking_users WHERE (userid='$id_user')");
+        log_me(0,$id_user,"USR","MOD","Modificati dati personali",null,$sql);
         
         
                  
@@ -154,6 +156,44 @@ if ($do=="mod"){
 	  $retegas->java_scripts_header[] = java_superfish();
 	  $retegas->java_scripts_bottom_body[] = java_qtip(".retegas_form h5[title]");
 
+      $retegas->java_scripts_header[] = '<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>';
+      $retegas->java_scripts_bottom_body[] ="<script>
+                                                var geocoder;
+                                                var map;
+                                                function initialize() {
+                                                  geocoder = new google.maps.Geocoder();
+                                                  var latlng = new google.maps.LatLng(45,8);
+                                                  var mapOptions = {
+                                                    zoom: 6,
+                                                    center: latlng,
+                                                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                                                  }
+                                                  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+                                                }
+
+                                                function codeAddress() {
+                                                  var address = document.getElementById('address1').value + ', ' + document.getElementById('address2').value;
+                                                  geocoder.geocode( { 'address': address}, function(results, status) {
+                                                    if (status == google.maps.GeocoderStatus.OK) {
+                                                      map.setCenter(results[0].geometry.location);
+                                                      
+                                                      var marker = new google.maps.Marker({
+                                                          map: map,
+                                                          position: results[0].geometry.location
+                                                      });
+                                                      
+                                                      $('#lat').val (results[0].geometry.location.lat());
+                                                      $('#lng').val (results[0].geometry.location.lng());
+                                                      $('#ir').html('INDIRIZZO RICONOSCIUTO');
+                                                    } else {
+                                                      //alert('Geocode was not successful for the following reason: ' + status);
+                                                      $('#ir').html('INDIRIZZO NON RICONOSCIUTO ('+ status +')');
+                                                    }
+                                                  });
+                                                }
+
+                                                google.maps.event.addDomListener(window, 'load', initialize);
+                                                </script>";
 		  // orizzontale                         
 
 	  

@@ -20,12 +20,18 @@ if(ordine_inesistente($id_ordine)){
 
 
 // Se in quell'ordine non posso fare nulla
-if(!((_USER_PERMISSIONS & perm::puo_gestire_retegas) OR (_USER_PERMISSIONS & perm::puo_gestire_la_cassa))){    
-    if(ordine_io_cosa_sono($id_ordine,_USER_ID)==0){
-            pussa_via();
-            exit;    
-    }
+//if(!((_USER_PERMISSIONS & perm::puo_gestire_retegas) OR (_USER_PERMISSIONS & perm::puo_gestire_la_cassa))){    
+//    if(ordine_io_cosa_sono($id_ordine,_USER_ID)==0){
+//            pussa_via();
+//            exit;    
+//    }
+//}
+
+if(!posso_gestire_ordine_full($id_ordine,_USER_ID)){
+    go("ordini_form",_USER_ID,"Questa operazione ti è preclusa.","?id_ordine=$id_ordine");
+    exit;
 }
+
 
 if($do=="accetta"){
     
@@ -71,7 +77,7 @@ if($do=="elimina"){
     delete_option_aiuto_ordine($id_ordine,mimmo_decode($id_utente));
     log_me($id_ordine,_USER_ID,"AIU","ELI","Eliminato aiuto",0,"Da user ".fullname_from_id(mimmo_decode($id_utente)));
     $msg="Richiesta eliminata : nessuno saprà nulla...";
-    go("ordini_form_new",_USER_ID,$msg,null);
+    go("ordini_form_new",_USER_ID,$msg,"?id_ordine=$id_ordine");
 }
 
 //Creazione della nuova pagina uso un oggetto rg_simplest

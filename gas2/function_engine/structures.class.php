@@ -27,9 +27,9 @@ class perm{
         const puo_vedere_retegas        =32768; //15    SUPER USER
         const puo_gestire_retegas       =65536; //16    ZEUS USER
 	}
-//----------------------------------    
+//----------------------------------
 
-//---------------------------OPZIONI    
+//---------------------------OPZIONI
 class opti{
 		const visibile_al_proprio_gas       =1;
 		const visibile_a_tutti              =2;
@@ -40,7 +40,7 @@ class opti{
         const stampe_senza_intestazioni     =64;
         const sito_senza_header             =128;
 }
-//---------------------------------- 
+//----------------------------------
 
 //---------------------MENU_LATERALI
 class menu_lat{
@@ -55,22 +55,31 @@ class menu_lat{
 }
 //----------------------------------
 
+//---------------------MENU_LATERALI
+class dettaglio{
+        const rettifica = "@@ RETTIFICA";
+        const trasporto = "@@ TRASPORTO";
+        const gestione = "@@ GESTIONE";
+}
+//----------------------------------
+
+
 //---------------------------CASSA
-//Movimenti CASSA --> TESTO    
+//Movimenti CASSA --> TESTO
 $__movcas = array(  "0"=>"Non definito",
-                    "1"=>"Carico credito",
-                    "2"=>"Pagamento ordine",
+                    "1"=>"Ricarica",
+                    "2"=>"Pagamento",
                     "3"=>"Rettifica",
-                    "4"=>"Scarico credito",
+                    "4"=>"Scarico",
                     "5"=>"Finanziamento GAS",
                     "6"=>"Restituzione Credito",
-                    "7"=>"Scarico credito (Pagamento Netto)",
-                    "8"=>"Scarico credito (Pagamento Trasporto)",
-                    "9"=>"Scarico credito (Pagamento Gestione)",
-                    "10"=>"Scarico credito (Finanziamento GAS)",
-                    "11"=>"Scarico credito (Anticipo per copertura)",
-                    "12"=>"Scarico credito (Costi GAS)",
-                    "13"=>"Scarico credito (Maggiorazione GAS)");
+                    "7"=>"Scarico (Merce)",
+                    "8"=>"Scarico (Trasporto)",
+                    "9"=>"Scarico (Gestione)",
+                    "10"=>"Scarico (Finanziamento GAS)",
+                    "11"=>"Scarico (Anticipo per copertura)",
+                    "12"=>"Scarico (Costi GAS)",
+                    "13"=>"Scarico (Maggiorazione GAS)");
 //Movimenti CASSA --> VALORI
 class movimento{
     Const non_definito = 0 ;
@@ -87,9 +96,9 @@ class movimento{
     const scarico_per_anticipo_copertura = 11;
     const scarico_per_costi_gas = 12 ;
     const scarico_per_maggiorazione_gas = 13 ;
-    
-} 
-//--------------------------------                    
+
+}
+//--------------------------------
 
 
 //---------------------------BACHECA
@@ -113,30 +122,30 @@ class argomenti{
     const valutazione = 12;
 }
 class opinioni{
-        
+
         //PARTECIPANTE
         const qualita       =   "OPI_QUALITA";
         const affare        =   "OPI_AFFARE";
-        
+
         //DES
         const sociale       =   "OPI_SOCIALE";
         const finanza       =   "OPI_FINANZA";
         const ambiente      =   "OPI_AMBIENTE";
-        
+
         //GESTORE
         const logistica     =   "OPI_LOGISTICA";
         const rapporti      =   "OPI_RAPPORTI";
         const tutte         =   "OPI_%"; //TODO da verificare
         const velocita      =   "OPI_VELOCITA";
-        
+
         //GAS
         const pulizia       =   "OPI_PULIZIA";
         const artigianalita =   "OPI_ARTIGIANALITA";
         const disponibilita =   "OPI_DISPONIBILITA";
-   }   
-//----------------------------------  
+   }
+//----------------------------------
 
-//Tipologie Messaggi    
+//Tipologie Messaggi
 class argo {
 
 public $argomenti;
@@ -156,10 +165,10 @@ public function __construct() {
                                argomenti::relazione => "Relazione",
                                argomenti::valutazione => "Valutazione");
    }
-		
+
 }
 
-//Tipologie visibilità   
+//Tipologie visibilità
 class visi {
 
 public $visibility;
@@ -171,45 +180,46 @@ public function __construct() {
 								 "2" => "dagli utenti del mio GAS soltanto",
 								 "3" => "Me medesimo soltanto");
    }
-		
+
 }
 
-//MAPPATURA INDIRIZZI PAGINE ---------------------------------- IMPORTANTE       
+//MAPPATURA INDIRIZZI PAGINE ---------------------------------- IMPORTANTE
 class addresses{
 
 public $addr;
 
 public function __construct($site,$local,$root = null,$image=null) {
-	  
+
 	  global $db;
 	  // controllo che $root è un drive locale piuttosto che un http
-	  if (substr($root,1,1)<>":"){    
+	  if (substr($root,1,1)<>":"){
 		$root = $site;
         if(!is_empty($image)){
             $iroot = $image;
         }else{
-            $iroot = $site;    
+            $iroot = $site;
         }
 	  }else{
 		$root = $local;
-        $iroot = $local;         
+        $iroot = $local;
 	  }
 	  // Posizione Pagine
-      
-      
-      
-      
+
+      //echo $site;die();
+
+
 	  $this->addr = array("sommario"                =>$root."index.php",
+
                           "start"                   =>$root."index_start.php",
-                          "disclaimer"              =>$root."amministra/amministra_disclaimer.php",  
+                          "disclaimer"              =>$root."amministra/amministra_disclaimer.php",
 						  "pannello_report"         =>$root."ordini/ordini_panel_select_report.php",
 						  "backup_temp"             =>$root."backup/temp/",
                           "coseinutili"             =>$root."coseinutili/ci_presentazione.php",
-                          
+
 
                           //ARTICOLI
                           "articoli_form"           =>$root."articoli/articoli_form_new.php",
-                          "articoli_edit"           =>$root."articoli/articoli_form_edit.php",    
+                          "articoli_edit"           =>$root."articoli/articoli_form_edit.php",
                           "articoli_delete"         =>$root."articoli/articoli_form_delete.php",
 
 						  //PANORAMICA
@@ -219,110 +229,110 @@ public function __construct($site,$local,$root = null,$image=null) {
 						  //BACHECA
 						  "bacheca"                 =>$root."bacheca/bacheca_table.php",
                           "bacheca_form"            =>$root."bacheca/bacheca_form.php",
-						  
 
-						  
-                
-                          
+
+
+
+
 						  //REPORT
 						  "rep_situazione_gas"      =>$root."ordini_chiusi/altri_gas/ag_table.php",
 						  "rep_dettaglio_articoli_c"=>$root."ordini_chiusi/listone_art/oc_lis_art_report.php",
 						  "rep_riepilogo_articoli_c"=>$root."ordini_chiusi/articoli_ordinati/oc_art_ord_report.php",
 						  "rep_dettaglio_articoli_a"=>$root."ordini_aperti/articoli_dettaglio/oa_art_dett_report.php",
 						  "rep_riepilogo_articoli_a"=>$root."ordini_aperti/articoli_ordinati/oa_art_ord_report.php",
-						  
+
 						  "rep_avanzo_ammanco"      =>$root."ordini_chiusi/articoli_ordinati_av_amm/oc_art_ord_av_amm_report.php",
 						  "rep_scatole_intere"      =>$root."ordini_chiusi/articoli_ordinati_scatole_intere/oc_art_ord_si_report.php",
-						  
+
 						  "rep_dettaglio_gas_c"     =>$root."ordini_chiusi/gas_dett/oc_g_dett_report.php",
 						  "rep_articoli_gas_c"      =>$root."ordini_chiusi/gas_art/oc_g_art_report.php",
 						  "rep_dett_art_m_sp_a"     =>$root."ordini_aperti/report/ordini_aperti_report_mia_spesa_articoli.php",
 						  "rep_dett_art_m_sp_c"     =>$root."ordini_chiusi/mia_spesa/ordini_chiusi_report_mia_spesa_articoli.php",
 						  "rep_riep_art_m_sp_a"     =>$root."ordini_aperti/articoli_ordinati/oa_art_ord_report.php",
 						  "rep_riep_art_m_sp_c"     =>$root."ordini_chiusi/miei_art/oc_m_art_report.php",
-					  
+
 						  "select_listino_maga"     =>$root."listini/listini_form_maga.php",
 
                           //grafici
-                          
+
                           "grafico_global_mon"      =>$root."gas/gasap_money_global.php",
 
 						  //GESTIONE ORDINI
 						   "pannello_gestisci"      =>$root."ordini/edit/ordini_panel_gestisci.php",
-						  
-						  
+
+
 
                           //ALTRO
 						  "wiki"                    =>"http://wiki.retegas.info",
-	                      "lang_ita"                =>$root."lang/italian.php",  
+	                      "lang_ita"                =>$root."lang/italian.php",
                           "lang_val"                =>$root."lang/valsesian.php"
-                          
-                      					  
-                           
-						  );  
+
+
+
+						  );
     include_once("locations_gas.php");
     $this->addr = $this->addr + $locations_gas;
-    
+
     include_once("locations_storici.php");
     $this->addr = $this->addr + $locations_storici;
-    
+
     include_once("locations_bacheca.php");
     $this->addr = $this->addr + $locations_bacheca;
-    
+
     include_once("locations_des.php");
     $this->addr = $this->addr + $locations_des;
-    
+
     include_once("locations_utenti.php");
     $this->addr = $this->addr + $locations_utenti;
-    
+
     include_once("locations_amici.php");
     $this->addr = $this->addr + $locations_amici;
-    
+
     include_once("locations_cassa.php");
     $this->addr = $this->addr + $locations_cassa;
-    
+
     include_once("locations_images.php");
     $this->addr = $this->addr + $locations_images;
-    
+
     include_once("locations_listini.php");
     $this->addr = $this->addr + $locations_listini;
-    
+
     include_once("locations_amministra.php");
     $this->addr = $this->addr + $locations_amministra;
-                          
+
     include_once("locations_css.php");
-    $this->addr = $this->addr + $locations_css;                      
-    
+    $this->addr = $this->addr + $locations_css;
+
     include_once("locations_mobile.php");
-    $this->addr = $this->addr + $locations_mobile;                                               
-    
+    $this->addr = $this->addr + $locations_mobile;
+
     include_once("locations_js.php");
     $this->addr = $this->addr + $locations_js;
-    
+
     include_once("locations_themes.php");
     $this->addr = $this->addr + $locations_themes;
-    
+
     include_once("locations_ajax.php");
     $this->addr = $this->addr + $locations_ajax;
-    
+
     include_once("locations_ditte.php");
     $this->addr = $this->addr + $locations_ditte;
-    
+
     include_once("locations_reports.php");
     $this->addr = $this->addr + $locations_reports;
-    
+
     include_once("locations_coseinutili.php");
     $this->addr = $this->addr + $locations_coseinutili;
-    
+
     include_once("locations_aiutanti.php");
     $this->addr = $this->addr + $locations_aiutanti;
-    
+
     include_once("locations_ordini.php");
     $this->addr = $this->addr + $locations_ordini;
-    
+
     include_once("locations_extra.php");
-    $this->addr = $this->addr + $locations_extra;                      
+    $this->addr = $this->addr + $locations_extra;
    }
-	
-	
+
+
 }

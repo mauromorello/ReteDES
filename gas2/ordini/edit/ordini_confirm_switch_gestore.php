@@ -6,7 +6,7 @@ include_once ("../../retegas.class.php");
 //
 include_once ("../ordini_renderer.php");
 
-$chiave = sanitize("SWITCH_".$codice);
+$chiave = "SWITCH_".$codice;
 
 if(!_USER_LOGGED_IN){
    go("sommario",0,null,"?q=121"); 
@@ -81,6 +81,4 @@ if(check_option_exist(0,$chiave)){
     }else{
         go("sommario");
     }
-}
-  
-?>
+};

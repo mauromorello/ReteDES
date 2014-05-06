@@ -9,12 +9,17 @@ $locations_des=Array(//DES
                           "gas_com_retegas"         =>$root."gas/gas_comunica_retegas_hermes.php",
                           "gas_com_prg_des"         =>$root."gas/gas_comunica_progetto_des.php",
                           "gas_table"               =>$root."gas/gas_table.php",
+                          "des_permessi_gas"        =>$root."des/des_permessi_gas.php",
+                          "des_nuovi_utenti"        =>$root."des/des_nuovi_utenti.php",
+                          "des_switch_responsabile" =>$root."des/des_switch_responsabile.php",
+                          "des_nuovo_gas"           =>$root."des/des_nuovo_gas.php",
                           "retegas_rec_act"         =>$root."gas/gasap_last_activity.php",
                           "retegas_perc_ut"         =>$root."gas/gasap_last_gas_percentage.php",
                           "retegas_online_now"      =>$root."gas/gasap_online_now.php",
                           "retegas_form_total"      =>$root."gas/gas_form_total.php",
                           "des_geo_dimensioni_gas"  =>$root."des/des_geo_dimensioni_gas.php",
                           "des_geo_ultimi_ordini"   =>$root."des/des_geo_ultimi_ordini.php",
+                          "des_geo_ultimi_ordini_all"   =>$root."des/des_geo_ultimi_ordini_all.php",
                           "des_geo_valori_ditte"    =>$root."des/des_geo_valori_ditte.php",
                           "des_soldi_giornaliero"   =>$root."des/des_soldi_giornaliero.php",
                           "des_option_sito"         =>$root."des/des_option_sito.php",
@@ -30,5 +35,5 @@ $locations_des=Array(//DES
                           "gas_ordine_dett_users"   =>$root."ordini/gas_spesa/dettaglio_utenti_gas.php");
 }
 
-  
+
 ?>

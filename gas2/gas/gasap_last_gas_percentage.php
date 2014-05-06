@@ -170,9 +170,10 @@ if (!(_USER_PERMISSIONS & perm::puo_vedere_retegas)){
 	  }
 	  
 		  // qui ci va la pagina vera e proria  
-	  $retegas->content  =  '<div style="position:relative; width: 100%; display:table;">
+	  $retegas->content  =  '<div class="rg_widget rg_widget_helper">
+                             <div style="position:relative; width: 100%; display:table;">
                              <div id="container_chart" style="width: 100%; height: 30em;   display:table-cell"></div>
-                             </div>';
+                             </div></div>';
 
 	  
 

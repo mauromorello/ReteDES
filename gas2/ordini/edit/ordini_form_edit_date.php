@@ -11,18 +11,15 @@ if (!_USER_LOGGED_IN){
 }    
 
 //CONTROLLI
-if (!(_USER_PERMISSIONS & perm::puo_partecipare_ordini)){
-     pussa_via();
-}
 
 if(!isset($id_ordine)){
      pussa_via();
 }
 
-if(id_referente_ordine_globale($id_ordine)<>_USER_ID){
-    go("sommario",_USER_ID,"Questo ordine non ti compete");
-    die();
-}
+if(!posso_gestire_ordine_full($id_ordine,_USER_ID)){
+        go("ordini_form",_USER_ID,"Questa operazione ti è preclusa.","?id_ordine=$id_ordine");
+        exit;
+    }
 
 
     

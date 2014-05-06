@@ -76,8 +76,17 @@ if (_USER_LOGGED_IN){
 	$id_user  = _USER_ID;
     $gas = _USER_ID_GAS;
     
-
+    //CONTROLLO MOBILE
+    $detect = new Mobile_Detect();
+    if($nomobile==2){write_option_text(_USER_ID,"_USER_OPT_FORZA_DESKTOP","SI");sleep(1);}
     
+    
+    if(read_option_text(_USER_ID,"_USER_OPT_FORZA_DESKTOP")<>"SI"){
+        if ( $detect->isMobile() ) {
+            log_me(0,_USER_ID,"LOG","MOB","Mobile Detect",0,$detect->getUserAgent());
+            go("sommario_mobile");
+        }
+    }
     //CONTROLLO SE E' STATO TOTTLAGTO UN BOOKMARK
     if(isset($page_title) AND isset($page_url)){
         
@@ -90,7 +99,12 @@ if (_USER_LOGGED_IN){
 	
     // QUA METTO I MENU PRIVATI
     $mio_menu[]='<li><a class="medium silver awesome" href="'.$RG_addr["pag_users_form_widgets"].'">Elementi visualizzati</a></li>
-                    <li><a class="medium silver awesome" href="'.$RG_addr["user_help_pers"].'">Aiuto rapido</a></li> 
+                  
+                 <li><a class="medium silver awesome" href="'.$RG_addr["user_option_sito"].'">Opzioni</a></li>
+                 <li><a class="medium red awesome" href="'.$RG_addr["gas_form_geogas"].'">I Gas</a></li>
+                 <!--<li><a class="medium green awesome" href="'.$RG_addr["des_geo_ultimi_ordini_all"].'">Ultimi acquisti</a></li>-->
+                 <li><a class="medium blue awesome" href="'.$RG_addr["des_soldi_giornaliero"].'">Quanto si spende</a></li>
+                 <li><a class="medium green awesome" href="'.$RG_addr["gas_non_siamo_soli"].'">Non siamo soli !!</a></li>
     ';
     
     //CONTROLLO I BOOKMARK DELL'UTENTE
@@ -129,12 +143,20 @@ if (_USER_LOGGED_IN){
    
    //echo $has_widgets; 
    
-                    
+   
+   //$contenuto .= alert_feedback();                 
+   $ordini_senza_feedback = alert_feedback_num();
+   if($ordini_senza_feedback>0){
+        if($ordini_senza_feedback>1){$pre="Ci sono $ordini_senza_feedback ordini ";}else{$pre="C'è un ordine ";} 
+        $contenuto .="<h4>$pre senza feedback <a class=\"awesome large red\" href=\"".$RG_addr["bacheca_alert_ordini"]."\">VAI ALLA PAGINA</a></h4>";    
+   }
+   
    $contenuto .='<div class="column" id="col_1">';
    
    
    // se non ha widgets preimpostati decido io quali mettergli
    if($has_widgets==0){
+        
         $contenuto .= rgw_retegas_comunica_new_user($retegas,$id_user);
         $contenuto .= rgw_widget_render($retegas,7,$id_user,$gas);
         $contenuto .= rgw_widget_render($retegas,9,$id_user,$gas);
@@ -150,7 +172,7 @@ if (_USER_LOGGED_IN){
        $contenuto .= rgw_widget_render($retegas,$WIDGETS[$i],$id_user,$gas);
    }
    $contenuto .='</div>
-                 <div class="column" id="col_2" style="margin-left:1em;">';
+                 <div class="column" id="col_2">';
    
    
    //se non ha widgets nella seconda colonna ci metto quelli che voglio io              
@@ -168,9 +190,8 @@ if (_USER_LOGGED_IN){
 
 }else{      // se l'user non ha effettuato il login
 
-    go("start");
+    go("start",null,null,"?nomobile=$nomobile");
     die();
-
 	unset($user);
 }
 	 

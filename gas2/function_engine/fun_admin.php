@@ -1,7 +1,7 @@
 <?php
 function db_dettagli_ordine_senza_ordine(){
 global $db;
-	
+
 $sql ='SELECT
     retegas_dettaglio_ordini.id_dettaglio_ordini,
     retegas_dettaglio_ordini.id_utenti,
@@ -20,9 +20,9 @@ $sql ='SELECT
     Right Join retegas_dettaglio_ordini ON retegas_ordini.id_ordini = retegas_dettaglio_ordini.id_ordine
     WHERE
     retegas_ordini.id_ordini IS NULL;';
- 
- return $db->sql_numrows($db->sql_query($sql));    
-	
+
+ return $db->sql_numrows($db->sql_query($sql));
+
 }
 function db_distribuzione_spesa_senza_dettagli_ordine(){
 $sql ='SELECT
@@ -43,7 +43,7 @@ WHERE
 retegas_dettaglio_ordini.id_dettaglio_ordini IS NULL';
   $ret = mysql_query($sql);
  $row = mysql_numrows($ret);
-return $row;    
+return $row;
 }
 function db_referenze_senza_ordine(){
 $sql ='SELECT
@@ -55,7 +55,7 @@ WHERE
 retegas_ordini.id_ordini IS NULL';
   $ret = mysql_query($sql);
  $row = mysql_numrows($ret);
-return $row;    
+return $row;
 }
 function db_amici_senza_referente(){
 $sql ='SELECT
@@ -73,7 +73,7 @@ WHERE
 maaking_users.userid IS NULL ';
   $ret = mysql_query($sql);
  $row = mysql_numrows($ret);
-return $row;    
+return $row;
 }
 function db_articoli_senza_listino(){
 $sql ='SELECT
@@ -96,7 +96,7 @@ WHERE
 retegas_listini.id_listini IS NULL';
   $ret = mysql_query($sql);
  $row = mysql_numrows($ret);
-return $row;    
+return $row;
 }
 function db_listini_senza_ditte(){
 $sql ='SELECT
@@ -113,24 +113,25 @@ WHERE
 retegas_ditte.id_ditte IS NULL ';
   $ret = mysql_query($sql);
  $row = mysql_numrows($ret);
-return $row;    
+return $row;
 }
 function db_dettagli_senza_articoli(){
-$sql ='SELECT
+$sql ="SELECT
 retegas_dettaglio_ordini.id_dettaglio_ordini
 FROM
 retegas_dettaglio_ordini
 Left Join retegas_articoli ON retegas_articoli.id_articoli = retegas_dettaglio_ordini.id_articoli
 WHERE
-retegas_articoli.id_articoli IS NULL ';
+(retegas_articoli.id_articoli IS NULL)
+AND art_codice <>'".dettaglio::rettifica."' ";
   $ret = mysql_query($sql);
  $row = mysql_numrows($ret);
-return $row;    
+return $row;
 }
 
 function db_ordini_senza_listino(){
 global $db;
-    
+
 $sql ='SELECT
         retegas_ordini.id_ordini,
         retegas_ordini.id_listini,
@@ -145,38 +146,47 @@ $sql ='SELECT
         Left Join retegas_listini ON retegas_ordini.id_listini = retegas_listini.id_listini
         WHERE
             retegas_listini.id_listini IS NULL';
- 
- return $db->sql_numrows($db->sql_query($sql));    
-    
+
+ return $db->sql_numrows($db->sql_query($sql));
+
 }
 
 function messaggi_ordine_singolo($ref_table,$id_ordine){
     global $RG_addr, $db;
-    
-    
+
+
       $query="select * from retegas_messaggi WHERE  id_ordine='$id_ordine' ORDER BY id_messaggio DESC";
       $result= $db->sql_query($query);
       $numfields = $db->sql_numfields($result);
 
       $h_table .= "<table id=\"$ref_table\"><thead><tr>";
-      
-      for ($i=0; $i < $numfields; $i++) 
-      { 
-      $h_table .= '<th>'.mysql_field_name($result, $i).'</th>'; 
+
+      for ($i=0; $i < $numfields; $i++)
+      {
+      $h_table .= '<th>'.mysql_field_name($result, $i).'</th>';
       }
       $h_table .= "</tr>
                     </thead>
                     <tbody>";
-   
-      while ($row = mysql_fetch_row($result)) 
-      { 
-      $h_table .= '<tr><td>'.implode($row,'</td><td>')."</td></tr>"; 
+
+      while ($row = mysql_fetch_row($result))
+      {
+      $h_table .= '<tr><td>'.implode($row,'</td><td>')."</td></tr>";
       }
       $h_table .= " </tbody>
                     </table>";
-    
+
       return $h_table;
-    
-    
+
+
+}
+
+function db_prezzi_dettaglio_diversi_prezzi_articoli(){
+    global $db;
+
+    $n = $db->sql_numrows($db->sql_query("  SELECT * FROM retegas_dettaglio_ordini D
+                                            INNER JOIN retegas_articoli A ON D.id_articoli=A.id_articoli
+                                            WHERE D.prz_dett<>A.prezzo"));
+    return $n;
 }
 ?>

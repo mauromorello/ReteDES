@@ -33,7 +33,7 @@ $j = new jqm(load_jqm_param());
 
 //-------------------------------------------------------PAG 1                                
 //Nuova pagina con relativi parametri
-$p = new jqm_page(load_page_param("RG Ordini","scheda"));
+$p = new jqm_page(load_page_param(_SITE_NAME,"scheda"));
 $p->jqm_footer_hide= true;
 //Assegno la navbar
 

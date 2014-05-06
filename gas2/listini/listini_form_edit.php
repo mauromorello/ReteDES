@@ -1,5 +1,5 @@
 <?php
-   
+
 // immette i file che contengono il motore del programma
 include_once ("../rend.php");
 include_once ("../retegas.class.php");
@@ -7,8 +7,8 @@ include_once ("../retegas.class.php");
 
 // controlla se l'user ha effettuato il login oppure no
 if (!_USER_LOGGED_IN){
-     pussa_via(); 
-}    
+     pussa_via();
+}
 
 
 //Mi assicuro che sia un numero
@@ -26,69 +26,71 @@ $nome_listino = listino_nome($id_listini);
 
 //se il comando ? quello di aggiungere la ditta
 if($do=="mod"){
-      
+
       $descrizione_listini=sanitize($descrizione_listini);
       $id_tipologie = CAST_TO_INT($id_tipologie,0);
       $is_privato = CAST_TO_INT($is_privato,0);
+      $opz_usage = CAST_TO_INT($opz_usage,0);
        // se ? vuoto
       if (($descrizione_listini)==""){$msg.="Devi almeno inserire il nome del listino<br>";$e_empty++;};
       if (($id_tipologie)==""){$msg.="Devi associare una tipologia di merce<br>";$e_empty++;};
       if (($data_valido)==""){$msg.="Devi inserire la data di scadenza<br>";$e_empty++;};
-    
+
       if (!controllodata($data_valido)){
         $e_logical ++;
-        $msg.="Formato della data non riconosciuto<br>";    
+        $msg.="Formato della data non riconosciuto<br>";
       };
-      
+
       //SE E' SCADUTO
       if (gas_mktime($data_valido,null)<gas_mktime(date("d/m/Y"),date("H:i:s"))){
       $msg.="Data antecedente ad oggi<br>
              Se vuoi far scadere il listino dagli la data di oggi.";
-      $e_logical ++;             
+      $e_logical ++;
       }
-      
-      
+
+
       $msg.="<br>Verifica i dati immessi e riprova";
       $e_total = $e_empty + $e_logical + $e_numerical;
-      
+
       if($e_total==0){
 
-      
+
         $data_app = $data_valido;
         $data_valido = conv_date_to_db($data_valido);
         // QUERY EDIT
-        $sql = "UPDATE retegas_listini 
-              SET 
+        $sql = "UPDATE retegas_listini
+              SET
               retegas_listini.descrizione_listini = '$descrizione_listini',
               retegas_listini.id_tipologie = '$id_tipologie',
               retegas_listini.data_valido = '$data_valido',
               retegas_listini.tipo_listino = '$tipo_listino',
-              retegas_listini.is_privato ='$is_privato'
-              WHERE 
+              retegas_listini.is_privato ='$is_privato',
+              retegas_listini.opz_usage ='$opz_usage'
+              WHERE
               retegas_listini.id_listini = '$id_listini' LIMIT 1;";
-        $data_valido=$data_app;      
+        $data_valido=$data_app;
         $result = $db->sql_query($sql);
         //echo $result;
         //EDIT BEGIN ---------------------------------------------------------
-         
+
         if (is_null($result)){
             $msg = "Errore nella modifica dei dati";
         }else{
             $msg = "Dati modificati";
         };
-        
+
         go("listini_scheda",_USER_ID,$msg,"?id_listino=$id_listini");
-        
-        //EDIT END --------------------------------------------------------- 
-              
+
+        //EDIT END ---------------------------------------------------------
+
       } // se non ci sono errori
-    
+
       //ci sono errori
       //Msg ? gi? settato
-  
-    
+
+
 }else{
-//altrimenti riempio i campi 
+//altrimenti riempio i campi
 $qry = "SELECT * FROM retegas_listini WHERE id_listini='$id_listini'";
 $row = $db->sql_fetchrow($db->sql_query($qry));
 
@@ -97,8 +99,8 @@ $data_valido = conv_only_date_from_db($row["data_valido"]);
 $id_tipologie = $row["id_tipologie"];
 $tipo_listino = $row["tipo_listino"];
 $is_privato = $row["is_privato"];
+$opz_usage = $row["opz_usage"];
 
-    
 }
 
 
@@ -109,12 +111,12 @@ $r = new rg_simplest();
 $r->voce_mv_attiva = 2;
 //Assegno il titolo che compare nella barra delle info
 $r->title = "Modifica intestazione listino";
-//Carico il 
+//Carico il
 $r->javascripts_header[]=java_head_datetimepicker();
 $r->javascripts[] = java_qtip(".retegas_form h5[title]");
 
 //Messaggio popup;
-//$r->messaggio = "Pagina di test"; 
+//$r->messaggio = "Pagina di test";
 //Dico quale menù orizzontale dovrà essere associato alla pagina.
 $r->menu_orizzontale = "";
 
@@ -198,8 +200,22 @@ $t->options[]=$t->create_option_item("Privato",1);
 $f->item[] = $t->create_form_select_item();
 unset($t);
 
-$t = new rg_form_submit();
+$t = new rg_form_select();
 $t->number=6;
+$t->name= "opz_usage";
+$t->value = $opz_usage;
+$t->label="Utilizzo campi OPZ";
+$t->help="Scegli se sono destinati al raggruppamento o alla gestione TAG articoli";
+
+//$t->options[]=$t->create_option_item("Raggruppamento",0);
+$t->options[]=$t->create_option_item("Tag",1);
+
+$f->item[] = $t->create_form_select_item();
+unset($t);
+
+
+$t = new rg_form_submit();
+$t->number=7;
 $t->name= "submit_form";
 $t->label="...e infine";
 $t->value= "Salva le modifiche";
@@ -210,7 +226,7 @@ unset($t);
 $h = new rg_form_hidden();
 $h->name="do";
 $h->value="mod";
-$f->item[] =$h->create_form_hidden_item(); 
+$f->item[] =$h->create_form_hidden_item();
 unset($h);
 
 $h = new rg_form_hidden();
@@ -229,6 +245,6 @@ $r->contenuto = "<div class=\"rg_widget rg_widget_helper\">
 
 //Mando all'utente la sua pagina
 echo $r->create_retegas();
-//Distruggo l'oggetto r    
-unset($r)   
+//Distruggo l'oggetto r
+unset($r)
 ?>

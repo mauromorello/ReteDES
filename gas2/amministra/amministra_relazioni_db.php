@@ -97,23 +97,7 @@ if(_USER_HAVE_MSG){
 					WHERE
 					retegas_listini.id_listini IS NULL";
 		break;
-	   
-	   case "ami":
-	   $intestazione = '<div class="ui-state-error ui-corner-all padding_6px">Amici senza Referente</div><br></hr>';
-			$query="SELECT
-					retegas_amici.id_amici,
-					retegas_amici.id_referente,
-					retegas_amici.nome,
-					retegas_amici.indirizzo,
-					retegas_amici.telefono,
-					retegas_amici.note,
-					retegas_amici.is_visible
-					FROM
-					retegas_amici
-					Left Join maaking_users ON maaking_users.userid = retegas_amici.id_referente
-					WHERE
-					maaking_users.userid IS NULL ";
-	   break;
+
 	   
 	   case "del_dis":
 			 if(_USER_PERMISSIONS & perm::puo_gestire_retegas){
@@ -177,6 +161,33 @@ if(_USER_HAVE_MSG){
 					retegas_ordini.id_ordini IS NULL;";
 	   break;
 	   
+       case "del_ami":
+         if(_USER_PERMISSIONS & perm::puo_gestire_retegas){
+            if(isset($id)){
+            
+                //echo "DELETE FROM `retegas_dettaglio_ordini WHERE `retegas_dettaglio_ordini`.`id_dettaglio_ordini` = '$id' LIMIT 1;"; 
+                $db->sql_query("DELETE FROM `retegas_amici` WHERE `retegas_amici`.`id_amici` = '$id' LIMIT 1;");                                  
+            } 
+         } 
+       
+       case "ami":
+       $delete_command = "?do=del_ami&id=";
+       $intestazione = '<div class="ui-state-error ui-corner-all padding_6px">Dettagli orfani di Ordini</div><br></hr>';
+            $query="SELECT
+                    retegas_amici.id_amici,
+                    retegas_amici.id_referente,
+                    retegas_amici.nome,
+                    retegas_amici.indirizzo,
+                    retegas_amici.telefono,
+                    retegas_amici.note,
+                    retegas_amici.is_visible
+                    FROM
+                    retegas_amici
+                    Left Join maaking_users ON maaking_users.userid = retegas_amici.id_referente
+                    WHERE
+                    maaking_users.userid IS NULL ";
+       break;
+       
 	   case "del_ref":
 		 if(_USER_PERMISSIONS & perm::puo_gestire_retegas){
 			if(isset($id)){

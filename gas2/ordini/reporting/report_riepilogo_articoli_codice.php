@@ -11,14 +11,18 @@ if (!_USER_LOGGED_IN){
      pussa_via(); 
 }    
 
-
-
+if(!(_USER_PERMISSIONS & perm::puo_vedere_tutti_ordini)){
+    if(!posso_gestire_ordine_full($id_ordine,_USER_ID)){
+        go("ordini_form",_USER_ID,"Questa operazione ti è preclusa.","?id_ordine=$id_ordine");
+        exit;
+    }
+}
 
 
 //Creazione della nuova pagina uso un oggetto rg_simplest
 $r = new rg_simplest();
 //Dico quale voce del men? verticale dovr? essere aperta
-$r->voce_mv_attiva = 0;
+$r->voce_mv_attiva = menu_lat::ordini;
 //Assegno il titolo che compare nella barra delle info
 $r->title = "Articoli per codice";
 
@@ -59,7 +63,9 @@ $query = "SELECT
                     retegas_articoli.ingombro,
                     retegas_articoli.qta_minima,
                     retegas_articoli.qta_multiplo,
-                    retegas_articoli.articoli_note
+                    retegas_articoli.articoli_note,
+                    retegas_dettaglio_ordini.prz_dett_arr,
+                    retegas_dettaglio_ordini.prz_dett
                     FROM
                     retegas_dettaglio_ordini
                     Inner Join retegas_articoli ON retegas_dettaglio_ordini.id_articoli = retegas_articoli.id_articoli
@@ -77,7 +83,7 @@ $res = $db->sql_query($query);
 
 
 $h .= $alert;
-$h .= "<table>";
+$h .= "<table id=\"output_1\">";
 $h .= "<thead>";
     $h .="<tr>";
     $h .="<th class=\"sinistra column_hide\">&nbsp;</th>";
@@ -85,7 +91,7 @@ $h .= "<thead>";
     $h .="<th class=\"sinistra\">Codice</th>";
     $h .="<th class=\"sinistra\">Descrizione</th>";
     $h .="<th class=\"centro\">QO/QA</th>";
-    $h .="<th class=\"centro\">SC/AV</th>";
+    $h .="<th class=\"centro\">SC/AV ARR</th>";
     $h .="<th class=\"destra\">Prezzo</th>";
     $h .="<th class=\"destra\">Tot Riga</th>";
     $h .="<th class=\"destra\">Costi</th>";
@@ -117,6 +123,8 @@ while ($row = mysql_fetch_array($res)){
     
     unset($alert_qta);
     unset($qta);
+    unset($alert_prz);
+    unset($prz);
     $qta = $row["t_q_arr"];
     if($qta==0){
                 $alert_qta = "<div class=\"campo_alert\">ANNULLATA</div>";
@@ -125,25 +133,37 @@ while ($row = mysql_fetch_array($res)){
                 $alert_qta = "<div class=\"campo_alert\">MODIFICATA</div>";
                 
             }
+    $prz = $row["prz_dett_arr"];
+    if($prz==0){
+                $alert_prz = "<div class=\"campo_alert\">GRATIS</div>";
+                $prz="0";
+            }else if($prz<>$row["prz_dett"]){
+                $alert_prz = "<div class=\"campo_alert\">MODIFICATO</div>";
+                
+            }
     
     if($row["qta_scatola"]>0){
-    $scatole = floor($row["t_q_arr"] / $row["qta_scatola"]);
-    $avanzo = (($row["t_q_arr"]) % ($row["qta_scatola"]));
+        $scatole = floor($row["t_q_arr"] / $row["qta_scatola"]);
+        $avanzo = (($row["t_q_arr"]) % ($row["qta_scatola"]));
+
     }else{
-    $scatole =0;
-    $avanzo = $row["t_q_arr"];    
+        $scatole =0;
+        $avanzo = $row["t_q_arr"];    
     }
+    
     $avanzo = calcola_avanzo($row["t_q_arr"],$row["qta_scatola"]);
+    $s_scatole = $s_scatole + $scatole;
+    $s_avanzo = $s_avanzo + $avanzo;
     
     $h .="<tr $cl>";
     $h .="<td class=\"sinistra column_hide\">$opz</td>";
     $h .="<td class=\"sinistra\">".$row["c_user"]."</td>";
     $h .="<td class=\"sinistra\">".$row["codice"]."</td>";
     $h .="<td class=\"sinistra\">".$row["descrizione_articoli"].$misura."</td>";
-    $h .="<td class=\"centro\">".round($row["t_q_ord"],2)." / ".round($qta,2).$alert_qta."</td>";
+    $h .="<td class=\"centro\">"._nf(round($row["t_q_ord"],2))." / "._nf(round($qta,2)).$alert_qta."</td>";
     $h .="<td class=\"centro\">$scatole / $avanzo</td>";
-    $h .="<td class=\"destra\">"._nf($row["prezzo"])."</td>";
-    $h .="<td class=\"destra\">"._nf($row["t_q_arr"]*$row["prezzo"])."</td>";
+    $h .="<td class=\"destra\">"._nf($row["prz_dett_arr"]).$alert_prz."</td>";
+    $h .="<td class=\"destra\">"._nf($row["t_q_arr"]*$row["prz_dett_arr"])."</td>";
     $h .="<td class=\"destra\">&nbsp;</td>";
     $h .="<td class=\"destra\">&nbsp;</td>";
     $h .="</tr>";
@@ -186,13 +206,16 @@ if($costo_gestione>0){
 //TOTALE VERSO GLI ESTERNI
 $netto = valore_totale_ordine_qarr($id_ordine);
 $costi_esterni = $costo_trasporto + $costo_gestione;
+$s_scatole = _nf($s_scatole);
+$s_avanzo = _nf($s_avanzo);
+
     $h .="<tr class=\"total\">";
     $h .="<th class=\"column_hide\">&nbsp;</th>";
     $h .="<th>&nbsp;</th>";
     $h .="<th>&nbsp;</th>";
     $h .="<th class=\"sinistra\">Totale pubblico:</th>";
     $h .="<th>&nbsp;</th>";
-    $h .="<th>&nbsp;</th>";
+    $h .="<th class=\"centro\">$s_scatole / $s_avanzo</th>";
     $h .="<th>&nbsp;</th>";
     $h .="<th class=\"destra\">"._nf($netto)."</th>";
     $h .="<th class=\"destra\">"._nf($costi_esterni)."</th>";
@@ -234,13 +257,16 @@ if(_USER_OPT_NO_HEADER=="SI"){
 
 //Mando all'utente la sua pagina
 if($output=="pdf"){
-    require_once("../../lib/dompdf_2/dompdf_config.inc.php");
+    
+    
+    require_once("../../lib/dompdf_3/dompdf_config.inc.php");
 
     $dompdf = new DOMPDF();
     $dompdf->load_html("<html><head>".$s."</head><body>".$i.$o.$h."</body></html>");
     $dompdf->render();
     $dompdf->stream("riepilogo_articoli_$id_ordine-$cod.pdf",array("Attachment" => 0));
-die();
+    //$dompdf->stream("riepilogo_articoli_$id_ordine-$cod.pdf");
+    die();
     
 }elseif($output=="html"){
     echo $s.$i.$o.$h;

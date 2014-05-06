@@ -11,13 +11,13 @@ if (!_USER_LOGGED_IN){
      pussa_via(); 
 }    
 
-if(id_referente_ordine_globale($id_ordine)<>_USER_ID){
-    pussa_via();       
-    exit;    
+if(!posso_gestire_ordine_full($id_ordine,_USER_ID)){
+    go("ordini_form",_USER_ID,"Questa operazione ti è preclusa.","?id_ordine=$id_ordine");
+    exit;
 }
 
 if(!(_USER_PERMISSIONS&perm::puo_postare_messaggi)){
-    pussa_via();       
+    go("ordini_form",_USER_ID,"Il tuo GAS non ti autorizza a mandare mail massive","?id_ordine=$id_ordine");
     exit;
 }
 
@@ -127,7 +127,7 @@ $res = $db->sql_query($query);
 
 
 
-
+$h .= "<div class=\"rg_widget rg_widget_helper\">";
 $h .= $alert;
 $h .= "<form action=\"\" method=\"POST\">";
 $h .= "<table>";
@@ -265,8 +265,9 @@ $h .="<p></p>";
 $h .="<textarea class =\"ckeditor\" rows=\"5\" name=\"msg_mail\" cols=\"60\"></textarea>";
 $h .="<input type=\"hidden\" name=\"do\" value=\"send_mail\">";
 $h .="<input type=\"hidden\" name=\"id_ordine\" value=\"$id_ordine\">";
-$h .="<input type=\"submit\" name=\"submit\" value=\"Invia il messaggio\" class=\"awesome large green\">";
+$h .="<br><input type=\"submit\" name=\"submit\" value=\"Invia il messaggio\" class=\"awesome large green\">";
 $h .="</form>";
+$h .="</div>";
 //-------------------------------------------------------------------------------------------
 
 

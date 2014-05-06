@@ -305,7 +305,7 @@ $j = new jqm(load_jqm_param());
 $p = new jqm_page(load_page_param());
 //Negli attributi assegno un ID
 $p->jqm_page_attrib="id=\"aperti\"";
-$p->jqm_header_title = "ReteDes.it - Ordini";
+$p->jqm_header_title = _SITE_NAME. " - Ordini";
 $p->jqm_footer_hide= true;
 //Assegno la navbar
 
@@ -329,7 +329,7 @@ unset($p);
 //Nuova pagina con relativi parametri
 $p = new jqm_page(load_page_param());
 //Negli attributi assegno un ID
-$p->jqm_header_title = "ReteGas.AP - Ordini";
+$p->jqm_header_title = _SITE_NAME. " - Ordini";
 $p->jqm_page_attrib="id=\"chiusi\"";
 $p->jqm_footer_hide= true;
 //Assegno la navbar
@@ -353,7 +353,7 @@ unset($p);
 //Nuova pagina con relativi parametri
 $p = new jqm_page(load_page_param());
 //Negli attributi assegno un ID
-$p->jqm_header_title = "ReteGas.AP - Ordini";
+$p->jqm_header_title = _SITE_NAME. " - Ordini";
 $p->jqm_page_attrib="id=\"futuri\"";
 $p->jqm_footer_hide= true;
 //Assegno la navbar
@@ -374,7 +374,7 @@ unset($p);
 //Nuova pagina con relativi parametri
 $p = new jqm_page(load_page_param());
 //Negli attributi assegno un ID
-$p->jqm_header_title = "ReteGas.AP - Ordini";
+$p->jqm_header_title = _SITE_NAME. " - Ordini";
 $p->jqm_page_attrib="id=\"miei\"";
 $p->jqm_footer_hide= true;
 //Assegno la navbar

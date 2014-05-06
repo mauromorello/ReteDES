@@ -3,8 +3,11 @@
 if(isset($root) AND isset($iroot)){
 $locations_cassa=Array(//CASSA
                           "add_credits"              =>$root."cassa/cassa_add_credits.php",  
+                          "sub_credits"              =>$root."cassa/cassa_sub_credits.php",
                           "add_credits_multi"        =>$root."cassa/cassa_add_credits_multi.php",  
                           "rett_credits"             =>$root."cassa/cassa_rett_credits.php",  
+                          "cassa_suggerisci_movimento"=>$root."cassa/cassa_suggerisci_movimento.php",
+                          "cassa_movimenti_suggeriti"=>$root."cassa/cassa_movimenti_suggeriti.php",
                           "situazione_cassa_users"   =>$root."cassa/cassa_situazione_users.php",  
                           "movimenti_cassa_users"    =>$root."cassa/cassa_movimenti_user.php",
                           "movimenti_cassa_gas"      =>$root."cassa/cassa_movimenti_gas.php",

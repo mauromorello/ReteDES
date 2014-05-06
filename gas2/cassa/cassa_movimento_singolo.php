@@ -129,7 +129,7 @@ if($do=="do_del"){
       }
       
       // qui ci va la pagina vera e proria  
-      $retegas->content  =  cassa_movimento_singolo($id_movimento);
+      $retegas->content  =  "</div class=\"rg_widget rg_widget_helper\">".cassa_movimento_singolo($id_movimento)."</div>";
 
       
             

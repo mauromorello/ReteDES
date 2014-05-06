@@ -430,7 +430,7 @@ function utente_attivo_partecipa_ordine($id_ordine){
     
     //ORDINE ESISTENTE
     if(ordine_inesistente($id_ordine)){
-        go("sommario",_USER_ID,"ORDINE INESISTENTE");
+        return "Ordine insesistente";
     }
     
     //UTENTE NON PUO' PARTECIPARE AGLI ORDINI
@@ -512,7 +512,165 @@ function utente_attivo_partecipa_ordine($id_ordine){
     }
     
 } 
+function utente_attivo_controllo_cassa($valore_nuovo,$id_ordine){
+
+    global $db, $RG_addr;
+    
+    
+             $is_ok = "ERRORE GENERICO";
+             
+             
+             if(_USER_USA_CASSA){
+                 
+                 //UTENTE CHE USA LA CASSA, 
+                 $vo = CAST_TO_FLOAT($valore_nuovo,0) -  valore_totale_mio_ordine($id_ordine,_USER_ID);
+                 
+                 // Aggiungo il 10% al valore del mio ordine
+                 $vo =  round((($vo/100)* _GAS_COPERTURA_CASSA ) + $vo);
+                 $vc = cassa_utente_tutti_movimenti(_USER_ID);
+                 
+                 //se il gas effettua il controllo di minimo
+                 if(_GAS_CASSA_CHECK_MIN_LEVEL){
+                     
+                     //se il credito non basta
+                     if(($vc-$vo)< _GAS_CASSA_MIN_LEVEL){
+
+                        //se non ha una prenotazione attiva
+                        if(read_option_prenotazione_ordine($id_ordine,_USER_ID)<>"SI"){ 
+                         
+                         
+                            //UTENTE CON LA CASSA 
+                            //GAS CONTROLLA MIN LEVEL
+                            //CREDITO RIMANENTE INFERIORE A MIN LEVEL
+                            //NON HA UNA PRENOTAZIONE ATTIVA
+                            log_me($id_ordine,_USER_ID,"ORD","XXX","Ordine rifiutato",0,"UTENTE CON CASSA<br>
+                                                                                         GAS CONTROLLA MIN LEVEL<br>
+                                                                                         CREDITO RIMANENTE ($vc - $vo) INF A MIN LEVEL "._GAS_CASSA_MIN_LEVEL);
+                             
+                            
+                            //go("ordine_partecipa",_USER_ID,"Credito insufficiente per questo acquisto;<br>
+                            //                                Ricorda che è contemplato un 10% di spese accessorie che vanno a sommarsi all'importo dell'ordine.<br>
+                            //                                Vi è inoltre una soglia minima di "._GAS_CASSA_MIN_LEVEL." Eu. (decisa dal tuo GAS) sotto la quale non si può ordinare.<br>
+                            //                                I totali effettivi saranno modificati o confermati ad ordine chiuso dal gestore o dal cassiere.","?id_ordine=$id_ordine");
+                            
+                            $is_ok = "Credito insufficiente per questo acquisto;<br>
+                                                            Ricorda che è contemplato un 10% di spese accessorie che vanno a sommarsi all'importo dell'ordine.<br>
+                                                            Vi è inoltre una soglia minima di "._GAS_CASSA_MIN_LEVEL." Eu. (decisa dal tuo GAS) sotto la quale non si può ordinare.<br>
+                                                            I totali effettivi saranno modificati o confermati ad ordine chiuso dal gestore o dal cassiere.";
+                               
+                         }else{
+                            log_me($id_ordine,_USER_ID,"ORD","XXX","Ordine con prenotazione",0,"UTENTE CON CASSA<br>
+                                                                                         GAS CONTROLLA MIN LEVEL<br>
+                                                                                         UTENTE CON PRENOTAZIONE ATTIVA");
+                            $is_ok = "SI";         
+                        }
+                     }else{
+                         //IL CREDITO BASTA
+                         $is_ok = "SI";
+                     }
+                 }else{
+             
+                     //UTENTE CON LA CASSA
+                     //GAS NON CONTROLLA MIN LEVEL
+                 
+                     $is_ok = "SI"; 
+                 }
+             }else{
+                 //L'utente non ha la cassa, controllo se è un ordine solo per cassati.
+                 if(_GAS_USA_CASSA){   
+                   if(_USER_ID_GAS ==id_gas_user(id_referente_ordine_globale($id_ordine))){
+                       //SE l'utente che partecipa è del gas dell'ordine
+                       if(ordini_field_value($id_ordine,"solo_cassati"=="SI")){
+                           //UTENTE SENZA CASSA
+                           //GAS USA CASSA
+                           //ORDINE SOLO PER CASSATI 
+                           
+                           log_me($id_ordine,_USER_ID,"ORD","XXX","Ordine rifiutato",0,"UTENTE SENZA CASSA<br>
+                                                                                     GAS USA CASSA<br>
+                                                                                     ORDINE SOLO PER CASSATI");
+                           //go("ordine_partecipa",_USER_ID,"Questo ordine è SOLO per gli utenti che usano la cassa.","?id_ordine=$id_ordine");
+                           $is_ok = "Questo ordine è SOLO per gli utenti che usano la cassa.";
+ 
+                       }else{
+                           //UTENTE SENZA CASSA
+                           //GAS USA CASSA
+                           //ORDINE PER TUTTI
+                           log_me($id_ordine,_USER_ID,"ORD","XXX","Ordine con prenotazione",0,"UTENTE SENZA CASSA<br>
+                                                                                         GAS USA CASSA<br>
+                                                                                         ORDINE PER TUTTI");
+                           $is_ok = "SI";
+                            
+                       }
+                       
+                       
+                   }else{
+                       //UTENTE SENZA CASSA
+                       //GAS USA CASSA
+                       //MA UTENTE ESTERNO
+                       $is_ok = "SI";
+                            
+                   }
+                 }else{
+                     //UTENTE SENZA CASSA
+                     //GAS SENZA CASSA 
+                     $is_ok = "SI";
+                      
+                 } 
+             }
+
+    return $is_ok;
+}
+
 
 function isValid($str) {
     return !preg_match('/[^A-Za-z0-9.#\\-$]/', $str);
+}
+
+function posso_gestire_ordine_full($id_ordine,$id_utente){
+    global $db;
+    $posso=false;
+    
+    //SE E' IL REFERENTE ORDINE
+    if(id_referente_ordine_globale($id_ordine)==$id_utente){
+        return true;
+    }
+    
+    //SE PUO' GESTIRE TUTTI GLI ORDINI (MA DEL PROPRIO GAS)
+    if(leggi_permessi_utente($id_utente)& perm::puo_vedere_tutti_ordini){
+        if(id_gas_user(id_referente_ordine_globale($id_ordine))==id_gas_user($id_utente)){
+            return true;
+        }
+    }
+    
+    //SE E' UN AIUTO EXTRA
+    if(check_option_referente_extra($id_ordine,$id_utente)>0){
+        return true;
+    }
+    
+    return false;
+    
+}
+function posso_gestire_ordine_gas($id_ordine,$id_utente){
+    global $db;
+    $posso=false;
+    
+    //SE E' IL REFERENTE ORDINE GAS
+    if(id_referente_ordine_proprio_gas($id_ordine)==$id_utente){
+        return true;
+    }
+    
+    //SE PUO' GESTIRE TUTTI GLI ORDINI (MA DEL PROPRIO GAS)
+    //if(leggi_permessi_utente($id_utente)& perm::puo_vedere_tutti_ordini){
+    //    if(id_gas_user(id_referente_ordine_globale($id_ordine))==id_gas_user($id_utente)){
+    //        return true;
+    //    }
+    //}
+    
+    //SE E' UN AIUTO EXTRA
+    if(check_option_referente_extra($id_ordine,$id_utente)>0){
+        return true;
+    }
+    
+    return false;
+    
 }

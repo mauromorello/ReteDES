@@ -1,5 +1,5 @@
 <?php
-   
+
 // immette i file che contengono il motore del programma
 include_once ("../rend.php");
 include_once ("../retegas.class.php");
@@ -7,8 +7,8 @@ include_once ("../retegas.class.php");
 
 // controlla se l'user ha effettuato il login oppure no
 if (!_USER_LOGGED_IN){
-     pussa_via(); 
-}    
+     pussa_via();
+}
 
 //controlla se l'utente ha i permessi necessari
 if(!(_USER_PERMISSIONS & perm::puo_creare_listini)){
@@ -30,74 +30,76 @@ $nome_ditta = ditta_nome($id_ditta);
 
 //se il comando è quello di aggiungere la ditta
 if($do=="add"){
-      
-          
+
+
       // se è vuoto
       if (empty($descrizione_listini)){$msg.="Devi almeno inserire il nome del listino<br>";$e_empty++;};
       if (empty($id_tipologie)){$msg.="Devi associare una tipologia di merce<br>";$e_empty++;};
       if (empty($data_valido)){$msg.="Devi inserire la data di scadenza<br>";$e_empty++;};
-   
+
       // data di scadenza maggiore di oggi
       if (!controllodata($data_valido)){
         $e_logical ++;
-        $msg.="Formato della data non riconosciuto<br>";    
+        $msg.="Formato della data non riconosciuto<br>";
       };
-      
-    
+
+
       //SE E' SCADUTO
       if (gas_mktime($data_valido,null)<gas_mktime(date("d/m/Y"),date("H:i:s"))){
       $msg.="Data antecedente ad oggi<br>";
-      $e_logical ++;             
+      $e_logical ++;
       }
-      
+
       $msg.="<br>Verifica i dati immessi e riprova";
-      
-      
+
+
       $e_total = $e_empty + $e_logical + $e_numerical;
-      
+
       if($e_total==0){
         //echo "ZERO ERRORI !!!";
         $data_valido = conv_date_to_db($data_valido);
         $descrizione_listini = sanitize($descrizione_listini);
         (int)$tipo_listino;
         (int)$is_privato;
-        
-        
-        
+
+
+
         // QUERY INSERT
-        $my_query="INSERT INTO retegas_listini 
+        $my_query="INSERT INTO retegas_listini
                 (descrizione_listini,
                  id_tipologie,
                  data_valido,
                  id_ditte,
                  id_utenti,
                  tipo_listino,
-                 is_privato) VALUES (
+                 is_privato,
+                 opz_usage) VALUES (
                  '$descrizione_listini',
                  '$id_tipologie',
                  '$data_valido',
                  '$id_ditta',
                  '"._USER_ID."',
                  '$tipo_listino',
-                 '$is_privato');";
-        
+                 '$is_privato',
+                 '$opz_usage');";
+
         //INSERT BEGIN ---------------------------------------------------------
          $result = $db->sql_query($my_query);
          if (is_null($result)){
-            go("sommario",_USER_ID,"Errore inserimento");  
+            go("sommario",_USER_ID,"Errore inserimento");
         }else{
-            
+
             $sql = "SELECT MAX(id_listini) FROM retegas_listini;";
             $res = $db->sql_query($sql);
             $row = $db->sql_fetchrowset($res);
             $id_listino = $row[0][0];
-            
+
             log_me(0,_USER_ID,"LIS","ADD","Creato il listino ($id_listino - $descrizione_listini) riferito alla ditta ($nome_ditta)",0,$my_query);
             $msg = "Nuovo listino aggiunto";
-            go("listini_form_2",_USER_ID,"Listino correttamente inserito","?id_listino=$id_listino");  
+            go("listini_form_2",_USER_ID,"Listino correttamente inserito","?id_listino=$id_listino");
         };
 
-    
+
 }
 }
 
@@ -109,12 +111,12 @@ $r = new rg_simplest();
 $r->voce_mv_attiva = menu_lat::anagrafiche;
 //Assegno il titolo che compare nella barra delle info
 $r->title = "Aggiungi un listino alla ditta ".$nome_ditta ;
-//Carico il 
+//Carico il
 $r->javascripts_header[]=java_head_datetimepicker();
 $r->javascripts[] = java_qtip(".retegas_form h5[title]");
 
 //Messaggio popup;
-//$r->messaggio = "Pagina di test"; 
+//$r->messaggio = "Pagina di test";
 //Dico quale menÃ¹ orizzontale dovrÃ  essere associato alla pagina.
 $r->menu_orizzontale = "";
 
@@ -124,22 +126,24 @@ $r->javascripts[]=java_datepicker("datepicker");
 $r->messaggio = $msg;
 //Creo la pagina dell'aggiunta
         $help_descrizione_listini='Il nome del listino.';
-        $help_id_tipologie       ='Categoria merceologica'; 
+        $help_id_tipologie       ='Categoria merceologica';
         $help_data_valido        ='Valido per proporre ordini fino a questa data.';
         $help_tipo_listino       ='Se è un listino standard oppure magazzino';
         $help_is_privato         ='Se è visibile solo dal tuo gas oppure da tutti.';
         $help_partenza           ='Gli articoli dovrai aggiungerli in seguito';
+        $help_opz_usage           ='I campi OPZ possono essere usati per raggruppare gli articoli oppure come attributi aggiuntivi per facilitarne la ricerca in listini lunghi.';
+
           $input_id_tipologie = "<select name= \"id_tipologie\"> ";
           $input_id_tipologie .= "<option value=\"0\">Selezionare Tipologia merce</option> ";
           $result = mysql_query("SELECT * FROM retegas_tipologia");
             while ($row = mysql_fetch_array($result)){
                     $T1 = $row[0];
                     $T2 = $row[1];
-          $input_id_tipologie .= "<option value=\"".$T1 ."\">".$T2 ."  </option>";   
+          $input_id_tipologie .= "<option value=\"".$T1 ."\">".$T2 ."  </option>";
              }//end while
           $input_id_tipologie.="</select>";
-     
-     
+
+
           $input_tipo_listino = "<select name= \"tipo_listino\"> ";
           $input_tipo_listino .= "<option value=\"0\">Standard</option> ";
           $input_tipo_listino .= "<option value=\"1\">Magazzino</option> ";
@@ -148,15 +152,20 @@ $r->messaggio = $msg;
           $input_is_privato = "<select name= \"is_privato\"> ";
           $input_is_privato .= "<option value=\"0\">Pubblico</option> ";
           $input_is_privato .= "<option value=\"1\">Privato (solo per il tuo GAS)</option> ";
-          $input_is_privato.="</select>";        
-     
+          $input_is_privato.="</select>";
+
+          $input_opz_usage = "<select name= \"opz_usage\"> ";
+          $input_opz_usage .= "<option value=\"0\" disabled>Raggruppamento</option> ";
+          $input_opz_usage .= "<option value=\"1\" selected>Tags</option> ";
+          $input_opz_usage.="</select>";
+
 
         $h = '<div class="rg_widget rg_widget_helper">
         <h3>Inserisci un nuovo listino della ditta '.$nome_ditta.'</h3>
 
         <form name="nuovo_listino" method="POST" action="" class="retegas_form">
 
-        
+
         <div>
         <h4>1</h4>
         <label for="descrizione_listini">Scrivi il nome del nuovo listino</label>
@@ -170,7 +179,7 @@ $r->messaggio = $msg;
         '.$input_id_tipologie.'
         <h5 title="'.$help_id_tipologie.'">Inf.</h5>
         </div>
-        
+
         <div>
         <h4>3</h4>
         <label for="data_valido">Inserisci la sua data di scadenza</label>
@@ -183,22 +192,29 @@ $r->messaggio = $msg;
         <label for="tipo_listino">Tipo listino</label>
         '.$input_tipo_listino.'
         <h5 title="'.$help_tipo_listino.'">Inf.</h5>
-        </div>        
-        
+        </div>
+
         <div>
         <h4>4</h4>
         <label for="is_privato">Visibilità</label>
         '.$input_is_privato.'
         <h5 title="'.$help_is_privato.'">Inf.</h5>
-        </div>       
-                        
+        </div>
+
         <div>
         <h4>5</h4>
+        <label for="opz_usage">Uso delle OPZIONI</label>
+        '.$input_opz_usage.'
+        <h5 title="'.$help_opz_usage.'">Inf.</h5>
+        </div>
+
+        <div>
+        <h4>6</h4>
         <label for="submit">e infine... </label>
         <input type="submit" name="submit" value="Aggiungi questo listino" align="center" >
         <input type="hidden" name="do" value="add">
         <h5 title="'.$help_partenza.'">Inf.</h5>
-        </div> 
+        </div>
 
 
         </form>
@@ -211,6 +227,6 @@ $r->messaggio = $msg;
 $r->contenuto = $h;
 //Mando all'utente la sua pagina
 echo $r->create_retegas();
-//Distruggo l'oggetto r    
-unset($r)   
-?> 
+//Distruggo l'oggetto r
+unset($r)
+?>

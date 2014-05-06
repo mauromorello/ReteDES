@@ -319,18 +319,23 @@ if($do=="save_mods"){
                                  $vc = cassa_utente_tutti_movimenti(_USER_ID);
                                  
                                  //se il credito non basta
-                                 if(($vc-$vo)< _GAS_CASSA_MIN_LEVEL){
-                                     $log .= "Credito insuff.<br>";
-                                     $msg = "Credito insufficiente per questo acquisto;<br>
-                                                Ricorda che è contemplata una percentuale del "._GAS_COPERTURA_CASSA."% di spese accessorie che vanno a sommarsi all'importo dell'ordine.<br>
-                                                Vi è inoltre una soglia minima di "._GAS_CASSA_MIN_LEVEL." Eu. (decisa dal tuo GAS) sotto la quale non si può ordinare.<br>
-                                                I totali effettivi saranno modificati o confermati ad ordine chiuso dal gestore o dal cassiere.";   
-                                     $dove_vai = "ordini_mod_ass_new";
-                                     go($dove_vai,_USER_ID,$msg,"?id_ordine=$id_ordine&id_articolo=$id_articolo");
+                                 if(_GAS_CASSA_CHECK_MIN_LEVEL){
+                                     if(($vc-$vo)< _GAS_CASSA_MIN_LEVEL){
+                                         $log .= "Credito insuff.<br>";
+                                         $msg = "Credito insufficiente per questo acquisto;<br>
+                                                    Ricorda che è contemplata una percentuale del "._GAS_COPERTURA_CASSA."% di spese accessorie che vanno a sommarsi all'importo dell'ordine.<br>
+                                                    Vi è inoltre una soglia minima di "._GAS_CASSA_MIN_LEVEL." Eu. (decisa dal tuo GAS) sotto la quale non si può ordinare.<br>
+                                                    I totali effettivi saranno modificati o confermati ad ordine chiuso dal gestore o dal cassiere.";   
+                                         $dove_vai = "ordini_mod_ass_new";
+                                         go($dove_vai,_USER_ID,$msg,"?id_ordine=$id_ordine&id_articolo=$id_articolo");
+                                     }else{
+                                         $log .= "Credito sufficiente<br>";
+                                         $update_cassa="SI";
+                                     }
                                  }else{
+                                     $log .= "Gas non controlla il minimo<br>";
                                      $update_cassa="SI";
                                  }
-                                 
                              
                              
                              }
@@ -433,18 +438,22 @@ if($do=="save_mods"){
                              $vc = cassa_utente_tutti_movimenti(_USER_ID);
                              
                              //se il credito non basta
-                             if(($vc-$vo)< _GAS_CASSA_MIN_LEVEL){
-                                 $log .= "Credito insuff.<br>";
-                                 $msg  = "Credito insufficiente per questo acquisto;<br>
-                                            Ricorda che è contemplata una percentuale del "._GAS_COPERTURA_CASSA."% di spese accessorie che vanno a sommarsi all'importo dell'ordine.<br>
-                                            Vi è inoltre una soglia minima di "._GAS_CASSA_MIN_LEVEL." Eu. (decisa dal tuo GAS) sotto la quale non si può ordinare.<br>
-                                            I totali effettivi saranno modificati o confermati ad ordine chiuso dal gestore o dal cassiere.";   
-                                 $dove_vai = "ordini_mod_ass_new";
-                                 go($dove_vai,_USER_ID,$msg,"?id_ordine=$id_ordine&id_articolo=$id_articolo");
+                             if(_GAS_CASSA_CHECK_MIN_LEVEL){
+                                 if(($vc-$vo)< _GAS_CASSA_MIN_LEVEL){
+                                     $log .= "Credito insuff.<br>";
+                                     $msg  = "Credito insufficiente per questo acquisto;<br>
+                                                Ricorda che è contemplata una percentuale del "._GAS_COPERTURA_CASSA."% di spese accessorie che vanno a sommarsi all'importo dell'ordine.<br>
+                                                Vi è inoltre una soglia minima di "._GAS_CASSA_MIN_LEVEL." Eu. (decisa dal tuo GAS) sotto la quale non si può ordinare.<br>
+                                                I totali effettivi saranno modificati o confermati ad ordine chiuso dal gestore o dal cassiere.";   
+                                     $dove_vai = "ordini_mod_ass_new";
+                                     go($dove_vai,_USER_ID,$msg,"?id_ordine=$id_ordine&id_articolo=$id_articolo");
+                                 }else{
+                                     $update_cassa="SI";
+                                 }
                              }else{
-                                 $update_cassa="SI";
+                                $log .= "Gas non controlla il minimo<br>";
+                                $update_cassa="SI";    
                              }
-                             
                          
                          
                          }
@@ -452,7 +461,7 @@ if($do=="save_mods"){
                         
                         //SE L'articolo NON ? univoco
                         if(!articolo_univoco($id_articolo)){
-                        
+                            $prz_articolo = db_val_q("id_articoli",$id_articolo,"prezzo","retegas_articoli");
                             $log .= "Articolo $id_articolo NON univoco<br>";
                             //LA QUANTITA' VECCHIA E' ZERO, DEVO INSERIRE L'ARTICOLO NUOVO
                             $query_inserimento_articolo = "INSERT INTO retegas_dettaglio_ordini ( 
@@ -462,7 +471,9 @@ if($do=="save_mods"){
                                                             qta_ord,
                                                             id_amico,
                                                             id_ordine,
-                                                            qta_arr) 
+                                                            qta_arr,
+                                                            prz_dett,
+                                                            prz_dett_arr) 
                                                             VALUES (
                                                                 '"._USER_ID."',
                                                                 '$id_articolo',
@@ -470,7 +481,9 @@ if($do=="save_mods"){
                                                                 '$nuova_quantita_articolo',
                                                                 '0',
                                                                 '$id_ordine',
-                                                                '$nuova_quantita_articolo'
+                                                                '$nuova_quantita_articolo',
+                                                                '$prz_articolo',
+                                                                '$prz_articolo'
                                                                 );";
                             $result = $db->sql_query($query_inserimento_articolo);
                             $log .= "Inserito DETTAGLIO<br>";

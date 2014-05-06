@@ -10,7 +10,12 @@ include_once ("../../retegas.class.php");
 if (!_USER_LOGGED_IN){
      pussa_via(); 
 }    
-
+if(!(_USER_PERMISSIONS & perm::puo_vedere_tutti_ordini)){
+    if(!posso_gestire_ordine_full($id_ordine,_USER_ID)){
+        go("ordini_form",_USER_ID,"Questa operazione ti è preclusa.","?id_ordine=$id_ordine");
+        exit;
+    }
+}
 
 
 
@@ -232,7 +237,7 @@ if(_USER_OPT_NO_HEADER=="SI"){
 
 //Mando all'utente la sua pagina
 if($output=="pdf"){
-    require_once("../../lib/dompdf_2/dompdf_config.inc.php");
+    require_once("../../lib/dompdf_3/dompdf_config.inc.php");
 
     $dompdf = new DOMPDF();
     $dompdf->load_html("<html><head>".$s."</head><body>".$i.$o.$h."</body></html>");

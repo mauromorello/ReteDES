@@ -905,12 +905,12 @@ function listini_render_table($ref_table,$id_ditta=null){
 			//    $c7="";    
 			  }
 			  if(listino_tipo($c1)==0){
-			  $c7="Normale";    
+			    $c7="Normale";    
 			  }else{
-			  $c7="<b>Magazzino</b>";    
+			    $c7="<b>Magazzino</b>";    
 			  }
 			  if($row["is_privato"]<>0){
-              $c7 .= "<br><b>PRIVATO</b>";    
+                $c7 .= "<br><b>PRIVATO</b>";    
               }else{
                   
               }
@@ -1270,7 +1270,14 @@ function ditte_render_form_edit($id_ditte){
         $mail_ditte= $row["mail_ditte"];
         $tag_ditte= $row["tag_ditte"];
         $telefono = $row["telefono"];
+        $lat = $row["ditte_gc_lat"];
+        $lng = $row["ditte_gc_lng"];
         
+        if($lat<>0){
+            $indirizzo_OK = "INDIRIZZO RICONOSCIUTO";
+        }else{
+            $indirizzo_OK = "INDIRIZZO NON RICONOSCIUTO";
+        }
 
         $help_descrizione_ditte='Il nome della ditta.';
         $help_indirizzo='Indirizzo della ditta, se non si sa mettere almeno la città'; 
@@ -1298,17 +1305,30 @@ function ditte_render_form_edit($id_ditte){
 
         <div>
         <h4>2</h4>
-        <label for="indirizzo">...indica il suo indirizzo e la sua città...</label>
-        <input type="text" name="indirizzo" value="'.$indirizzo.'" size="50"></input>
-        <h5 title="'.$help_indirizzo.'">Inf.</h5>
+        <label for="indirizzo">...indica il suo indirizzo e la sua città, fai click su "Cerca" per capire se l\'indirizzo è stato riconosciuto o meno;</label>
+        <div id="panel" style="display:inline;">
+            <input id="address" type="text" name="indirizzo" value="'.$indirizzo.'" size="50"></input>
+            <input type="button" value="Cerca" onclick="codeAddress()">
+            <input id="lat" type="hidden" name="lat" value="">
+            <input id="lng" type="hidden" name="lng" value="">
+            
         </div>
+        <h5 title="'.$help_indirizzo.'">Inf.</h5>
+        <div id="ir" style="display:block;">'.$indirizzo_OK.'</div>
+        </div>
+
+        <div id="map-canvas" style="width:200px;height:200px;display:inline-block;"></div>
+        
 
         <div>
         <h4>3</h4>
         <label for="website">...scrivi l\'indirizzo internet del suo sito (se ne ha uno)...</label>
         <input type="text" name="website" value="'.$website.'" size="50"></input>
         <h5 title="'.$help_website.'">Inf.</h5>
+        
         </div>
+            
+        
         
         <div>
         <h4>4</h4>

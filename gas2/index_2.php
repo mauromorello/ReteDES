@@ -31,8 +31,9 @@ if(_USER_LOGGED_IN){
     if(_USER_PERMISSIONS & perm::puo_gestire_retegas){
         $butt_admin = "<a data-role=\"button\" href=\"".$RG_addr["m_admin_panel"]."\"  data-icon=\"gear\" rel=\"external\">Admin</a>";
     }
-    
-    
+    $butt_desktop = "<a data-role=\"button\" href=\"".$RG_addr["sommario"]."?nomobile=1\"  data-icon=\"gear\" rel=\"external\">Versione Desktop</a>";
+    $butt_force_desktop = "<a data-role=\"button\" href=\"".$RG_addr["sommario"]."?nomobile=2\"  data-icon=\"gear\" rel=\"external\">Forza Desktop</a>";
+
        
     $c="<h2>".fullname_from_id(_USER_ID)."</h2>
         <h4>".gas_nome(_USER_ID_GAS)."</h4>        
@@ -40,6 +41,8 @@ if(_USER_LOGGED_IN){
         $butt_cassa
         $butt_admin
         <a data-role=\"button\" href=\"".$RG_addr["sommario_mobile"]."?do=logout\" data-icon=\"delete\" rel=\"external\" >Log Out</a>
+        $butt_desktop
+        $butt_force_desktop
         ";
     //IMPOSTO le cose uguali per tutte le pagine_
     $footer_title = _USER_FULLNAME.", ".gas_nome(_USER_ID_GAS);    
@@ -60,7 +63,7 @@ if(_USER_LOGGED_IN){
             </div>
             
             <a data-role=\"button\" href=\"".$RG_addr["sommario_mobile"]."#page_login_form\">Effettua il login</a>
-            <a data-role=\"button\" href=\"".$RG_addr["sommario"]."\" rel=\"external\">Versione desktop</a>";
+            <a data-role=\"button\" href=\"".$RG_addr["sommario"]."?nomobile=1\" rel=\"external\">Versione desktop</a>";
     //IMPOSTO le cose uguali per tutte le pagine_
     $footer_title = "Sviluppo : ma.morez at tiscali.it";       
 }

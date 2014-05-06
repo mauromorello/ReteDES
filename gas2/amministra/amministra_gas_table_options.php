@@ -105,8 +105,8 @@ if (!(_USER_PERMISSIONS & perm::puo_gestire_retegas)){
               $gg_ina = read_option_gas_text($idgas,"_GAS_SITE_INATTIVITA");
               $msg_ina = read_option_gas_text($idgas,"_GAS_SITE_FRASE_INATTIVITA");
               $ha_cassa = read_option_gas_text($idgas,"_GAS_USA_CASSA");
-              $puo_part = read_option_gas_text($idgas,"_GAS_PUO_PART_ORD_EST");
-              $puo_cond = read_option_gas_text($idgas,"_GAS_PUO_COND_ORD_EST");
+              $puo_part = read_option_gas_text_new($idgas,"_GAS_PUO_PART_ORD_EST");
+              $puo_cond = read_option_gas_text_new($idgas,"_GAS_PUO_COND_ORD_EST");
               
                 $h.= "<tr>";    
                 $h.= "<td>$descrizionegas</td>";

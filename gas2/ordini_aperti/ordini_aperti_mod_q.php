@@ -552,16 +552,20 @@ if (is_logged_in($user)){
 	
 	if($do=="do_add_q"){
 		do_add_articolo_specifico($id_arti,$id_ordine,$id_user,$q_to_add,$q_min);
-	    if(_USER_USA_CASSA){           
-           cassa_update_ordine_utente($id_ordine,$id_user); 
+	    if(read_option_prenotazione_ordine($id_ordine,$id_user)<>"SI"){
+            if(_USER_USA_CASSA){           
+               cassa_update_ordine_utente($id_ordine,$id_user); 
+            }
         }
 	die();    
 	}
 	
 	if($do=="do_del_riga"){
 		do_delete_articolo_specfico($n_riga,$id_ordine,$id_user);
-	    if(_USER_USA_CASSA){           
-           cassa_update_ordine_utente($id_ordine,$id_user); 
+        if(read_option_prenotazione_ordine($id_ordine,$id_user)<>"SI"){
+	        if(_USER_USA_CASSA){           
+                cassa_update_ordine_utente($id_ordine,$id_user); 
+            }
         }
 	die();    
 	}

@@ -140,7 +140,7 @@ if(_USER_OPT_NO_HEADER=="SI"){
 
 //Mando all'utente la sua pagina
 if($output=="pdf"){
-    require_once("../../lib/dompdf_2/dompdf_config.inc.php");
+    require_once("../../lib/dompdf_3/dompdf_config.inc.php");
     $o = sistema_accenti($o);
     
     $dompdf = new DOMPDF();

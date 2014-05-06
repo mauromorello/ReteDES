@@ -1,5 +1,5 @@
-<?php      
- 
+<?php
+
 // immette i file che contengono il motore del programma
 include_once ("rend.php");
 include_once ("retegas.class.php");
@@ -8,9 +8,13 @@ include_once ("function_engine/functionmsg.php");
 $retegas = new sito;
 
 
+
+
 if (_USER_LOGGED_IN){
     go("sommario");
-}    
+}
+
+
 
 if($do=="do_login"){
     switch (do_login($username,$password,$remember)) {
@@ -22,7 +26,7 @@ if($do=="do_login"){
         break;
     case 2:
         $msg = "Username o password vuoti";
-        $go="#2"; 
+        $go="#2";
         unset($q);
         unset($username);
         unset($password);
@@ -31,7 +35,7 @@ if($do=="do_login"){
         $msg = "Username o Password non riconosciuti :<br> ".
                '<a class="" href="'.$RG_addr["user_forgotten_pwd"].'">Password dimenticata ?</a>  <a class="" href="'.$RG_addr["user_forgotten_usn"].'">Username dimenticato ?</a>';
                break;
-        $go="#2";       
+        $go="#2";
         unset($q);
         unset($username);
         unset($password);
@@ -49,192 +53,213 @@ if($do=="do_login"){
         unset($q);
         unset($username);
         unset($password);
-        break;         
+        break;
     case 6:
         $msg = "Account disattivato.";
         unset($q);
         unset($username);
         unset($password);
-        break;              
+        break;
     default:
         pussa_via();
-        exit;    
+        exit;
     }
-    
-}    
- 
+
+}
+
 if($do=="do_register"){
-          
-          
-          
-              
-          $username = sanitize($username);    
+
+
+
+
+          $username = sanitize($username);
           if(is_empty($username)){
               $err_empty++;
               $msg .= "Manca il nome utente<br>";
           }
-          
-          
+          if(!isValid($username)){
+             $err_log++;
+             $msg .= "Lo username scelto contiene caratteri non validi<br>";
+          }
+
           if(is_empty($password)){
               $err_empty++;
               $msg .= "Manca la prima password<br>";
           }
-          
+          if(!isValid($password)){
+             $err_log++;
+             $msg .= "La password scelta contiene caratteri non validi<br>";
+          }
           if(is_empty($password2)){
               $err_empty++;
               $msg .= "Manca la seconda password<br>";
           }
-          
-          $email = sanitize($email);
+
+          //$email = sanitize($email);
           if(is_empty($email)){
               $err_empty++;
               $msg .= "Manca la tua email<br>";
           }
-          
-          $fullname = sanitize($fullname);
+
+          //$fullname = sanitize($fullname);
           if(is_empty($fullname)){
                 $err_empty++;
                 $msg .= "Manca il tuo nome completo<br>";
           }
-          
-          $tel = sanitize($tel);
+
+          //$tel = sanitize($tel);
           if(is_empty($tel)){
                 $err_empty++;
                 $msg .= "Manca il tuo recapito telefonico<br>";
           }
-          
-          
+
+
           if($password != $password2){
-                $msg .= "Le due password non coincidono<br>"; 
+                $msg .= "Le due password non coincidono<br>";
                 $err_log++;
           }
           if(strlen($username)>15){
-                $msg .= "Il nome utente non puo' essere più lungo di 15 caratteri<br>"; 
-                $err_log++;   
+                $msg .= "Il nome utente non puo' essere più lungo di 15 caratteri<br>";
+                $err_log++;
           }
-          
+
           if($consenso <> "1"){
-                $msg .= "Manca il tuo consenso ad accettare le regole del sito.<br>"; 
+                $msg .= "Manca il tuo consenso ad accettare le regole del sito.<br>";
                 $err_log++;
           }
-          
+
           if($gasappartenenza == "-1"){
-                $msg .= "Devi scegliere un gas al quale iscriverti<br>"; 
+                $msg .= "Devi scegliere un gas al quale iscriverti<br>";
                 $err_log++;
           }
-          
-          
+
+
           if(!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email)){
-                $msg .= "La mail inserita non è stata accettata<br>"; 
+                $msg .= "La mail inserita non è stata accettata<br>";
                 $err_log++;
           }
-          
-          
-          
+
+
+
           $sql_email_check = $db->sql_query("SELECT email FROM maaking_users WHERE email='$email'");
           $sql_username_check = $db->sql_query("SELECT username FROM maaking_users WHERE username='$username'");
           $email_check = $db->sql_numrows($sql_email_check);
           $username_check = $db->sql_numrows($sql_username_check);
 
-          
+
 
           if($email_check > 0){
-                  $msg .= "Hai inserito una mail che esiste già<br>"; 
+                  $msg .= "Hai inserito una mail che esiste già<br>";
                   $err_log++;
                   unset($email);
           }
 
           if($username_check > 0){
-                  $msg .= "Hai inserito un nome utente che esiste già<br>"; 
+                  $msg .= "Hai inserito un nome utente che esiste già<br>";
                   $err_log++;
                   unset($username);
           }
 
 
           $err_tot = $err_empty + $err_log;
-          
+
           if($err_tot==0){
-          
-              
-              
-            $messaggio_referente = sanitize($messaggio_referente);
-          
-          
+
+
+
+            $messaggio_referente_q = sanitize($messaggio_referente);
+
+
             // USer non ancora attivato
             $isactive = 0;
-          
+
             $code = md5(time());
             $code = rand(0,999999999);
             $subject = "["._SITE_NAME."] Nuovo account - Validazione";
 
             $md5_password = md5($password);
-            $gasappartenenza = intval($gasappartenenza); 
+            $gasappartenenza = intval($gasappartenenza);
             $consenso=intval($consenso);
             $permessi = leggi_permessi_default($gasappartenenza);
-          
+            $email = sanitize($email);
+            $fullname = sanitize($fullname);
+            $tel = sanitize($tel);
+
             $result = $db->sql_query("INSERT INTO maaking_users (username,password,email,fullname,regdate,isactive,code,id_gas,consenso,tel,user_permission,profile) "
-                                                       ."  VALUES('$username','$md5_password','$email','$fullname',NOW(),'$isactive','$code','$gasappartenenza','$consenso','$tel','$permessi','$messaggio_referente');");
+                                                       ."  VALUES('$username','$md5_password','$email','$fullname',NOW(),'$isactive','$code','$gasappartenenza','$consenso','$tel','$permessi','$messaggio_referente_q');");
             if (!$result) {
                 log_me(0,0,"USR","NEW","DB FAIL - Nuovo user da START",null,$fullname." ".$email);
                 die('Errore interno: ' . mysql_error().";");
             }
-          
+
           $message_u = message_mail_utente($username,$password,strip_tags($messaggio_referente));
-          $message_a = message_mail_admin_gas($username,$fullname,$tel,$code,strip_tags($messaggio_referente),gas_nome($gasappartenenza)); 
-          
-          
-          
+          $message_a = message_mail_admin_gas($username,$fullname,$tel,$code,strip_tags($messaggio_referente),gas_nome($gasappartenenza));
+
+
+
           $email_a = id_gas_mail($gasappartenenza);
           $headers = message_headers($site_name,_SITE_MAIL_REAL);
-          
+
           $go1 =  mail($email,$subject,$message_u, $headers);
           sleep(1);
           $go2 =  mail($email_a,$subject,$message_a, $headers);
           sleep(1);
-          $go3 =  mail(_SITE_MAIL_LOG,"Nuova attivazione",$message_a, $headers);    
-          
+          $go3 =  mail(_SITE_MAIL_LOG,"Nuova attivazione",$message_a, $headers);
+
           if(!$go1 or!$go2){
              $msg.="Problema durante l'invio della mail";
              log_me(0,0,"USR","NEW","MAIL ERROR da Nuovo user da START",null,$fullname." ".$email);
           }else{
              //go("sommario",0,null,"?q=registrazione_ok");
              log_me(0,0,"USR","NEW","Nuovo user da START",null,$fullname." ".$email);
-             $msg = "Registrazione effettuata. Attendi l'attivazione da parte del tuo GAS.";
+             $msg = "Registrazione effettuata. Attendi l'attivazione da parte del tuo GAS. Se hai selezionato l'opzione per creare un nuovo gas verrai contattato da un amministratore del sistema.";
           }
-          
-          }    
-        
-        
+
+          }
+
+
     }
-     
-    // assegno la posizione che sarà indicata nella barra info 
+
+    //Se non voglio proprio la versione desktop
+    if(($nomobile<>1)){
+        $detect = new Mobile_Detect();
+        if ( $detect->isMobile() ) {
+            log_me(0,0,"LOG","MOB","Mobile Detect",0,$detect->getUserAgent());
+            go("sommario_mobile");
+        }
+    }
+
+
+
+
+    // assegno la posizione che sarà indicata nella barra info
     $retegas->posizione = "Home page";
-      
+
     // Dico a retegas come sarà composta la pagina, cioè da che sezioni è composta.
     // Queste sono contenute in un array che ho chiamato HTML standard
-    
+
     $retegas->sezioni = array("html_header",        // Chi sei e dove sei
                                 "contenuti");
-      
+
     // Il menu' orizzontale è pronto ma è vuoto. Con questa istruzione lo riempio con un elemento
     $retegas->menu_sito = $mio_menu;
- 
+
     // dico a retegas quali sono i fogli di stile che dovrà usare
     // uso quelli standar per la maggior parte delle occasioni
     //$retegas->css = array_merge($retegas->css, $retegas->css_standard);
- 
-      
+
+
     // dico a retegas quali file esterni dovrà caricare
     $retegas->java_headers = array_merge(array("rg"), $retegas->java_headers);
-    
+
     $retegas->java_scripts_header[]="<script type=\"text/javascript\" src=\"".$RG_addr["js_head_slide"]."\"></script>";
     $retegas->java_scripts_header[]= java_head_select2();
     $retegas->java_scripts_header[]='<script type="text/javascript">// VERSION: 2.2 LAST UPDATE: 13.03.2012
-                                        /* 
+                                        /*
                                          * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
-                                         * 
+                                         *
                                          * Made by Wilq32, wilq32@gmail.com, Wroclaw, Poland, 01.2009
-                                         * Website: http://code.google.com/p/jqueryrotate/ 
+                                         * Website: http://code.google.com/p/jqueryrotate/
                                          */
                                         (function(j){for(var d,k=document.getElementsByTagName("head")[0].style,h=["transformProperty","WebkitTransform","OTransform","msTransform","MozTransform"],g=0;g<h.length;g++)void 0!==k[h[g]]&&(d=h[g]);var i="v"=="\v";jQuery.fn.extend({rotate:function(a){if(!(0===this.length||"undefined"==typeof a)){"number"==typeof a&&(a={angle:a});for(var b=[],c=0,f=this.length;c<f;c++){var e=this.get(c);if(!e.Wilq32||!e.Wilq32.PhotoEffect){var d=j.extend(!0,{},a),e=(new Wilq32.PhotoEffect(e,d))._rootObj;
                                         b.push(j(e))}else e.Wilq32.PhotoEffect._handleRotation(a)}return b}},getRotateAngle:function(){for(var a=[],b=0,c=this.length;b<c;b++){var f=this.get(b);f.Wilq32&&f.Wilq32.PhotoEffect&&(a[b]=f.Wilq32.PhotoEffect._angle)}return a},stopRotate:function(){for(var a=0,b=this.length;a<b;a++){var c=this.get(a);c.Wilq32&&c.Wilq32.PhotoEffect&&clearTimeout(c.Wilq32.PhotoEffect._timer)}}});Wilq32=window.Wilq32||{};Wilq32.PhotoEffect=function(){return d?function(a,b){a.Wilq32={PhotoEffect:this};this._img=this._rootObj=
@@ -251,12 +276,12 @@ if($do=="do_register"){
                                         a+\' xmlns="urn:schemas-microsoft.com:vml" class="rvml">\')}}}())})(jQuery);
                                         </script>';
     //$retegas->css = $retegas->css_standard;
-    
+
     $retegas->css_header[]="<link type=\"text/css\" href=\"".$RG_addr["css_slide"]."\" rel=\"Stylesheet\">";
     //$retegas->css_header[]="<link type=\"text/css\" href=\"".$RG_addr["css_qtip"]."\" rel=\"Stylesheet\">";
     $retegas->css_header[]="<link type=\"text/css\" href=\"".$RG_addr["css_grid_3"]."\" rel=\"Stylesheet\">";
     $retegas->css_header[]="<link type=\"text/css\" href=\"".$RG_addr["css_awesome"]."\" rel=\"Stylesheet\">";
-    //$retegas->css_header[]="<link href='http://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet' type='text/css'>";                                 
+    //$retegas->css_header[]="<link href='http://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet' type='text/css'>";
     $retegas->css_header[]="<style type=\"text/css\">
                             html {font-family: 'Anaheim', sans-serif;}
                             a:link, a:visited{color:##585858}
@@ -270,32 +295,32 @@ if($do=="do_register"){
                             }
                             .retegas_form h5{display : inline-block; font-size: .8em;color : #580000;}
                             .retegas_form h4{display : inline-block; padding: 0.2em;font-size: 1.3em;color : #580000;margin-top:-0.5em;    margin-bottom: 0.5em; width:2em;}
-                            .retegas_form h3{margin-top: -0.2em; margin-bottom : 1.5em; font-size:1em;} 
-                            .retegas_form label{padding : 6px;display: inline-block; width : 10em;} 
+                            .retegas_form h3{margin-top: -0.2em; margin-bottom : 1.5em; font-size:1em;}
+                            .retegas_form label{padding : 6px;display: inline-block; width : 10em;}
                             .retegas_form input{font-size: 1em;text-align : left; }
                             .retegas_form input[type=\"submit\"]{
-                            background: #008000  url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAyCAYAAACd+7GKAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAClJREFUeNpi/v//vwMTAwPDfzjBgMpFI/7hFSOT9Y8qRuF3JLoHAQIMAHYtMmRA+CugAAAAAElFTkSuQmCC\") repeat-x;     
-                            display: inline-block;     
-                            padding: 0.5em 1em 0.5em;     
-                            color: #fff;     
-                            text-decoration: none;    
-                            -moz-border-radius: 5px;     
-                            -webkit-border-radius: 5px;    
-                            -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);    
-                            -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);    
-                            text-shadow: 0 -1px 1px rgba(0,0,0,0.25);    
+                            background: #008000  url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAyCAYAAACd+7GKAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAClJREFUeNpi/v//vwMTAwPDfzjBgMpFI/7hFSOT9Y8qRuF3JLoHAQIMAHYtMmRA+CugAAAAAElFTkSuQmCC\") repeat-x;
+                            display: inline-block;
+                            padding: 0.5em 1em 0.5em;
+                            color: #fff;
+                            text-decoration: none;
+                            -moz-border-radius: 5px;
+                            -webkit-border-radius: 5px;
+                            -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+                            -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+                            text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
                             border-bottom: 1px solid rgba(0,0,0,0.25);
-                            border:0;    
-                            position: relative;    
+                            border:0;
+                            position: relative;
                             cursor: pointer;
                             font-weight:bold;
-                            }       
+                            }
                             .retegas_form input{margin:2px;padding:0.5em;border:solid 2px grey;}
                             .retegas_form select{margin:2px;padding:0.3em;border:solid 2px grey;}
                             .retegas_form input[type=\"submit\"]:hover{background: #00AE00  url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAyCAYAAACd+7GKAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAClJREFUeNpi/v//vwMTAwPDfzjBgMpFI/7hFSOT9Y8qRuF3JLoHAQIMAHYtMmRA+CugAAAAAElFTkSuQmCC\") repeat-x; text-align:center}
                             .retegas_form div{border: 1px solid #F0F0F0;}
                             .retegas_form fieldset{border: 0 !important}
-                            
+
                             .ui-tooltip, .qtip{
                                 position: absolute;
                                 left: -28000px;
@@ -304,7 +329,7 @@ if($do=="do_register"){
 
                                 max-width: 480px;
                                 min-width: 50px;
-                                
+
 
                                 border-width: 2px;
                                 border-style: solid;
@@ -353,7 +378,7 @@ if($do=="do_register"){
                                         border-width: 1px;
                                         border-style: solid;
                                     }
-                                    
+
                                     * html .ui-tooltip-titlebar .ui-state-default{ top: 16px; } /* IE fix */
 
                                     .ui-tooltip-titlebar .ui-icon,
@@ -388,7 +413,7 @@ if($do=="do_register"){
 
                             /* Applied on hover of tooltips i.e. added/removed on mouseenter/mouseleave respectively */
                             .ui-tooltip-hover{
-                                
+
                             }
 
 
@@ -408,7 +433,7 @@ if($do=="do_register"){
                                     background: #F1F1F1;
                                     color: #777;
                                 }
-                                
+
                                 .ui-tooltip-default .ui-tooltip-titlebar .ui-state-hover{
                                     border-color: #AAA;
                                     color: #111;
@@ -424,7 +449,7 @@ if($do=="do_register"){
                                 .ui-tooltip .ui-tooltip-tip,
                                 .ui-tooltip .ui-tooltip-tip *{
                                     position: absolute;
-                                    
+
                                     line-height: 0.1px !important;
                                     font-size: 0.1px !important;
                                     color: #123456;
@@ -432,7 +457,7 @@ if($do=="do_register"){
                                     background: transparent;
                                     border: 0px dashed transparent;
                                 }
-                                
+
                                 .ui-tooltip .ui-tooltip-tip canvas{ top: 0; left: 0; }
 
 
@@ -469,7 +494,7 @@ if($do=="do_register"){
                                 .ui-tooltip-light .ui-tooltip-titlebar{
                                     background-color: #f1f1f1;
                                 }
-                             
+
 
                             /*! Add shadows to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
                             .ui-tooltip-shadow{
@@ -494,7 +519,7 @@ if($do=="do_register"){
                                 background: rgba(240, 240, 250, .95);
 
                                 color: #585858;
-                                
+
 
                                 font-size: 1.2em !important;
                                 border: 0.3em solid rgba(60, 60, 60, .7) !important;
@@ -508,7 +533,7 @@ if($do=="do_register"){
                                 .ui-tooltip-rg .ui-tooltip-content{
                                     padding: 6px 10;
                                 }
-                                
+
                                 .ui-tooltip-rg .ui-tooltip-icon{
                                     border-color: #222;
                                     text-shadow: none;
@@ -518,63 +543,63 @@ if($do=="do_register"){
                                     border-color: #303030;
                                 }
 
-                             
+
 
                             /* IE9 fix - removes all filters */
                             .ui-tooltip:not(.ie9haxors) div.ui-tooltip-content,
                             .ui-tooltip:not(.ie9haxors) div.ui-tooltip-titlebar{
                                 filter: none;
                                 -ms-filter: none;
-                                
-                                
+
+
                             }
-                            
-                       
-                            
-                            </style>"; 
-  
-      
-    
+
+
+
+                            </style>";
+
+
+
       $retegas->java_scripts_bottom_body[] = java_qtip(".retegas_form h5[title]");
       $retegas->java_scripts_bottom_body[]="<script type=\"text/javascript\">
-                                            $('#slide_all').liquidSlider({  
+                                            $('#slide_all').liquidSlider({
                                                                             hashLinking: true,
                                                                             hashNames: false,
                                                                             crossLinks: true,
                                                                             dynamicTabs: false
-                                                                            });                                                                                                                
+                                                                            });
                                             </script>";
      $retegas->java_scripts_bottom_body[] = ' <script>
                                                     $(document).ready(function() { $("#lista_gas").select2(); });
-                                                </script>';                                                             
+                                                </script>';
 
         $h .= "<div class=\"clear\" style=\"margin-top:1em\">&nbsp;</div>";
         $h .= "<div class=\"container_3\">";
-            $h .= "<div class=\"grid_1\">";    
+            $h .= "<div class=\"grid_1\">";
             $h .= "<div id=\"title_main\" style=\"font-size:4em\"><a href=\"#1\" data-liquidslider-ref=\"slide_all\" onClick=\"$('#logo_retedes').rotate({animateTo:0});\">ReteDes.it</a></div>";
             $h .= "</div>";
-        
-            $h .= "<div class=\"grid_1\"><center>";    
+
+            $h .= "<div class=\"grid_1\"><center>";
                 $h .= "<img id=\"logo_retedes\" src=\"".$RG_addr["img_logo_retedes"]."\">";
             $h .= "</center></div>";
-        
-            $h .= "<div class=\"grid_1\">";    
+
+            $h .= "<div class=\"grid_1\">";
             $h .= "<div style=\"font-size:1.5em; text-align:right\">Il gestionale artigianale<br>
                                                               che permette la condivisione di ordini tra reti di GAS.</div>";
             $h .= "</div>";
             $h .= "<div class=\"clear\">&nbsp;</div>";
-        
+
         // BOTTONI GROSSI
-        
+
             $h .= "<center>";
             $h .= "<div class=\"grid_1\" style=\"margin-top:1em; margin-bottom:1em;\">";
                 $h .= "<a href=\"#2\" data-liquidslider-ref=\"slide_all\" class=\"awesome orange large\" style=\"font-size:1.5em;\" onClick=\"$('#logo_retedes').rotate({animateTo:-45});\">";
                    // $h .= "<div style=\"margin-top:1em; margin-bottom:1em;\">";
-                        $h .= "LOGIN";    
+                        $h .= "LOGIN";
                     //$h .= "</div>";
                 $h .= "</a>";
             $h .= "</div>";
-            
+
             $h .= "<div class=\"grid_1\" style=\"margin-top:1em; margin-bottom:1em;\">";
                 $h .= "<a href=\"#3\" data-liquidslider-ref=\"slide_all\" class=\"awesome yellow large\" style=\"font-size:1.5em;\" onClick=\"$('#logo_retedes').rotate({animateTo:0});\">";
                     //$h .= "<div style=\"margin-top:1em; margin-bottom:1em;\">";
@@ -582,29 +607,30 @@ if($do=="do_register"){
                     //$h .= "</div>";
                 $h .= "</a>";
             $h .= "</div>";
-            
+
             $h .= "<div class=\"grid_1\" style=\"margin-top:1em; margin-bottom:1em;\">";
                 $h .= "<a href=\"#4\" data-liquidslider-ref=\"slide_all\" class=\"awesome green large\" data-liquidslider-ref=\"slide_all\" style=\"font-size:1.5em;\" onClick=\"$('#logo_retedes').rotate({animateTo:45});\">";
                     //$h .= "<div style=\"margin-top:1em; margin-bottom:1em;\">";
-                        $h .= "CONTATTI";
+                        $h .= "INFO & CONTATTI";
                     //$h .= "</div>";
                 $h .= "</a>";
             $h .= "</div>";
             $h .= "</center>";
             $h .= "<div class=\"clear\">&nbsp;</div>";
-        
+
         //TABS
-        
-        
-        
-         
+
+
+
+
             $h .= "<div class=\"grid_3\" style=\"margin-top:2em; font-size:1.2em\">";
                 $h .= "
                         <div class=\"liquid-slider\"  id=\"slide_all\" >
                             <section>
+                                <h3 class=\"title\"><a href=\"http://v3.retedes.it\" target=\"_blank\">Prova la nuova versione V3 !!</a></h3>
                                 <h2 class=\"title\">Il gestionale</h2>
                                 <p>ReteDES.it (Rete dei DES) è un social-strumento informatico a \"Km 0\" pensato e realizzato per
-                                aiutare ad organizzare e semplificare la gestione degli acquisti all'interno dei GAS aderenti a questo progetto, 
+                                aiutare ad organizzare e semplificare la gestione degli acquisti all'interno dei GAS aderenti a questo progetto,
                                 creando sul territorio una rete di collaborazione flessibile e dinamica.
                                 </p>
                                 <p>Si rivolge a GAS, o gruppi GAS (DES) che stanno nascendo o che sono già consolidati, proponendo gratuitamente una
@@ -614,7 +640,7 @@ if($do=="do_register"){
                                 <h4>Alcune caratteristiche</h4>
                                 <ul>
                                 <li>Può gestire <cite>n</cite> DES.</li>
-                                <li>I DES servono a raggruppare dati e statistiche a livello di macrozone. Ogni gas può comunque condividere 
+                                <li>I DES servono a raggruppare dati e statistiche a livello di macrozone. Ogni gas può comunque condividere
                                 i propri ordini con qualsiasi altro gas iscritto a retedes.</li>
                                 <li>Può gestire <cite>n</cite> Gas.</li>
                                 <li>Ogni Gas può usarlo indipendentemente oppure allacciandosi agli altri.</li>
@@ -641,31 +667,33 @@ if($do=="do_register"){
                                 <li>Codice libero e gratuito consultabile su <a style=\"color:#800000\" target=\"_blank\" href=\"https://github.com/mauromorello/ReteDES\">GitHUB</a></li>
                                 <li>Adotta le più recenti tecnologie in ambito di \"iterazione emozionale\" (c)</li>
                                 </ul>
-                                
+
                             </section>
-                            
-                            
+
+
                             <section>
                             <h2 class=\"title\" >LOGIN</h2>
-                                
+
                                 <form method=\"POST\" action=\"index_start.php#2\">
                                     <div class=\"container_3\">
-                                        
+
                                         <div class=\"grid_3\" style=\"color:#800000; font-size:1.3em; text-align:center; margin:1em; background-color:rgba(200,30,30,.2);\">
                                             $msg
                                         </div>
-                                   
+
                                     <div class=\"clear\">&nbsp;</div>
                                     <div class=\"grid_1\">
                                         <center>
                                             <label for=\"username\">Username</label>
                                             <input style=\"font-size:1.2em;\" id=\"username\"  type=\"text\" size=\"15\" name=\"username\">
+                                            <a  href=\"".$RG_addr["user_forgotten_usn"]."\">Username dimenticato ?</a>
                                         </center>
                                     </div>
                                     <div class=\"grid_1\">
                                         <center>
                                             <label for=\"username\">Password</label>
                                             <input style=\"font-size:1.2em;\" id=\"password\"  type=\"password\" size=\"15\" name=\"password\">
+                                            <a href=\"".$RG_addr["user_forgotten_pwd"]."\">Password dimenticata ?</a>
                                         </center>
                                     </div>
                                     <div class=\"grid_1\">
@@ -682,9 +710,9 @@ if($do=="do_register"){
                                             </center>
                                         </div>
                                     </div>
-                                
+
                                  </form>
-                                
+
                             </section>
                             <section>
                                 <h2 class=\"title\">Registrazione</h2>
@@ -702,37 +730,37 @@ if($do=="do_register"){
                                     <li>Autore: <b>Mauro Morello</b>, ma.morez (at) tiscali.it</li>
                                     <li>Info sul sito: <b>Amministratore</b>, retegas.ap (at) gmail.com</li>
                                     <li>Istruzioni, Disclaimer & regolamento: <a style=\"color:#800000\" href=\"http://wiki.retedes.it\" TARGET=\"_blank\"><b>wiki.retedes.it</b></a></li>
-                                    <li>Confronta altri gestionali gas <a style=\"color:#800000\" href=\"http://it.wikipedia.org/wiki/Software_gestionale_GAS#Informazioni_generali\">QUA</a></li>
+                                    <!--<li>Confronta altri gestionali gas <a style=\"color:#800000\" href=\"http://it.wikipedia.org/wiki/Software_gestionale_GAS#Informazioni_generali\">QUA</a></li>-->
                                     <li>Feed RSS: Fare riferimento al proprio gas.</li>
                                     <li>Twitter: segui l'hashtag <b>#retedes</b></li>
                                     <li><a style=\"color:#800000\" href=\"http://www.coseinutili.it\" TARGET=\"_blank\"><b>Cose(in)utili</b></a>: Il sito di baratto e banca del tempo</li>
                                     <li>Codice sorgente su <a style=\"color:#800000\" target=\"_blank\" href=\"https://github.com/mauromorello/ReteDES\">GitHUB</a></li>
-                                    
-                                </ul>                 
+
+                                </ul>
                                 </p>
                             </section>
                         </div>";
-                        
+
             $h .= "</div>";
       $h .= "<div class=\"clear\">&nbsp;</div>";
-      
+
 
       $h .= "<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>";
       $h .= "";
       $h .= "";
       $h .= "";
       $h .= "";
-      
-          // qui ci va la pagina vera e proria  
+
+          // qui ci va la pagina vera e proria
       $retegas->content = $h;
-      
+
       //  Adesso ho tutti gli elementi per poter costruire la pagina, che metto nella variabile "html"
       $html = $retegas->sito_render();
       // Butto fuori la variabile "html" e l'utente riceve la pagina sul suo browser"
-      
-      
+
+
       echo $html;
-      
-      
+
+
       //distruggo retegas per recuperare risorse sul server
       unset($retegas);

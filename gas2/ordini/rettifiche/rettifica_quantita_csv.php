@@ -1,7 +1,7 @@
 <?php
 
 
-   
+
 // immette i file che contengono il motore del programma
 include_once ("../../rend.php");
 include_once ("../../retegas.class.php");
@@ -9,19 +9,26 @@ include_once ("../../retegas.class.php");
 
 // controlla se l'user ha effettuato il login oppure no
 if (!_USER_LOGGED_IN){
-     pussa_via(); 
-}    
+     pussa_via();
+}
 
 //CONTROLLI
 if(ordine_inesistente($id_ordine)){
-    pussa_via();  
-    exit;  
+    pussa_via();
+    exit;
 }
 //CONTROLLO SE L'ORDINE E' DI USER
-if(_USER_ID<>id_referente_ordine_globale($id_ordine)){
-    pussa_via();  
-    exit;    
-} 
+//Se non sono almeno referente GAS allora non posso vedere nulla.
+$mio_Stato = ordine_io_cosa_sono($id_ordine,_USER_ID);
+
+//Se posso vedere tutti gli ordini
+if(!(_USER_PERMISSIONS & perm::puo_vedere_tutti_ordini)){
+
+    if ($mio_Stato<3){
+        go("sommario",_USER_ID,"Questo ordine non mi compete");
+    }
+
+}
 
 
 
@@ -34,7 +41,7 @@ $r->title = "Rettifica OFFLINE";
 
 
 //Dico quale men? orizzontale dovr?? essere associato alla pagina.
-$r->menu_orizzontale = ordini_menu_all($id_ordine); 
+$r->menu_orizzontale = ordini_menu_all($id_ordine);
 
 
 if(_USER_HAVE_MSG){
@@ -68,7 +75,7 @@ $h_h .= "<div id=\"istr\">
         <p>ATTENZIONE : </p>
             <ul>
                 <li>La modifica dei valori viene eseguita immediatamente, all'atto del caricamento.</li>
-            </ul>        
+            </ul>
         </div>";
 
 
@@ -88,13 +95,13 @@ $h .= "<div>
        <div>
        <h4>3</h4>
                <form action=\"rettifica_csv_upload.php\" method=\"post\" enctype=\"multipart/form-data\" >
-                Importa il file precedente dopo averlo modificato 
+                Importa il file precedente dopo averlo modificato
                 <input type=\"file\" name=\"upfile\" >
-                
+
                 <input type=\"hidden\" name=\"id_ordine\" value=$id_ordine>
                 <input type=\"submit\" class=\"awesome green \" value=\"IMPORTA\">
                 </form>
-       </div>";       
+       </div>";
 $h .= "</div>";
 $h.= "</div>";
 
@@ -103,5 +110,5 @@ $r->contenuto = $h;
 
 //Mando all'utente la sua pagina
 echo $r->create_retegas();
-//Distruggo l'oggetto r    
+//Distruggo l'oggetto r
 unset($r);

@@ -100,5 +100,4 @@ $r->contenuto = $h;
 //Mando all'utente la sua pagina
 echo $r->create_retegas();
 //Distruggo l'oggetto r    
-unset($r)   
-?>
+unset($r);

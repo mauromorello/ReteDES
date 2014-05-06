@@ -24,11 +24,10 @@ if (!_USER_LOGGED_IN){
 			exit;   	
 		}
 
-	if (id_referente_ordine_globale($id)<>_USER_ID){
-		$msg = "Birbante, stai cercando di modificare un ordine non tuo";
-		include ("../ordini_aperti/ordini_aperti_table.php");
-	exit;    
-	}
+	if(!posso_gestire_ordine_full($id_ordine,_USER_ID)){
+        go("ordini_form",_USER_ID,"Questa operazione ti è preclusa.","?id_ordine=$id_ordine");
+        exit;
+    }
 
 	if ($do=="mod"){
 		unset($do);

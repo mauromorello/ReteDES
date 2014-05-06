@@ -146,12 +146,9 @@ if (is_logged_in($user)){
         },
         
         title: {
-            text: 'Andamento spesa'
+            text: 'Andamento spesa mio GAS'
         },
         
-        xAxis: {
-            maxZoom: 30 * 24 * 3600000 // fourteen days
-        },
         yAxis: {
             title: {
                 text: 'Euro'
@@ -159,13 +156,8 @@ if (is_logged_in($user)){
         },
         
         series: [{
-            name: 'Spesa ReteGas TOTALE',
+            name: 'Spesa Mio GAS',
             type: 'spline',
-            data: [".$data_activity_1."]
-        },
-        {
-            name: 'Spesa Mio Gas',
-            type: 'areaspline',
             data: [".$data_activity_2."]
         }]
     });
@@ -181,9 +173,9 @@ if (is_logged_in($user)){
 	  }
 	  
 		  // qui ci va la pagina vera e proria  
-	  $retegas->content  =  '<div style="position:relative; width: 100%; display:table;">
+	  $retegas->content  =  '<div class="rg_widget rg_widget_helper"><div style="position:relative; width: 100%; display:table;">
                              <div id="container_chart" style="width: 100%; height: 30em;   display:table-cell"></div>
-                             </div>';
+                             </div></div>';
 
 	  
 

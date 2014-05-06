@@ -164,7 +164,7 @@ if (is_logged_in($user)){
 	  }
 	  
 		  // qui ci va la pagina vera e proria  
-	  $retegas->content  =  "<div id=\"map_canvas\" style=\"width:100%; height:460px\"></div>";
+	  $retegas->content  =  "<div class=\"rg_widget rg_widget_helper\"><div id=\"map_canvas\" style=\"width:100%; height:460px\"></div></div>";
 
 	  
 
@@ -176,8 +176,4 @@ if (is_logged_in($user)){
 	  
 	  
 	  //distruggo retegas per recuperare risorse sul server
-	  unset($retegas);	  
-	  
-	  
-	  
-?>
+	  unset($retegas);

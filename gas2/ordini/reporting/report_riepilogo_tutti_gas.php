@@ -1,5 +1,5 @@
 <?php
-   
+
 // immette i file che contengono il motore del programma
 include_once ("../../rend.php");
 include_once ("../ordini_renderer.php");
@@ -9,36 +9,14 @@ include_once ("../../retegas.class.php");
 
 // controlla se l'user ha effettuato il login oppure no
 if (!_USER_LOGGED_IN){
-     pussa_via(); 
-}    
-
-
-
-if (!(_USER_PERMISSIONS & perm::puo_partecipare_ordini)){
-     go("sommario",_USER_ID,"Non puoi partecipare agli ordini. Contatta il tuo referente GAS.");
+     pussa_via();
 }
 
-if (ordine_inesistente($id_ordine)){
-     go("sommario",_USER_ID,"Ordine insesistente");
-}
-
-
-//Se posso vedere tutti gli ordini
 if(!(_USER_PERMISSIONS & perm::puo_vedere_tutti_ordini)){
-
-        //Se non sono almeno referente GAS allora non posso vedere nulla.
-        $mio_Stato = ordine_io_cosa_sono($id_ordine,_USER_ID);
-        if ($mio_Stato<3){
-            go("sommario",_USER_ID,"Questo ordine non mi compete");
-        }
-
-        //Se sono referente gas controllo di vedere il MIO gas
-        if ($mio_Stato==3){
-            if($id_gas<>_USER_ID_GAS){
-                go("sommario",_USER_ID,"Solo il referente ordine può vedere tutti i gas.");
-            }
-        }
-
+    if(!posso_gestire_ordine_full($id_ordine,_USER_ID)){
+        go("ordini_form",_USER_ID,"Questa operazione ti è preclusa.","?id_ordine=$id_ordine");
+        exit;
+    }
 }
 
 
@@ -47,10 +25,10 @@ $stato_ordine = stato_from_id_ord($id_ordine);
 
 if($stato_ordine==2){
     $alert = "<div class=\"ui-state-error ui-corner-all padding_6px\">
-                <h4>Finchè l'ordine non è confermato, questi dati sono da considerarsi NON ATTENDIBILI<br>
+                <h4>Finchè l'ordine non è CONVALIDATO, questi dati sono da considerarsi NON ATTENDIBILI<br>
                 </h4>
-              </div>  ";    
-    
+              </div>  ";
+
 }
 
 
@@ -63,10 +41,10 @@ $r->title = "Spesa GAS - Riepilogo";
 
 
 //Messaggio popup;
-//$r->messaggio = "Pagina di test"; 
+//$r->messaggio = "Pagina di test";
 //Dico quale men? orizzontale dovr?? essere associato alla pagina.
 //$r->menu_orizzontale = ordini_menu_completo($user,$id_ordine);
-    
+
     //SE l'ordine ? chiuso allora posso stamparlo
     //if(is_printable_from_id_ord($id_ordine)){
     $r->menu_orizzontale[] = '  <li><a class="medium silver awesome">Esporta</a>
@@ -87,15 +65,18 @@ $h .= $alert;
 //LOOP TRA TUTTI I GAS
 $result = $db->sql_query("SELECT * FROM retegas_gas");
 
-$riga=0;  
+$riga=0;
 while ($row_gas = $db->sql_fetchrow($result)){
+
+    $somma_scatole = 0 ;
+    $somma_avanzo=0 ;
 
     //BEGIN ------- SINGLE GAS
     $stato = gas_partecipa_ordine($id_ordine,$row_gas["id_gas"]);
-    
+
     if($stato==2){
-    
-        $id_gas = $row_gas["id_gas"];        
+
+        $id_gas = $row_gas["id_gas"];
         $query = "SELECT
                             count(retegas_dettaglio_ordini.id_utenti) AS c_user,
                             Sum(retegas_dettaglio_ordini.qta_ord) AS t_q_ord,
@@ -107,7 +88,7 @@ while ($row_gas = $db->sql_fetchrow($result)){
                             retegas_articoli.misura,
                             retegas_articoli.descrizione_articoli,
                             retegas_articoli.qta_scatola,
-                            retegas_articoli.prezzo,
+                            retegas_dettaglio_ordini.prz_dett_arr AS prezzo,
                             retegas_articoli.ingombro,
                             retegas_articoli.qta_minima,
                             retegas_articoli.qta_multiplo,
@@ -147,16 +128,16 @@ while ($row_gas = $db->sql_fetchrow($result)){
         $h .= "</thead>";
         $h .= "<tbody>";
         while ($row = mysql_fetch_array($res)){
-            
+
             $riga++;
-            
+
             if(is_integer($riga / 2)){
                 $cl  ="class=\"odd\"";
             }else{
                 $cl = "";
             }
-            
-            
+
+
             unset($opz);
             if($stato_ordine==2){
             //    $opz = "<a class=\"awesome option yellow\">M</a>
@@ -165,9 +146,9 @@ while ($row_gas = $db->sql_fetchrow($result)){
             if($stato_ordine==3){
                 //$opz = "<a class=\"option blue awesome\" title=\"Assegna\" href=\"../../ordini_chiusi/ordini_chiusi_ass_q.php?id=".$row["id_articoli"]."&id_ordine=$id_ordine&q_min=".db_val_q("id_articoli",$row["id_articoli"],"qta_minima","retegas_articoli")."&id_dett=".$row["id_dettaglio_ordini"]."\">A</a>";
             }
-            
+
             $misura = " (". $row["u_misura"]." ".$row["misura"].")";
-            
+
             unset($alert_qta);
             unset($qta);
             $qta = $row["t_q_arr"];
@@ -176,18 +157,21 @@ while ($row_gas = $db->sql_fetchrow($result)){
                         $qta="";
                     }else if($qta<>$row["t_q_ord"]){
                         $alert_qta = "<div class=\"campo_alert\">MODIFICATA</div>";
-                        
+
                     }
-            
+
             if($row["qta_scatola"]>0){
             $scatole = floor($row["t_q_arr"] / $row["qta_scatola"]);
             $avanzo = (($row["t_q_arr"]) % ($row["qta_scatola"]));
             }else{
             $scatole =0;
-            $avanzo = $row["t_q_arr"];    
+            $avanzo = $row["t_q_arr"];
             }
             $avanzo = calcola_avanzo($row["t_q_arr"],$row["qta_scatola"]);
-            
+
+            $somma_scatole = $somma_scatole + $scatole;
+            $somma_avanzo = $somma_avanzo + $avanzo;
+
             $h .="<tr $cl>";
             $h .="<td class=\"sinistra column_hide\">$opz</td>";
             $h .="<td class=\"sinistra\">".$row["c_user"]."</td>";
@@ -238,14 +222,17 @@ while ($row_gas = $db->sql_fetchrow($result)){
 
         //TOTALE VERSO GLI ESTERNI
         $netto = valore_totale_mio_gas($id_ordine,$id_gas);
+        $somma_scatole = _nf($somma_scatole);
+        $somma_avanzi = _nf($somma_avanzo);
+
         $costi_esterni = $costo_trasporto + $costo_gestione;
             $h .="<tr class=\"total\">";
             $h .="<th class=\"column_hide\">&nbsp;</th>";
             $h .="<th>&nbsp;</th>";
             $h .="<th>&nbsp;</th>";
             $h .="<th class=\"sinistra\">Totale pubblico ".gas_nome($id_gas).":</th>";
-            $h .="<th>&nbsp;</th>";
-            $h .="<th>&nbsp;</th>";
+            $h .="<th class=\"centra\">&nbsp;</th>";
+            $h .="<th class=\"centro\">$somma_scatole / $somma_avanzo (Q.Arr)</th>";
             $h .="<th>&nbsp;</th>";
             $h .="<th class=\"destra\">"._nf($netto)."</th>";
             $h .="<th class=\"destra\">"._nf($costi_esterni)."</th>";
@@ -287,11 +274,11 @@ while ($row_gas = $db->sql_fetchrow($result)){
             $h2 .="</tr>";
         }
         //GRAN TOTALE INTERNO
-           
+
             $costi = $costi_esterni+
-                     $costo_gas + 
+                     $costo_gas +
                      $magg_gas;
-            
+
             $h2 .="<tr class=\"total\">";
             $h2 .="<th class=\"column_hide\">&nbsp;</th>";
             $h2 .="<th>&nbsp;</th>";
@@ -309,7 +296,7 @@ while ($row_gas = $db->sql_fetchrow($result)){
         if($id_gas == _USER_ID_GAS ){
             $h.=$h2;
         }
-            
+
         $h .= "</tfoot>";
 
 
@@ -319,7 +306,7 @@ while ($row_gas = $db->sql_fetchrow($result)){
 
         //-------------------------------END SINGLE GAS
     }//if gas partecipante
-    
+
 }
 
 //Creo l'intestazione per il pdf e l'html
@@ -337,19 +324,19 @@ if(_USER_OPT_NO_HEADER=="SI"){
 }else{
     $i=load_pdf_header("../../images/rg.jpg");
     $o=render_scheda_pdf_ordine($id_ordine).
-    "<h2>Riepilogo articoli ogni GAS</h2>";;    
+    "<h2>Riepilogo articoli ogni GAS</h2>";;
 }
 
 //Mando all'utente la sua pagina
 if($output=="pdf"){
-    require_once("../../lib/dompdf_2/dompdf_config.inc.php");
+    require_once("../../lib/dompdf_3/dompdf_config.inc.php");
 
     $dompdf = new DOMPDF();
     $dompdf->load_html("<html><head>".$s."</head><body>".$i.$o.$h."</body></html>");
     $dompdf->render();
     $dompdf->stream("riepilogo_ord_tutti_gas_$id_ordine-$cod.pdf",array("Attachment" => 0));
 die();
-    
+
 }elseif($output=="html"){
     echo $s.$i.$o.$h;
 }else{
@@ -360,6 +347,6 @@ die();
                     ."</div>";
     echo $r->create_retegas();
 }
-//Distruggo l'oggetto r    
-unset($r)   
+//Distruggo l'oggetto r
+unset($r)
 ?>

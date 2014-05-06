@@ -84,7 +84,7 @@ if (!_USER_LOGGED_IN){
            
             $msg = "Nuova ditta aggiunta";
             sleep(1);
-            $res_geocode = geocode_ditte_table("SELECT * FROM retegas_ditte WHERE descrizione_ditte='$descrizione_ditte' AND indirizzo='$indirizzo';");
+            //$res_geocode = geocode_ditte_table("SELECT * FROM retegas_ditte WHERE descrizione_ditte='$descrizione_ditte' AND indirizzo='$indirizzo';");
             log_me(0,_USER_ID,"DIT","ADD","Aggiunta ditta $descrizione_ditte",0,$res_geocode);
             go("ditte_table_3",_USER_ID,"Nuova ditta aggiunta");
             die();  
@@ -157,8 +157,4 @@ if (!_USER_LOGGED_IN){
 	  
 	  
 	  //distruggo retegas per recuperare risorse sul server
-	  unset($retegas);	  
-	  
-	  
-	  
-?>
+	  unset($retegas);

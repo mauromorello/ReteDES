@@ -188,7 +188,7 @@ function schedona_ordine_mobile($id_ordine,$id_user=null){
                 $f = fopen ($myurl, "r");
                 $str = stream_get_contents($f);
                 preg_match("/Distance: ([0-9,.-]+)/", $str, $distance);
-            //Tolgo il separatore delle migliaia perchè rompe le palle
+            //Tolgo il separatore delle migliaia perch? rompe le palle
             $dist_ditta_gas =str_replace(",","",$distance[1]); 
             $dist_ditta_gas = round(floatval($dist_ditta_gas),2);
             
@@ -340,7 +340,7 @@ function schedona_ditta_mobile($id_ditta,$id_user=null){
          
          <li>Proponente: $proponente</li>
          <li><h3>Tag associati:</h3> <p>$tag_associati</p></li>
-         <li data-role=\"list-divider\">Attività ditta</li>
+         <li data-role=\"list-divider\">AttivitÃ  ditta</li>
          <li>Listini attivi: $listini_attivi</li>
          
 
@@ -361,10 +361,14 @@ function schedona_ditta_mobile($id_ditta,$id_user=null){
 //FUNCTION PER MOBILE
 function load_jqm_param(){
     $p = array(
-    "jqm_jqm_css"       =>  "http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.css",
-    "jqm_jquery_url"    =>  "http://code.jquery.com/jquery-1.7.1.min.js",
-    "jqm_jqm_url"       =>  "http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js",
+    "jqm_jqm_css"       =>  "http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css",
+    "jqm_jquery_url"    =>  "http://code.jquery.com/jquery-1.9.1.min.js",
+    "jqm_jqm_url"       =>  "http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js",
     "jqm_app_title"     =>  _SITE_NAME."(M)");
+    
+    
+    
+    
     return $p;
 }
 function load_page_param($title=_SITE_NAME,$id=null){
@@ -431,7 +435,7 @@ global $RG_addr;
 
 $n = array( 
             "<li><a href=\"".$RG_addr["m_ordini_scheda"]."?id_ordine=$id_ordine\" data-prefetch>Scheda</a></li>",
-            //"<li><a href=\"".$RG_addr["m_ordini_partecipa"]."?id_ordine=$id_ordine\" data-prefetch>Partecipa</a></li>",
+            "<li><a href=\"".$RG_addr["m_ordini_partecipa"]."?id_ordine=$id_ordine\" data-prefetch>Partecipa</a></li>",
             "<li><a href=\"".$RG_addr["m_ordini_mia_spesa"]."?id_ordine=$id_ordine\" data-prefetch>Mia Spesa</a></li>");
             //"<li><a href=\"".$RG_addr["m_ordini"]."?id_ordine=$id_ordine\" data-icon=\"gear\">Gestisci</a></li>");    
 

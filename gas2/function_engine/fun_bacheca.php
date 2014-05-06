@@ -348,7 +348,7 @@ function bacheca_read_titolo_commento_ordine_referente($id_utente,$id_ordine){
 
 function bacheca_render_fullwidth_messaggio($id_messaggio){
     
-    global $db;
+    global $db,$RG_addr;
     global $RG_lista_argomenti_messaggi;
     
     $protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === FALSE ? 'http' : 'https';
@@ -370,7 +370,7 @@ function bacheca_render_fullwidth_messaggio($id_messaggio){
     $id_ordine = CAST_TO_INT($row["id_ordine"],0);
     if($id_ordine>0){
         $cosa = descrizione_ordine_from_id_ordine($row["id_ordine"]);  
-        $ordine =" (Ordine #".$row["id_ordine"]." [$cosa] del ".conv_date_from_db(db_val_q("id_ordini",$id_ordine,"data_chiusura","retegas_ordini")).") ";
+        $ordine =" (Ordine #".$row["id_ordine"]." [<a href=\"".$RG_addr["ordini_form"]."?id_ordine=".$row["id_ordine"]."\">$cosa</a>] del ".conv_date_from_db(db_val_q("id_ordini",$id_ordine,"data_chiusura","retegas_ordini")).") ditta <a href=\"".$RG_addr["ditte_form_new"]."?id_ditta=".ditta_id_from_listino(listino_ordine_from_id_ordine($row["id_ordine"]))."\">".ditta_nome_from_id_ordine($row["id_ordine"])."</a> ";
     }
 
     if($row["bacheca_address"]<>""){$indirizzo=", commento geolocato in <cite>".$row["bacheca_address"]."</cite>";}
@@ -379,7 +379,7 @@ function bacheca_render_fullwidth_messaggio($id_messaggio){
     $info_div="<br>
                 <div id=\"msg_".$row["id_bacheca"]."\" style=\"display:none;\">
                 <span class=\"small_link\"><strong>".$RG_lista_argomenti_messaggi[$row["code_uno"]]."</strong> #".$row["id_bacheca"].", ruolo : <strong>".$row["code_due"]."</strong>, del ".conv_date_from_db($row["timbro_bacheca"])."$ordine $indirizzo </span><br>
-                (".gas_nome($row["id_gas"])." - ".db_val_q("id_des",_USER_ID_DES,"des_descrizione","retegas_des").") 
+                ".db_val_q("id_des",_USER_ID_DES,"des_descrizione","retegas_des")."
                 </div>";
     
     if($row["id_utente"]==_USER_ID){
@@ -390,12 +390,13 @@ function bacheca_render_fullwidth_messaggio($id_messaggio){
         $show_commands ="";
     }
     
-    $h  =  "<div class=\"rg_widget rg_widget_helper\" style=\"padding:0.2em;\">";
-    $h .=  "<h4 style=\"margin-bottom:.4em;\">".$row["titolo_messaggio"].", di ".fullname_from_id($row["id_utente"])."</h4>";
+    $h  =  "<div class=\"rg_widget rg_widget_helper rg_widget_feedback\" style=\"padding:0.2em;\">";
+    $h .=  "<h4 style=\"margin-bottom:.4em; margin-top:.4em;\">\"".$row["titolo_messaggio"]."\", <span style=\"font-weight:normal;\">dice ".fullname_from_id($row["id_utente"]).", del ".gas_nome($row["id_gas"])."</span></h4>";
     $h .=  "<span class=\"small_link\">[<a href=\"#\" onclick=\"$('#msg_".$row["id_bacheca"]."').toggle();return false;\">INFO</a>] $show_commands</span>";
     if($row["messaggio"]<>""){
         $h .=  "<span class=\"small_link\">[<a href=\"#\" onclick=\"$('#msgread_".$row["id_bacheca"]."').toggle();return false;\">LEGGI TUTTO</a>]</span>";
     }
+    $h .=  "";
     $h .=  $info_div;
     $h .=  "<br>";
     if($row["messaggio"]<>""){

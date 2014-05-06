@@ -67,16 +67,17 @@ if($do=="save_mods"){
              $vc = cassa_utente_tutti_movimenti(_USER_ID);
              
              //se il credito non basta
-             if(($vc-$vo)< _GAS_CASSA_MIN_LEVEL){
-                 $log .= "Credito insuff.<br>";
-                 $msg  = "Credito insufficiente per questo acquisto;<br>
-                            Ricorda che è contemplata una percentuale del "._GAS_COPERTURA_CASSA."% di spese accessorie che vanno a sommarsi all'importo dell'ordine.<br>
-                            Vi è inoltre una soglia minima di "._GAS_CASSA_MIN_LEVEL." Eu. (decisa dal tuo GAS) sotto la quale non si può ordinare.<br>
-                            I totali effettivi saranno modificati o confermati ad ordine chiuso dal gestore o dal cassiere.";   
-                 $dove_vai = "ordini_mod_uni_new";
-                 go($dove_vai,_USER_ID,$msg,"?id_ordine=$id_ordine&id_articolo=$id_articolo");
+             if(_GAS_CASSA_CHECK_MIN_LEVEL){
+                 if(($vc-$vo)< _GAS_CASSA_MIN_LEVEL){
+                     $log .= "Credito insuff.<br>";
+                     $msg  = "Credito insufficiente per questo acquisto;<br>
+                                Ricorda che è contemplata una percentuale del "._GAS_COPERTURA_CASSA."% di spese accessorie che vanno a sommarsi all'importo dell'ordine.<br>
+                                Vi è inoltre una soglia minima di "._GAS_CASSA_MIN_LEVEL." Eu. (decisa dal tuo GAS) sotto la quale non si può ordinare.<br>
+                                I totali effettivi saranno modificati o confermati ad ordine chiuso dal gestore o dal cassiere.";   
+                     $dove_vai = "ordini_mod_uni_new";
+                     go($dove_vai,_USER_ID,$msg,"?id_ordine=$id_ordine&id_articolo=$id_articolo");
+                 }
              }
-             
          
          
          }
@@ -324,5 +325,4 @@ $r->contenuto =     schedina_ordine($id_ordine).
 echo $r->create_retegas();
 
 //Distruggo l'oggetto r    
-unset($r)   
-?>
+unset($r);

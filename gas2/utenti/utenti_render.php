@@ -7,13 +7,13 @@ if (eregi("utenti_render.php", $_SERVER['SCRIPT_NAME'])) {
 
 function utenti_render_register_form(){
         global $messaggio_referente, $tel, $username, $password, $password2, $email, $gasappartenenza, $fullname, $user_taken_err, $consenso, $email_taken_err;
-            
+
         $disclaimer = strip_tags(read_option_note(0,"DISCLAIMER"));
-        
+
 
 
         $help_username='Il tuo nome utente.<br>Un nome utente è un nome semplice che identifica il tuo accesso. La sua lunghezza massima è di 15 caratteri. Il sito distingue tra lettere maiuscole e minuscole.';
-        $help_password='La tua password.<br>Può contenere lettere e  numeri, il sito distingue tra lettere minuscole e maiuscole.'; 
+        $help_password='La tua password.<br>Può contenere lettere e  numeri, il sito distingue tra lettere minuscole e maiuscole.';
         $help_ripeti_password ='Ripetendo la password siamo sicuri che sia quella voluta, e che non contenga errori di battitura.';
         $help_gasappartenenza ='Scegli il gas con il quale ti sei messo in contatto e del quale vuoi fare parte.';
 
@@ -25,15 +25,15 @@ function utenti_render_register_form(){
         $help_fullname = 'Il tuo vero Nome e cognome.<br>ReteDES.it si basa sulla fiducia e sulla collaborazione reciproca, è quindi fondamentale conoscere personalmente tutti i partecipanti';
 
         $content_disclaimer = (str_replace("\\r\\n","",read_option_note(0,"DISCLAIMER")));
-        
-        
+
+
         $h = '<div class="retegas_form ui-corner-all">
-        
+
         <p>Tutti i campi sono obbligatori</p>
 
         <form id="register" name="scheda_registrazione" method="POST" action="index_start.php#3" >
 
-        
+
         <div>
         <h4>1</h4>
         <label for="username">Scegli il tuo nome utente, max 15 caratteri.</label>
@@ -55,14 +55,14 @@ function utenti_render_register_form(){
         <input  type="password" name="password2" value="'.$password2.'" size="20"></input>
         <h5 title="'.$help_password2.'">Inf.</h5>
         </div>
-        
+
         <div>
         <h4>4</h4>
         <label for="email">inserisci la tua email:</label>
         <input type="email" name="email" value="'.$email.'" size="20"></input>
         <h5 title="'.$help_email.'">Inf.</h5>
         </div>
-        
+
         <div>
         <h4>5</h4>
         <label for="fullname">inserisci il tuo nome e cognome</label>
@@ -76,62 +76,64 @@ function utenti_render_register_form(){
         <input type="tel" name="tel" value="'.$tel.'" size="20"></input>
         <h5 title="'.$help_tel.'">Inf.</h5>
         </div>
-        
+
         <div>
         <h4>7</h4>
-        
+
         <label for="consenso">...dichiaro di aver letto, compreso ed accettato il qui seguente disclaimer</label>
         <input type="checkbox" name="consenso" value="1"></input>
         <span><textarea name="Disclaimer" wrap="virtual" align="justify" >'.$content_disclaimer.'</textarea></span>
         <h5 title="'.$help_consenso.'">Inf.</h5>
         </div>
-        
+
         <div>
         <h4>8</h4>
         <label for="gasappartenenza">..faccio parte del seguente GAS:</label>
         <select name= "gasappartenenza" id="lista_gas" >';
-        
+
         $result = mysql_query("SELECT * FROM retegas_gas ORDER BY id_gas ASC");
         $totalrows = mysql_num_rows($result);
         $h .= "<option value=\"-1\">Selezionare GAS</option>";
+
         while ($row = mysql_fetch_array($result)){
                 $idgas = $row['id_gas'];
                 $descrizionegas = $row['descrizione_gas'];
                 if ($idgas==$gasappartenenza){$agg=" selected ";}else{$agg=null;}
-        $h .= "<option value=\"".$idgas ."\" $agg>".$descrizionegas ."  </option>";   
+        $h .= "<option value=\"".$idgas ."\" $agg>".$descrizionegas ."  </option>";
          }//end while
+        $h .= "<option value=\"0\">Voglio creare un nuovo GAS !</option>";
         $h .='</select>
         <h5 title="'.$help_gasappartenenza.'">Inf.</h5>
         </div>
-        
+
         <div>
         <h4>9</h4>
-        
+
         <label for="messaggio_referente">Scrivi un tuo messaggio di presentazione.</label>
         <span><textarea id="messaggio_referente" class ="" name="messaggio_referente" cols="40" style="display:inline-block;">'.$messaggio_referente.'</textarea></span>
         <h5 title="'.$help_messaggio_referente.'">Inf.</h5>
-        </div>        
-                        
+        </div>
+
         <div>
         <h4>10</h4>
         <label for="submit">e infine... </label>
         <input type="submit" name="submit" value="Invia la richiesta" align="center" >
         <input type="hidden" name="do" value="do_register">
-        </div> 
+        </div>
 
 
         </form>
-        </div>'; 
-        
-        
-        
+        </div>';
 
 
 
 
-    
-return $h;    
-    
+
+
+
+
+return $h;
+
 }
 
 
@@ -139,8 +141,8 @@ function utenti_option_sito($id_user){
 //echo "USER OPT = $user_options";
 //$opz = leggi_opzioni_sito_utente($id_user);
 $user_options = leggi_opzioni_sito_utente($id_user);
- 
-if($user_options<>$opz){$msg="ATTENZIONE : la nuova configurazione di opzioni si attiverà dal prossimo LOGIN";} 
+
+if($user_options<>$opz){$msg="ATTENZIONE : la nuova configurazione di opzioni si attiverà dal prossimo LOGIN";}
 //$user_options=$opz;
 
 // GESTIONE DEI PERMESSI ----------------------------------------------------
@@ -149,8 +151,8 @@ if($user_options & opti::visibile_a_tutti){$checked_2=" CHECKED ";}
 if($user_options & opti::aggiornami_nuovi_ordini){$checked_3=" CHECKED ";}
 if($user_options & opti::avvisami_scadenza_3gg){$checked_4=" CHECKED ";}
 if($user_options & opti::acconsento_comunica_tutti){$checked_5=" CHECKED ";}
-if($user_options & opti::stampe_senza_intestazioni){$checked_6=" CHECKED ";} 
-if($user_options & opti::sito_senza_header){$checked_7=" CHECKED ";} 
+if($user_options & opti::stampe_senza_intestazioni){$checked_6=" CHECKED ";}
+if($user_options & opti::sito_senza_header){$checked_7=" CHECKED ";}
 
 $h_table .='
 <div class="rg_widget rg_widget_helper">
@@ -192,10 +194,10 @@ $h_table .='
     <tr class="odd">
         <th>Pagine sito senza intestazione (più spazio per i dati)</th>
         <td><input '.$checked_7.'type="checkbox" name="s_s_h" value="'.opti::sito_senza_header.'"</td>
-    </tr>    
+    </tr>
 <table>
 
- 
+
 <input type="hidden" name="do"  value="change_user_options">
 <input type="hidden" name="id_utente_opzioni"  value="'.$id_user.'">
 <center>
@@ -203,26 +205,26 @@ $h_table .='
 </center>
 </form>
 </div>
-   
+
 ';
 return $h_table;
-    
+
 }
 function utenti_option_sito_v2($id_user){
     global $RG_addr;
-    
+
     if(_USER_OPT_SEND_MAIL=="SI"){
         $vis_opt_mail = "<span style=\"color:green;\"><strong>OPZIONE ATTIVATA</strong></span>";
     }else{
         $vis_opt_mail = "<span style=\"color:red;\">OPZIONE NON ATTIVA</span>";
-    }    
-    
+    }
+
     if(_USER_OPT_NO_HEADER=="SI"){
         $vis_opt_snh = "<span style=\"color:green;\"><strong>OPZIONE ATTIVATA</strong></span>";
     }else{
         $vis_opt_snh = "<span style=\"color:red;\">OPZIONE NON ATTIVA</span>";
     }
-    
+
     $h .= '<table style="font-size:16px;">
             <thead>
             <tr>
@@ -232,59 +234,59 @@ function utenti_option_sito_v2($id_user){
             </tr>
             </thead>
             <tbody>';
-    
+
     $h .= '<tr>';
     $h .= '<td>NON VOGLIO ricevere mail dal sito</td>';
     $h .= '<td><div id="opt_mail"></div></td>';
     $h .= '<td><div id="ajax_opt_mail">'.$vis_opt_mail.'</div></td>';
     $h .= '</tr>';
-   
+
     $h .= '<tr class="odd">';
     $h .= '<td>Pagine del sito senza intestazione (per computer con schermo piccolo)</td>';
     $h .= '<td><div id="opt_snh"></div></td>';
     $h .= '<td><div id="ajax_opt_snh">'.$vis_opt_snh.'</div></td>';
     $h .= '</tr>';
-   
+
     $h .= '<tr>';
     $h .= '<td>Stampe senza intestazione (per fare stare più dati sui fogli)</td>';
     $h .= '<td><div id="opt_print"></div></td>';
     $h .= '<td><div id="ajax_opt_print"></div></td>';
     $h .= '</tr>';
-   
-   
+
+
     $h .= '</tbody>';
     $h .= '<tfoot>';
     $h .= '</tfoot>';
-    $h .= '</table>';        
-    
+    $h .= '</table>';
+
     return $h;
 }
 
 function utenti_permessi_sito($c1){
-    
+
 $user_permission = leggi_permessi_utente($c1);
-    
+
 // GESTIONE DEI PERMESSI ----------------------------------------------------
 if($user_permission & perm::puo_creare_ordini){$checked_1=" CHECKED ";}
 if($user_permission & perm::puo_partecipare_ordini){$checked_2=" CHECKED ";}
-if($user_permission & perm::puo_creare_gas){$hidden_3=perm::puo_creare_gas;}      
+if($user_permission & perm::puo_creare_gas){$hidden_3=perm::puo_creare_gas;}
 if($user_permission & perm::puo_creare_ditte){$checked_4=" CHECKED ";}
 if($user_permission & perm::puo_creare_listini){$checked_5=" CHECKED ";}
 if($user_permission & perm::puo_mod_perm_user_gas){$hidden_6=perm::puo_mod_perm_user_gas;}
 if($user_permission & perm::puo_avere_amici){$checked_7=" CHECKED ";}
 if($user_permission & perm::puo_postare_messaggi){$checked_8=" CHECKED ";}
-if($user_permission & perm::puo_eliminare_messaggi){$hidden_9=perm::puo_eliminare_messaggi;}      
+if($user_permission & perm::puo_eliminare_messaggi){$hidden_9=perm::puo_eliminare_messaggi;}
 if($user_permission & perm::puo_gestire_utenti){$hidden_10=perm::puo_gestire_utenti;}
 if($user_permission & perm::puo_vedere_tutti_ordini){$hidden_11=perm::puo_vedere_tutti_ordini;}
 if($user_permission & perm::puo_gestire_la_cassa){$hidden_12=perm::puo_gestire_la_cassa;}
-if($user_permission & perm::puo_operare_con_crediti){$checked_13=" CHECKED ";} 
+if($user_permission & perm::puo_operare_con_crediti){$checked_13=" CHECKED ";}
 if($user_permission & perm::puo_vedere_retegas){$hidden_14=perm::puo_vedere_retegas;}
 if($user_permission & perm::puo_gestire_retegas){$hidden_15=perm::puo_gestire_retegas;}
 
 $h_table .='
 <div class="rg_widget rg_widget_helper">
 <h3>Permessi utente</h3>
-<form  name="Modifica permessi" method="POST" action="utenti_form.php">
+<form  name="Modifica permessi" method="POST" action="">
 <table>
     <tr class="odd">
         <th>Può creare ordini</th>
@@ -317,7 +319,7 @@ $h_table .='
         <tr class="odd">
         <th >Può operare con crediti da referente ordine</th>
         <td><input '.$checked_13.'type="checkbox" name="p_o_c" value="'.perm::puo_operare_con_crediti.'"</td>
-    </tr>    
+    </tr>
 <table>
 
 <input type="hidden" name="p_c_g"  value="'.$hidden_3.'">
@@ -328,7 +330,7 @@ $h_table .='
 <input type="hidden" name="p_g_c"  value="'.$hidden_12.'">
 <input type="hidden" name="p_v_rg"  value="'.$hidden_14.'">
 <input type="hidden" name="p_g_rg"  value="'.$hidden_15.'">
- 
+
 <input type="hidden" name="do"  value="change_user_permissions">
 <input type="hidden" name="id_utente_permessi"  value="'.$c1.'">
 <center>
@@ -336,25 +338,25 @@ $h_table .='
 </center>
 </form>
 </div>
-   
+
 ';
 
 return $h_table;
-    
+
 }
 function utenti_permessi_sito_zeus($c1){
     global $RG_addr;
-    
+
     $user_permission = leggi_permessi_utente($c1);
 
         // GESTIONE DEI PERMESSI ----------------------------------------------------
 if($user_permission & perm::puo_creare_ordini){$checked_1=" CHECKED ";}
-if($user_permission & perm::puo_partecipare_ordini){$checked_2=" CHECKED ";}     
+if($user_permission & perm::puo_partecipare_ordini){$checked_2=" CHECKED ";}
 if($user_permission & perm::puo_creare_gas){$checked_3=" CHECKED ";}
 if($user_permission & perm::puo_creare_ditte){$checked_4=" CHECKED ";}
 if($user_permission & perm::puo_creare_listini){$checked_5=" CHECKED ";}
 if($user_permission & perm::puo_mod_perm_user_gas){$checked_6=" CHECKED ";}
-if($user_permission & perm::puo_avere_amici){$checked_7=" CHECKED ";} 
+if($user_permission & perm::puo_avere_amici){$checked_7=" CHECKED ";}
 if($user_permission & perm::puo_postare_messaggi){$checked_8=" CHECKED ";}
 if($user_permission & perm::puo_eliminare_messaggi){$checked_9=" CHECKED ";}
 if($user_permission & perm::puo_gestire_utenti){$checked_10=" CHECKED ";}
@@ -363,7 +365,7 @@ if($user_permission & perm::puo_gestire_la_cassa){$checked_12=" CHECKED ";}
 if($user_permission & perm::puo_operare_con_crediti){$checked_13=" CHECKED ";}
 if($user_permission & perm::puo_vedere_retegas){$checked_14=" CHECKED ";}
 if($user_permission & perm::puo_gestire_retegas){$checked_15=" CHECKED ";}
-      
+
 $h_table .='
  <div class="rg_widget rg_widget_helper">
 <h3>Permessi utente</h3>
@@ -406,8 +408,8 @@ $h_table .='
         <th >Può operare con crediti da referente ordine</th>
         <td><input '.$checked_13.'type="checkbox" name="p_o_c" value="'.perm::puo_operare_con_crediti.'"</td>
     </tr>
-    
-    
+
+
     </tr>
     <tr>
         <th style="text-align:left;">PERMESSI AVANZATI</th>
@@ -445,34 +447,34 @@ $h_table .='
         <tr class="odd">
         <th >Può vedere statistiche di ReteGAS</th>
         <td><input '.$checked_14.'type="checkbox" name="p_v_rg" value="'.perm::puo_vedere_retegas.'"</td>
-    </tr>    
+    </tr>
     </tr>
         <tr class="odd">
         <th >Può GESTIRE Tutta Retegas.AP (Se ti togli questa opzione non potrai più rimetterla)</th>
         <td><input '.$checked_15.'type="checkbox" name="p_g_rg" value="'.perm::puo_gestire_retegas.'"</td>
     </tr>
-    
+
 <table>
 <input type="hidden" name="do"  value="change_user_permissions_zeus">
 <input type="hidden" name="id_utente_permessi"  value="'.$c1.'">
 <input class="large black awesome" style="margin:20px;text-align:right" type="submit" value="Salva">
 </form>
-</div>    
+</div>
 ';
 
-return $h_table;    
+return $h_table;
 }
 
 function utenti_form_public($id,$gas){
-    
+
      global $db,$RG_addr,$id_user;
   // QUERY
-      
-      
-        
+
+
+
 
       $my_query="SELECT * FROM maaking_users WHERE  (userid='$id') LIMIT 1";
-      
+
       // SQL NOMI DEI CAMPI
       $d1="userid";
       $d2="fullname";
@@ -483,40 +485,40 @@ function utenti_form_public($id,$gas){
       $d7="tel";
       $d8="profile";
       $d9="id_gas";
-      
+
       // TITOLO TABELLA
       $titolo_tabella="Scheda pubblica utente";
-      
+
       // INTESTAZIONI CAMPI
       $h1="ID";
       $h2="Nome";
       $h3="";
       $h4="Indirizzo";
       $h5="Città";
-      $h6="mail";      
+      $h6="mail";
       $h7="telefono";
       $h8="note";
       $h9="GAS";
 
-      
+
       // COSTRUZIONE TABELLA  -----------------------------------------------------------------------
-      
+
 
       $result = mysql_query($my_query);
       if(mysql_numrows($result)==0){
           $h_table .= "<div class=\"rg_widget rg_widget_helper\">
-            <div style=\"margin-bottom:16px;\">Nessun utente con questo codice</div> 
+            <div style=\"margin-bottom:16px;\">Nessun utente con questo codice</div>
              ";
           return $h_table;
           exit;
       }
-      
-      $row = mysql_fetch_array($result);  
-      
-      //$h_table .= ditte_menu_2($id,$id_user);
-      
 
-         
+      $row = mysql_fetch_array($result);
+
+      //$h_table .= ditte_menu_2($id,$id_user);
+
+
+
          // VALORI DELLE CELLE da DB---------------------
               $c1 = $row["$d1"];
               $c2 = $row["$d2"];
@@ -527,15 +529,15 @@ function utenti_form_public($id,$gas){
               $c7 = $row["$d7"];
               $c8 = $row["$d8"];
               $c9 = $row["$d9"];
-              
+
               $user_permission = $row["user_permission"];
-              
+
        if (($c9<>$gas) & (user_level($id_user)<>5)){
-          $c3 =  $c4 = $c5 = $c6 = $c7 = $c8 = "Non disponibile"; 
-           
+          $c3 =  $c4 = $c5 = $c6 = $c7 = $c8 = "Non disponibile";
+
        }
-       $c9 = gas_nome($c9);       
-  
+       $c9 = gas_nome($c9);
+
 if(read_option_text($id,"_USER_OPT_SEND_MAIL")<>"NO"){
     $submit="Scrivi un messaggio e premi <input class=\"large magenta awesome\" style=\"margin-top:1em;\" type=\"submit\" value=\"Invia\">";
     $textarea ="<textarea rows=\"5\" name=\"msg_mail\" cols=\"30\" class=\"ckeditor\"></textarea>";
@@ -543,10 +545,10 @@ if(read_option_text($id,"_USER_OPT_SEND_MAIL")<>"NO"){
     $submit = "&nbsp;</h4>";
     $textarea = "<h3>Questo utente non vuole ricevere mail dal sito.</h3>";
 }
-  
+
 $h_table .= "<div class=\"rg_widget rg_widget_helper\">
-            <h3>$titolo_tabella</h3> 
-             ";         
+            <h3>$titolo_tabella</h3>
+             ";
 $h_table .=  "<table>
         <tr  class=\"odd sinistra\">
             <th>$h2</th>
@@ -584,21 +586,21 @@ $h_table .=  "<table>
         </table>
         </div>";
       // END TABELLA ----------------------------------------------------------------------------
- 
-return $h_table;  
-    
+
+return $h_table;
+
 }
 function utenti_form_private($id){
-    
+
      global $db,$RG_addr;
   // QUERY
-      
-    
-      
-        
+
+
+
+
 
       $my_query="SELECT * FROM maaking_users WHERE  (userid='$id') LIMIT 1";
-      
+
       // SQL NOMI DEI CAMPI
       $d1="userid";
       $d2="fullname";
@@ -609,49 +611,49 @@ function utenti_form_private($id){
       $d7="tel";
       $d8="profile";
       $d9="id_gas";
-      
+
       // TITOLO TABELLA
       $titolo_tabella="Scheda personale";
-      
+
       // INTESTAZIONI CAMPI
       $h1="ID";
       $h2="Nome";
       $h3="";
       $h4="Indirizzo";
       $h5="Città";
-      $h6="mail";      
+      $h6="mail";
       $h7="telefono";
       $h8="Note";
       $h9="GAS";
-      
+
       //  LARGHEZZA E CLASSI COLONNE
       $col_1="";
-      $col_2=""; 
+      $col_2="";
 
 
-      
-      
-      
+
+
+
       // OPZIONI
-      
+
       // COSTRUZIONE TABELLA  -----------------------------------------------------------------------
       global $db;
 
       $result = mysql_query($my_query);
       if(mysql_numrows($result)==0){
           $h_table .= "<div class=\"rg_widget rg_widget_helper\">
-            <div style=\"margin-bottom:16px;\">Nessun utente con questo codice</div> 
+            <div style=\"margin-bottom:16px;\">Nessun utente con questo codice</div>
              ";
           return $h_table;
           exit;
       }
-      
-      $row = mysql_fetch_array($result);  
-      
-      //$h_table .= ditte_menu_2($id,$id_user);
-      
 
-         
+      $row = mysql_fetch_array($result);
+
+      //$h_table .= ditte_menu_2($id,$id_user);
+
+
+
          // VALORI DELLE CELLE da DB---------------------
               $c1 = $row["$d1"];
               $c2 = $row["$d2"];
@@ -669,16 +671,16 @@ function utenti_form_private($id){
               }else{
                   $c12 = "Indirizzo NON riconosciuto";
               }
-              
-              $user_permission = $row["user_permission"];
-              
 
-       $c9 = gas_nome($c9);       
-  
+              $user_permission = $row["user_permission"];
+
+
+       $c9 = gas_nome($c9);
+
 
 $h_table .= "<div class=\"rg_widget rg_widget_helper\">
-            <h3>$titolo_tabella</h3> 
-             ";         
+            <h3>$titolo_tabella</h3>
+             ";
 $h_table .=  "<table>
 
         <tr  class=\"odd\">
@@ -728,21 +730,21 @@ $h_table .=  "<table>
         </table>
 ";
       // END TABELLA ----------------------------------------------------------------------------
- 
-return $h_table;  
-    
+
+return $h_table;
+
 }
 
 function utenti_form_public_small($id,$gas){
-    
+
      global $db,$RG_addr,$id_user;
   // QUERY
-      
-      
-        
+
+
+
 
       $my_query="SELECT * FROM maaking_users WHERE  (userid='$id') LIMIT 1";
-      
+
       // SQL NOMI DEI CAMPI
       $d1="userid";
       $d2="fullname";
@@ -753,49 +755,49 @@ function utenti_form_public_small($id,$gas){
       $d7="tel";
       $d8="profile";
       $d9="id_gas";
-      
+
       // TITOLO TABELLA
       $titolo_tabella="Scheda pubblica utente";
-      
+
       // INTESTAZIONI CAMPI
       $h1="ID";
       $h2="Nome";
       $h3="";
       $h4="Indirizzo";
       $h5="Città";
-      $h6="mail";      
+      $h6="mail";
       $h7="telefono";
       $h8="note";
       $h9="GAS";
-      
+
       //  LARGHEZZA E CLASSI COLONNE
       $col_1="";
-      $col_2=""; 
+      $col_2="";
 
 
-      
-      
-      
+
+
+
       // OPZIONI
-      
+
       // COSTRUZIONE TABELLA  -----------------------------------------------------------------------
       global $db;
 
       $result = mysql_query($my_query);
       if(mysql_numrows($result)==0){
           $h_table .= "<div class=\"rg_widget rg_widget_helper\">
-            <div style=\"margin-bottom:16px;\">Nessun utente con questo codice</div> 
+            <div style=\"margin-bottom:16px;\">Nessun utente con questo codice</div>
              ";
           return $h_table;
           exit;
       }
-      
-      $row = mysql_fetch_array($result);  
-      
-      //$h_table .= ditte_menu_2($id,$id_user);
-      
 
-         
+      $row = mysql_fetch_array($result);
+
+      //$h_table .= ditte_menu_2($id,$id_user);
+
+
+
          // VALORI DELLE CELLE da DB---------------------
               $c1 = $row["$d1"];
               $c2 = $row["$d2"];
@@ -806,19 +808,19 @@ function utenti_form_public_small($id,$gas){
               $c7 = $row["$d7"];
               $c8 = $row["$d8"];
               $c9 = $row["$d9"];
-              
+
               $user_permission = $row["user_permission"];
-              
+
        if (($c9<>$gas) & (user_level($id_user)<>5)){
-          $c3 =  $c4 = $c5 = $c6 = $c7 = $c8 = "Non disponibile"; 
-           
+          $c3 =  $c4 = $c5 = $c6 = $c7 = $c8 = "Non disponibile";
+
        }
-       $c9 = gas_nome($c9);       
-  
+       $c9 = gas_nome($c9);
+
 
 $h_table .= "<div class=\"rg_widget rg_widget_helper\">
-            <h3>$titolo_tabella</h3> 
-             ";         
+            <h3>$titolo_tabella</h3>
+             ";
 $h_table .=  "<table>
         <tr  class=\"odd\">
             <th $col_1>$h2</th>
@@ -846,28 +848,28 @@ $h_table .=  "<table>
         </tr>
         </table>
         </div>
-        
+
         ";
       // END TABELLA ----------------------------------------------------------------------------
- 
-return $h_table;  
-    
+
+return $h_table;
+
 }
 
 function utenti_render_form_edit($id_user){
 
-        global $db;     
-        
+        global $db;
+
         global $fullname,
                $indirizzo,
-               $citta,  
+               $citta,
                $mail,
                $telefono;
-               
+
         $query = "SELECT * FROM maaking_users WHERE userid='$id_user' LIMIT 1;";
         $res = $db->sql_query($query);
         $row = $db->sql_fetchrow($res);
-        
+
         if(!isset($fullname)){
             $fullname   = $row["fullname"];
         }
@@ -882,32 +884,32 @@ function utenti_render_form_edit($id_user){
         }
         if(!isset($telefono)){
             $telefono   = $row["tel"];
-        }        
+        }
 
-        $help_fullname='Ricorda che Retegas.AP richiede un nome reale e completo. 
-        Se da verifiche risultasse non essere coerente con la realtà, Retegas.AP o chi da essa delegato potrà
+        $help_fullname='Ricorda che ReteDES richiede un nome reale e completo.
+        Se da verifiche risultasse non essere coerente con la realtà, ReteDES o chi da essa delegato potrà
         eliminare l\'account senza alcun preavviso.<br>
         In caso di dubbi consultare il Disclaimer (disclaimer.retegas.info)';
-        $help_indirizzo='Per inserire un indirizzo valido NON usare lettere accentate. Se vuoi provare se sarà accettato prova ad inserirlo in google maps. Se viene visualizzata la tua località allora andrà bene anche per il sito.';
-        $help_citta='La tua città.'; 
-        $help_mail ='La tua mail. Verrà usata per tutte le comunicazioni da parte di Retegas.AP';
+        $help_indirizzo='Dopo aver inserito la via e la città, clicca su \'CERCA\',<br/> se l\'indirizzo viene accettato compare un messaggio';
+        $help_citta='La tua città.';
+        $help_mail ='La tua mail. Verrà usata per tutte le comunicazioni da parte di ReteDES';
         $help_telefono ='Il tuo Recapito telefonico. Vale lo stesso discorso come descritto nel \'nome utente\'';
-        
+
 
         $h = '
         <div class="rg_widget rg_widget_helper">
         <div class="ui-state-error ui-corner-all padding_6px ui-widget-content">
-        Per cambiare username, gas di appartenenza contattare il proprio responsabile retegas.ap.<br>
+        Per cambiare username, gas di appartenenza contattare il proprio responsabile reteDES.<br>
         Per cambiare password usare la pagina apposita.<br>
         Inserendo un indirizzo valido (basta anche solo la città), verrà posizionato un pallino rosso approssimativo sulla mappa del proprio GAS.
         </div>
         <br>
-        
+
         <h3>Modifica i tuoi dati personali</h3>
 
         <form name="modifica ditta" method="POST" action="" class="retegas_form">
 
-        
+
         <div>
         <h4>1</h4>
         <label for="fullname">Puoi modificare il tuo nome...</label>
@@ -918,17 +920,27 @@ function utenti_render_form_edit($id_user){
         <div>
         <h4>2</h4>
         <label for="indirizzo">..o il tuo indirizzo..<br>LEGGI le INF qua a destra !!</label>
-        <input type="text" name="indirizzo" value="'.$indirizzo.'" size="50"></input>
+
+        <input id="address1" type="text" name="indirizzo" value="'.$indirizzo.'" size="50"></input>
         <h5 title="'.$help_indirizzo.'">Inf.</h5>
+
         </div>
+
 
         <div>
         <h4>3</h4>
         <label for="citta">...o la tua città..</label>
-        <input type="text" name="citta" value="'.$citta.'" size="50"></input>
-        <h5 title="'.$help_citta.'">Inf.</h5>
+        <div id="panel" style="display:inline;">
+            <input id="address2" type="text" name="citta" value="'.$citta.'" size="50"></input>
+            <input type="button" value="Cerca" onclick="codeAddress()">
+            <input id="lat" type="hidden" name="lat" value="">
+            <input id="lng" type="hidden" name="lng" value="">
         </div>
-        
+        <h5 title="'.$help_citta.'">Inf.</h5>
+        <div id="ir" style="display:block;">'.$indirizzo_OK.'</div>
+        </div>
+       <div id="map-canvas" style="width:200px;height:200px;display:inline-block;"></div>
+
         <div>
         <h4>4</h4>
         <label for="mail">..oppure puoi cambiare la tua mail</label>
@@ -936,35 +948,35 @@ function utenti_render_form_edit($id_user){
         <h5 title="'.$help_mail.'">Inf.</h5>
         </div>
 
-        
+
         <div>
         <h4>6</h4>
         <label for="telefono">.. qui modifichi il tuo telefono</label>
         <input type="text" name="telefono" value="'.$telefono.'" size="50"></input>
         <h5 title="'.$help_telefono.'">Inf.</h5>
-        </div>        
-                        
+        </div>
+
         <div>
         <h4>7</h4>
         <label for="submit">e infine... </label>
         <input type="submit" name="submit" value="Salva le modifiche !" align="center" >
         <input type="hidden" name="do" value="mod">
-        </div> 
+        </div>
 
 
         </form>
-        </div>';              
+        </div>';
 
 
-        return $h;      
+        return $h;
 
     }
 function utenti_render_form_password($id_user){
 
-        global $db;     
-        
-        
-  
+        global $db;
+
+
+
         $h = '
         <div class="ui-state-error ui-corner-all padding_6px ui-widget-content">
         Una volta cambiata la password, effettuare nuovamente il login.
@@ -978,23 +990,23 @@ function utenti_render_form_password($id_user){
         '.render_form_element_text(1,"old_pwd",$old_pwd,"Inserisci la tua password attuale.","La tua password abituale (quella che usi per il login.)").'
         '.render_form_element_password(2,"new_pwd1",$new_pwd1,"Qui la nuova password","La password che userai da ora in poi").'
         '.render_form_element_password(3,"new_pwd2",$new_pwd2,"E qui ripeti la nuova password","Ripeti la password che userai da qui in poi").'
-        
+
         <div>
         <h4>7</h4>
         <label for="submit">e infine... </label>
         <input type="submit" name="submit" value="Salva la nuova password !" align="center" >
         <input type="hidden" name="do" value="pwd">
-        </div> 
+        </div>
 
 
         </form>
-        </div>';              
+        </div>';
 
 
-        return $h;      
+        return $h;
 
     }
-    
+
 function utenti_gestione_widgets($id_user){
 //echo "USER OPT = $user_options";
 //$opz = leggi_opzioni_sito_utente($id_user);
@@ -1022,9 +1034,9 @@ $user_widgets = unserialize(base64_decode(read_option_text($id_user,"WGO")));
 
 //print_r($user_widgets);
 
-if(!$user_widgets){$user_widgets=array(7,9);};       
-                    
-$checked = "CHECKED"; 
+if(!$user_widgets){$user_widgets=array(7,9);};
+
+$checked = "CHECKED";
 foreach ($user_widgets as $position => $item) :
 
 $en = "";
@@ -1037,27 +1049,27 @@ switch ($item){
                             <td><input '.$checked.' '.$en.' type="hidden" name="wdg[]" value="'.$item.'">Non eliminabile</td>
                         </tr>';
             break;
-            
+
             case 9:
            $h[] ='<tr class="odd sinistra">
                             <th>'.$n.'</th>
                             <td><input '.$checked.' '.$en.' type="hidden" name="wdg[]" value="'.$item.'">Non eliminabile</td>
                         </tr>';
-            break;                                                        
+            break;
             default:
-            
-            
+
+
             $h[] ='<tr class="odd sinistra">
                             <th>'.$n.'</th>
                             <td><input '.$checked.' '.$en.' type="checkbox" name="wdg[]" value="'.$item.'"></td>
                         </tr>';
             break;
         }
-        
 
 
- 
- 
+
+
+
 endforeach;
 
 
@@ -1082,11 +1094,11 @@ if(!in_array($i,$user_widgets)){
                             <th>'.$n.'</th>
                             <td><input '.$checked.' '.$en.' type="hidden" name="wdg[]" value="'.$i.'">Non eliminabile</td>
                         </tr>';
-            break;                                                        
-            default:     
+            break;
+            default:
                 $n = $wi[$i];
-                
-                
+
+
                 $h[] ='<tr class="odd sinistra">
                     <th>'.$n.'</th>
                     <td><input '.$checked.' '.$en.' type="checkbox" name="wdg[]" value="'.$i.'"></td>
@@ -1094,12 +1106,12 @@ if(!in_array($i,$user_widgets)){
             break;
         }
 
-} 
- 
 }
- 
- 
- 
+
+}
+
+
+
 $h_table .='
 <div class="rg_widget rg_widget_helper">
 <h3>Gestione elementi HomePage</h3>
@@ -1110,19 +1122,19 @@ tra le quali il fatto di comparire aperto oppure chiuso. Alcuni elementi non pos
 <table>';
 
 
-foreach ($h as $position => $item) : $h_table .= $item; endforeach; 
-   
+foreach ($h as $position => $item) : $h_table .= $item; endforeach;
+
 $h_table .='</table>
 
- 
+
 <input type="hidden" name="do"  value="change_widgets">
 <center>
 <input class="large green awesome" style="margin:20px;" type="submit" value="Salva le modifiche">
 </center>
 </form>
 </div>
-   
+
 ';
 return $h_table;
-    
-}    
+
+}

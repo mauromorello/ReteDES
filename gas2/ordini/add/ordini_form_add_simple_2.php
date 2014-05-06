@@ -1,6 +1,6 @@
 <?php
 
-   
+
 // immette i file che contengono il motore del programma
 include_once ("../../rend.php");
 include_once ("../../retegas.class.php");
@@ -8,8 +8,8 @@ include_once ("../../retegas.class.php");
 
 // controlla se l'user ha effettuato il login oppure no
 if (!_USER_LOGGED_IN){
-     pussa_via(); 
-}    
+     pussa_via();
+}
 
 //CONTROLLI
 if (!(_USER_PERMISSIONS & perm::puo_creare_ordini)){
@@ -22,14 +22,14 @@ if($do=="add"){
             $empty++;
             $msg .= "Descrizione mancante<br>";
         }
-        
-        
-        $data_chiusura = CAST_TO_INT($giorni_chiusura,0); 
-            
-        //se manca la data di chiusura chiudo l'ordine tra una settimana alle 22:00;  
+
+
+        $data_chiusura = CAST_TO_INT($giorni_chiusura,0);
+
+        //se manca la data di chiusura chiudo l'ordine tra una settimana alle 22:00;
         if(empty($data_chiusura) | $data_chiusura==0){
-            
-            
+
+
             $data_chiusura=date("d/m/Y");
             //echo $data_chiusura."<br>";
             $data_chiusura = gas_mktime($data_chiusura) + (60*60*24*7);
@@ -39,23 +39,23 @@ if($do=="add"){
             $data_chiusura = $data_chiusura ." 22:00";
             //echo $data_chiusura;
 
-        }else{            
+        }else{
            $data_chiusura=date("d/m/Y",gas_mktime(date("d/m/Y")) + (60 * 60 * 24 * $data_chiusura));
-           $data_chiusura = $data_chiusura ." 22:00";  
-        }    
+           $data_chiusura = $data_chiusura ." 22:00";
+        }
 
         if(empty($id_listino) | $id_listino=="" | $id_listino ==0){
             $empty++;
             $msg .= "Listino mancante o non valido<br>";
-        }    
+        }
 
         //NON DATA VALIDA -------------------------------------
         if(!controllodataora($data_chiusura)){
             $logical++;
-            $msg .= "Data chiusura non valida<br>"; 
+            $msg .= "Data chiusura non valida<br>";
         }
-       
-        
+
+
         //-------------------------- PRESO DA ORDINI ADD
         $e_total = $empty + $logical;
 
@@ -64,31 +64,33 @@ if($do=="add"){
             //echo "ZERO ERRORI !!!";
             $data_2 = (int)$id_listino;
             $data_4 = sanitize(trim($descrizione));
-            
+
             //POSTICIPO DI DUEE ORE L'APERTURA
-            $date_now  = date( "d/m/Y H:i" ); 
-            $time_now  = time( $date_now ); 
-            $time_next = $time_now + 2 * 60 * 60; 
-            $date_next = date( "d/m/Y H:i", $time_next); 
-            
-            
+            $date_now  = date( "d/m/Y H:i" );
+            $time_now  = time( $date_now );
+            $time_next = $time_now + 2 * 60 * 60;
+            $date_next = date( "d/m/Y H:i", $time_next);
+
+
             $data_7 = conv_date_to_db($date_next);
             $data_8 = conv_date_to_db($data_chiusura);
-            
+            $data_merce = $data_8;
+
             // L'opzione SOLO CASSATI E' PRESA DAL DEFAULT DELLE OPZIONI CASSA
             $data_20=read_option_gas_text(_USER_ID_GAS,"_GAS_CASSA_DEFAULT_SOLO_CASSATI");
 
             // QUERY INSERT
-            $my_query="INSERT INTO retegas_ordini 
-            (id_listini, 
-            id_utente, 
-            descrizione_ordini, 
-            data_chiusura, 
-            costo_trasporto, 
-            costo_gestione, 
-            min_articoli, 
-            min_scatola, 
-            privato, 
+            $my_query="INSERT INTO retegas_ordini
+            (id_listini,
+            id_utente,
+            descrizione_ordini,
+            data_chiusura,
+            data_merce,
+            costo_trasporto,
+            costo_gestione,
+            min_articoli,
+            min_scatola,
+            privato,
             data_apertura,
             id_stato,
             senza_prezzo,
@@ -100,6 +102,7 @@ if($do=="add"){
             '"._USER_ID."',
             '$data_4',
             '$data_8',
+            '$data_merce',
             '0',
             '0',
             '0',
@@ -117,7 +120,7 @@ if($do=="add"){
             if (is_null($result)){
                 $msg .= "Errore nell'inserimento del record";
                 pussa_via();
-                  
+
             }else{
 
                 // se l'ordine ? stato inserito, allora inserisco anche le referenze
@@ -137,7 +140,7 @@ if($do=="add"){
                 note_referenza,
                 maggiorazione_referenza,
                 maggiorazione_percentuale_referenza)
-                VALUES 
+                VALUES
                 ('$ur',
                 '"._USER_ID."',
                 '$gr',
@@ -145,20 +148,20 @@ if($do=="add"){
                 '0',
                 '".$row_gas["maggiorazione_ordini"]."');");
 
-                
+
                 $nome_ordine = descrizione_ordine_from_id_ordine($ur);
                 $messa = "<b>L'utente $fullname ha creato l'ordine speedy $nome_ordine</b>";
                 log_me($ur,_USER_ID,"ORD","CRE",$messa,0,$my_query);
 
                 $msg .= "L'ordine $ur ($descrizione) è stato creato, partirà il $date_next; C'è tutto il tempo per modificarlo o cancellarlo, prima che una mail venga mandata a tutti i possibili partecipanti.";
-                
+
                 go("sommario",_USER_ID,$msg);
-                
+
             }
 
         }else{
 
-            unset($do);    
+            unset($do);
             $msg .= "Controlla i dati e riprova";
         }
 }
@@ -183,7 +186,7 @@ $r->javascripts[] = "<script>
                                                                             return text.toUpperCase().indexOf(term.toUpperCase())>=0
                                                                             ||
                                                                             String(opt.attr(\"alt\")).toUpperCase().indexOf(term.toUpperCase())>=0}
-                                                                        }); 
+                                                                        });
                         });
                         </script>";
 
@@ -193,8 +196,8 @@ if(_USER_HAVE_MSG){
 }
 if($msg){$r->messaggio=$msg;}
 //Contenuto
-        
-        
+
+
         if(isset($id_listino)){
             $id_ditta = ditta_id_from_listino($id_listino);
             $script_listini='';
@@ -203,7 +206,7 @@ if($msg){$r->messaggio=$msg;}
         if(isset($data_chiusura)){
             $data_chiusura = CAST_TO_INT(gas_mktime($data_chiusura)-gas_mktime(date("d/m/Y"))/24/60/60,0,15);
         }
-        
+
         $query_ditte = "SELECT *
         FROM
         retegas_ditte
@@ -220,42 +223,42 @@ if($msg){$r->messaggio=$msg;}
 
             //CONSTRUCTOR DITTA
             $l .= '<optgroup label="'.$row["descrizione_ditte"].'">';
-        
-        
+
+
             //SCELGO TRA I LISTINI DELLA DITTA NON SCADUTI E NON MAGAZZINO
-            $query_listini = "SELECT * FROM retegas_listini 
+            $query_listini = "SELECT * FROM retegas_listini
                                 WHERE id_ditte='".$row["id_ditte"]."'
                                 AND data_valido > NOW()
                                 AND tipo_listino = 0";
             $res_listini = $db->sql_query($query_listini);
             while ($row_listini = $db->sql_fetchrow($res_listini)){
-                
-                
-                
+
+
+
                 $add = "NO";
-                
+
                 if($row_listini["is_privato"]>0){
                     if(id_gas_user($row_listini["id_utenti"]<>_USER_ID_GAS)){
-                       $add = "NO"; 
+                       $add = "NO";
                     }else{
-                       $add = "SI"; 
+                       $add = "SI";
                     }
                 }else{
                     $add = "SI";
                 }
                 //sanitize($row["descrizione_ditte"])
-                
+
                 if($row_listini["id_listini"]==$id_listino){
                     $selected=" SELECTED ";
                 }else{
                     $selected ="";
                 }
-                
+
                 if($add=="SI"){
                     $l .= '<option '.$selected.' alt="'.sanitize($row["descrizione_ditte"]).'" value="'.$row_listini["id_listini"].'">'.$row_listini["descrizione_listini"].' ('.fullname_from_id($row_listini["id_utenti"]).')</option>';
                 }
             }
-        
+
             $l .="</optgroup>";
         }
 
@@ -279,7 +282,7 @@ if($msg){$r->messaggio=$msg;}
         <label for="selection">Scegli il listino da utilizzare</label>
         <select id="selection" name="id_listino" style="width:50%">
         <option value="0">Nessuna ditta e listino selezionati</OPTION>
-        '.$l.'        
+        '.$l.'
         </select>
         <h5 title="'.$help_ditta.'">Inf.</h5>
         </span>
@@ -305,7 +308,7 @@ if($msg){$r->messaggio=$msg;}
         <input type="submit" name="submit" value="Fai partire l\'ordine" align="center" >
         <input type="hidden" name="do" value="add">
         <h5 title="'.$help_partenza.'">Inf.</h5>
-        </div> 
+        </div>
 
 
         </form>
@@ -320,5 +323,5 @@ $r->contenuto = $h;
 
 //Mando all'utente la sua pagina
 echo $r->create_retegas();
-//Distruggo l'oggetto r    
+//Distruggo l'oggetto r
 unset($r);

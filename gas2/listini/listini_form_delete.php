@@ -10,32 +10,35 @@ include_once ("listini_renderer.php");
 if (!_USER_LOGGED_IN){
      pussa_via(); 
 }    
+        $id_listino = CAST_TO_INT($id_listino);
+        
+        if($id_listino>0){
+            $id_ditta = ditta_id_from_listino($id_listino);
+            
+            
+            if(listino_proprietario($id_listino)<>_USER_ID){
+                $msg="Questo listino non è stato inserito da te, oppure è già stato cancellato.<br> Impossibile eliminarlo";
+                go("form_ditta",_USER_ID,$msg,"?id_ditta=$id_ditta");
+                die();
+            }
+            if(articoli_n_in_listino($id_listino)<>0){
+                $msg="Questo listino non è vuoto.<br> Impossibile eliminarlo";
+                go("form_ditta",_USER_ID,$msg,"?id_ditta=$id_ditta");
+                die();
+            }
+	      //-------------------------------------------------DELETE
+		    if($do=="del"){
 
-
-        if(listino_proprietario($id_listino)<>_USER_ID){
-            $msg="Questo listino non è stato inserito da te, oppure è già stato cancellato.<br> Impossibile eliminarlo";
-            go(sommario,_USER_ID,$msg);
+                
+		    $sql =  "delete from  retegas_listini where retegas_listini.id_listini=$id_listino LIMIT 1;";    
+		    $res = $db->sql_query($sql);
+        		    
+		    $msg = "Eliminazione riuscita";	
+            go("form_ditta",_USER_ID,$msg,"?id_ditta=$id_ditta");
             die();
-        }
-        if(articoli_n_in_listino($id_listino)<>0){
-            $msg="Questo listino non è vuoto.<br> Impossibile eliminarlo";
-            go(sommario,_USER_ID,$msg);
-            die();
-        }
-	  //-------------------------------------------------DELETE
-		if($do=="del"){
-			
-
-		
-		$sql =  "delete from  retegas_listini where retegas_listini.id_listini=$id_listino LIMIT 1;";    
-		$res = $db->sql_query($sql);
-        		
-		$msg = "Eliminazione riuscita";	
-        go(sommario,_USER_ID,$msg);
-        die();
-		}
+		    }
 	  
-	  
+        }
 	  
 	  //-------------------------------------------------------
 	  
@@ -66,7 +69,7 @@ if(_USER_HAVE_MSG){
 //Contenuto
 $h .= listini_form($id_listino,true);
 $h .="<div class=\"rg_widget rg_widget_helper\">
-        <h3>CANECLLA questo listino</h3>
+        <h3>CANCELLA questo listino</h3>
         
         <h4>
             sei sicuro ? <a class=\"awesome red medium\" href=\"?do=del&id_listino=$id_listino\">SI</a>

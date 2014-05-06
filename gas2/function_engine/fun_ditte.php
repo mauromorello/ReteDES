@@ -67,7 +67,16 @@ function ditta_nome($ditta){
   $ret = $db->sql_query($sql);
   $row = $db->sql_fetchrow($ret);
   return $row["descrizione_ditte"]; 
+ }
+function ditta_nome_from_id_ordine($id_ordine){
+    //ID Ditta --> Nome ditta
+  global $db;
+  $sql = "SELECT * FROM `retegas_ditte` WHERE (`retegas_ditte`.`id_ditte`= '".ditta_id_from_listino(listino_ordine_from_id_ordine($id_ordine))."')";
+  $ret = $db->sql_query($sql);
+  $row = $db->sql_fetchrow($ret);
+  return $row["descrizione_ditte"]; 
  } 
+  
 function ditta_data_creazione($ditta){
    
   global $db;

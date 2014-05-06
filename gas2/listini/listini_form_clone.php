@@ -74,13 +74,15 @@ if ($do=="clone"){
 				 data_valido,
 				 id_ditte,
 				 tipo_listino,
-				 id_utenti) VALUES (
+				 id_utenti,
+                 opz_usage) VALUES (
 				 '$data_2',
 				 '$data_3',
 				 '$data_4',
 				 '$data_5',
 				 '$data_6',
-				 '"._USER_ID."');";
+				 '"._USER_ID."',
+                 '".$row_old["opz_usage"]."');";
 		
 		//INSERT BEGIN ---------------------------------------------------------
 		 $result = $db->sql_query($my_query);
@@ -98,7 +100,7 @@ if ($do=="clone"){
         }
         
 		//passo tutti gli articoli che erano associati al vecchio listino
-		$res_articoli = $db->sql_query("SELECT * FROM retegas_articoli WHERE retegas_articoli.id_listini='$id';");
+		$res_articoli = $db->sql_query("SELECT * FROM retegas_articoli WHERE retegas_articoli.id_listini='$id' ORDER BY id_articoli ASC;");
 		while ($row = mysql_fetch_array($res_articoli)){
 		
         		

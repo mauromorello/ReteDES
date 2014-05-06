@@ -63,13 +63,15 @@ $query = "UPDATE retegas_gas
 			  retegas_gas.website_gas = '$website_gas',
 			  retegas_gas.mail_gas = '$mail_gas',
 			  retegas_gas.comunicazione_referenti = '$comunicazione_referenti',
-			  retegas_gas.maggiorazione_ordini = '$maggiorazione_ordini' 
+			  retegas_gas.maggiorazione_ordini = '$maggiorazione_ordini',
+              retegas_gas.gas_gc_lat ='$lat',
+              retegas_gas.gas_gc_lng ='$lng' 
 			  WHERE 
 			  retegas_gas.id_gas = '"._USER_ID_GAS."' LIMIT 1;";
 $result = $db->sql_query($query);
 
 
-        $res_geocode = geocode_gas_table("SELECT * FROM retegas_gas WHERE (id_gas='"._USER_ID_GAS."')");
+        //$res_geocode = geocode_gas_table("SELECT * FROM retegas_gas WHERE (id_gas='"._USER_ID_GAS."')");
         //$res_geocode = geocode_gas_table("SELECT * FROM retegas_gas");
         log_me(0,$id_user,"GAS","MOD","Modificati dati gas",null,$res_geocode."<br>".$sql);
 
@@ -130,6 +132,46 @@ $msg .= "Verifica i dati immessi e riprova<br>";
 	  $retegas->java_scripts_header[]=java_superfish();
       $retegas->java_scripts_bottom_body[] = java_qtip(".retegas_form h5[title]");
 
+      $retegas->java_scripts_header[] = '<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>';
+      $retegas->java_scripts_bottom_body[] ="<script>
+                                                var geocoder;
+                                                var map;
+                                                function initialize() {
+                                                  geocoder = new google.maps.Geocoder();
+                                                  var latlng = new google.maps.LatLng(".geo_des_center(_USER_ID_DES).");
+                                                  var mapOptions = {
+                                                    zoom: 6,
+                                                    center: latlng,
+                                                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                                                  }
+                                                  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+                                                }
+
+                                                function codeAddress() {
+                                                  var address = document.getElementById('address').value;
+                                                  geocoder.geocode( { 'address': address}, function(results, status) {
+                                                    if (status == google.maps.GeocoderStatus.OK) {
+                                                      map.setCenter(results[0].geometry.location);
+                                                      
+                                                      var marker = new google.maps.Marker({
+                                                          map: map,
+                                                          position: results[0].geometry.location
+                                                      });
+                                                      
+                                                      $('#lat').val (results[0].geometry.location.lat());
+                                                      $('#lng').val (results[0].geometry.location.lng());
+                                                      $('#ir').html('INDIRIZZO RICONOSCIUTO');
+                                                    } else {
+                                                      //alert('Geocode was not successful for the following reason: ' + status);
+                                                      $('#ir').html('INDIRIZZO NON RICONOSCIUTO - ' + status);
+                                                    }
+                                                  });
+                                                }
+
+                                                google.maps.event.addDomListener(window, 'load', initialize);
+                                                </script>";
+      
+      
 		  // orizzontale                         
 
 	  // assegno l'eventuale messaggio da proporre
@@ -186,14 +228,24 @@ $msg .= "Verifica i dati immessi e riprova<br>";
         <textarea id="nome_gas" class ="ckeditor" name="nome_gas" cols="28" style="display:inline-block;">'.$nome_gas.'</textarea>
         </div>        
         
-        
+
         <div>
         <h4>3</h4>
-        <label for="sede_gas">...indica il suo indirizzo e la sua città...</label>
-        <input type="text" name="sede_gas" value="'.$sede_gas.'" size="50"></input>
+        <label for="indirizzo">...indica il suo indirizzo e la sua città, fai click su "Cerca" per capire se l\'indirizzo è stato riconosciuto o meno;</label>
+        <div id="panel" style="display:inline;">
+            <input id="address" type="text" name="sede_gas" value="'.$sede_gas.'" size="50"></input>
+            <input type="button" value="Cerca" onclick="codeAddress()">
+            <input id="lat" type="hidden" name="lat" value="">
+            <input id="lng" type="hidden" name="lng" value="">
+            
+        </div>
         <h5 title="'.$help_sede_gas.'">Inf.</h5>
+        <div id="ir" style="display:block;">'.$indirizzo_OK.'</div>
         </div>
 
+        <div id="map-canvas" style="width:200px;height:200px;display:inline-block;"></div>
+ 
+        
         <div>
         <h4>4</h4>
         <label for="website_gas">...scrivi l\'indirizzo internet del suo sito (se ne ha uno)...</label>

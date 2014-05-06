@@ -25,9 +25,16 @@ $locations_js=Array(// Posizione Javascript
                           "js_tablesorter_pack"     =>$root."js/jquery.tablesorter.pack.js",
                           "js_tablegroup "          =>$root."js/jquery.tablegroup.pack.js",
                           "js_timepicker_addon"     =>$root."js/jquery-ui-timepicker-addon.min.js",
-                          "js_highcharts"           =>$root."js/highcharts_2_3_5/highcharts.src.js",
-                          "js_highcharts_more"      =>$root."js/highcharts_2_3_5/highcharts-more.src.js",
-                          "js_highcharts_export"    =>$root."js/highcharts_2_3_5/modules/exporting.js",
+                          //"js_highcharts"           =>$root."js/highcharts_2_3_5/highcharts.src.js",
+                          //"js_highcharts_more"      =>$root."js/highcharts_2_3_5/highcharts-more.src.js",
+                          //"js_highcharts_export"    =>$root."js/highcharts_2_3_5/modules/exporting.js",
+                          "js_handsomtable"           =>$root."js/handsomtable/dist/jquery.handsontable.full.js",
+
+
+                          "js_highcharts"           =>$root."js/highcharts_3_0_2/highcharts.src.js",
+                          "js_highcharts_more"      =>$root."js/highcharts_3_0_2/highcharts-more.src.js",
+                          "js_highcharts_export"    =>$root."js/highcharts_3_0_2/modules/exporting.js",
+
                           "js_timeline"             =>"http://www.simile-widgets.org/timeline/api/timeline-api.js",
                           //"js_timeline"             =>"http://static.simile.mit.edu/timeline/api-2.3.0/timeline-api.js?bundle=true",
                           "js_head_slide"           =>$root."js/jquery.liquid-slider-1.0.min.js",
@@ -43,11 +50,16 @@ $locations_js=Array(// Posizione Javascript
                           "js_rateit"               =>$root."js/rateit/jquery.rateit.min.js",
                           //"js_timeline"             =>$root."js/timeline_2.3.0/timeline_js/timeline-api.js",
                           //"js_timeline_ajax"        =>$root."js/timeline_2.3.0/ajax/simile-ajax-api.js",
-                          "js_highstocks"           =>$root."js/highstocks_1_2_5/highstock.js",
-                          "js_highstocks_export"    =>$root."js/highstocks_1_2_5/modules/exporting.js",
+
+                          //"js_highstocks"           =>$root."js/highstocks_1_2_5/highstock.js",
+                          //"js_highstocks_export"    =>$root."js/highstocks_1_2_5/modules/exporting.js",
+
+                          "js_highstocks"           =>$root."js/highstocks_1_3_6/highstock.js",
+                          "js_highstocks_export"    =>$root."js/highstocks_1_3_6/modules/exporting.js",
+
                           "js_metadata"             =>$root."js/jquery.metadata.js",
                           "js_superfish"            =>$root."js/superfish-1.4.8/js/superfish.js");
 }
 
-  
+
 ?>

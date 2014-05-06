@@ -85,9 +85,9 @@ if($do=="check_data"){
             if (trim($data[9])<>""){$unici++;}
             
             //CAMPI TESTO
-            $data[10]=sanitize($data[10]); //OPZ1
-            $data[11]=sanitize($data[11]); //OPZ2
-            $data[12]=sanitize($data[12]); //OPZ3
+            //$data[10]=sanitize($data[10]); //OPZ1
+            //$data[11]=sanitize($data[11]); //OPZ2
+            //$data[12]=sanitize($data[12]); //OPZ3
             
             //Controllo articoli doppi
             if (!$data[0]==""){

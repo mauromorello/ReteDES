@@ -4,7 +4,7 @@
 function cassa_add_credits($id_ut){
 
 
-        global $db;     
+        global $db;
         global  $usr,
                 $importo,
                 $descrizione_movimento;
@@ -29,75 +29,75 @@ function cassa_add_credits($id_ut){
         <input type="text" name="importo" value="'.$importo.'" size="20"></input>
         <h5 title="'.$help_importo.'">Inf.</h5>
         </div>
-        
+
         <div>
         <h4>2</h4>
         <label for="descrizione">... eventualmente una nota breve (max 200 caratteri)</label>
         <input type="text" name="descrizione_movimento" value="'.$descrizione_movimento.'" size="50"></input>
         <h5 title="'.$help_descrizione_movimento.'">Inf.</h5>
-        </div> 
-        
-        
-        
-        
+        </div>
+
+
+
+
         <div>
         <h4>3</h4>
         <label for="submit">infine... </label>
         <input type="submit" name="submit" value="Vai alla pagina di conferma" align="center" >
         <input type="hidden" name="do" value="conf">
-        <input type="hidden" name="id_ute" value="'.$id_ut.'"> 
+        <input type="hidden" name="id_ute" value="'.$id_ut.'">
         <h5 title="'.$help_partenza.'">Inf.</h5>
-        </div> 
+        </div>
 
 
         </form>
-        ';              
+        ';
 
 
-        return $h;      
+        return $h;
 
 }
 function cassa_add_credits_confirm($id_ute){
 
 
-        global $db;     
+        global $db;
         global  $usr,
                 $importo,
                 $descrizione_movimento;
 
-        $help_pwd='Per evitare che su un computer lasciato incustodito possano essere effettuate operazioni pericolose.';        
+        $help_pwd='Per evitare che su un computer lasciato incustodito possano essere effettuate operazioni pericolose.';
         $help_partenza ='Ricarica il credito dell\'utente';
         $help_contabilizza ='Se clicchi questa opzione il movimento risulterà subito contabilizzato.';
-        
+
         if(read_option_gas_text(_USER_ID_GAS,"_GAS_CASSA_USE_PASSWORD_CONFIRM")=="SI"){
             $check_pwd ='<div>
                             <h4>1</h4>
                             <label for="pwd">Inserisci la tua password</label>
                             <input type="password" name="pwd" value="" size="20"></input>
                             <h5 title="'.$help_pwd.'">Inf.</h5>
-                        </div>';    
+                        </div>';
         }else{
-            $check_pwd ="";    
+            $check_pwd ="";
         }
-                
+
         $h2 ='
         <div class="retegas_form ui-corner-all">
         <h3>Richiesta di conferma operazione</h3>
         <strong>Stai per aggiungere '.$importo.' Euro al credito di '.fullname_from_id($id_ute).';<br>
         </strong>
         <br>
-        
+
         <form name="add_credit" method="POST" action="">
-        
+
         '.$check_pwd.'
-        
+
         <div>
             <h4>2</h4>
             <label for="contabilizza">Contabilizza subito</label>
             <input type="checkbox" name="contabilizza" value="si" size="20"></input>
             <h5 title="'.$help_contabilizza.'">Inf.</h5>
         </div>
-        
+
         <div>
         <h4>3</h4>
         <label for="submit">infine... </label>
@@ -111,25 +111,147 @@ function cassa_add_credits_confirm($id_ute){
         </div>
 
         </form>
-        
+
         <h5>
         oppure <a class="awesome medium red" href="">Abbandona</a>
         </h5>
         <br>
         <br>
         </div>
-        ';        
+        ';
 
-        return $h2;      
+        return $h2;
 
 }
 
+//SOTTRAI CREDITO UTENTE
+function cassa_sub_credits($id_ut){
 
+
+        global $db;
+        global  $usr,
+                $importo,
+                $descrizione_movimento;
+
+
+
+        $help_descrizione_movimento='Note sul movimento';
+        //$help_ditta ='Seleziona una ditta tra quelle con listini disponibili';
+        //$help_listino ='Seleziona un listino associato alla ditta scelta in precedenza tra quelli disponibili';
+        //$help_data_chiusura='Scegli quando l\'ordine deve chiudersi;<br>Se lasciato vuoto, si chiuderà tra una settimana alle 22.00';
+        $help_partenza = 'Qualsiasi errore di scarico potrà essere rettificato successivamente';
+
+
+        $h = '<div class="retegas_form ui-corner-all">
+        <h3>Sottrai credito a '.fullname_from_id($id_ut).'</h3>
+
+        <form name="sub_credit" method="POST" action="">
+
+        <div>
+        <h4>1</h4>
+        <label for="codice">Inserisci il credito da scaricare</label>
+        <input type="text" name="importo" value="'.$importo.'" size="20"></input>
+        <h5 title="'.$help_importo.'">Inf.</h5>
+        </div>
+
+        <div>
+        <h4>2</h4>
+        <label for="descrizione">... eventualmente una nota breve (max 200 caratteri)</label>
+        <input type="text" name="descrizione_movimento" value="'.$descrizione_movimento.'" size="50"></input>
+        <h5 title="'.$help_descrizione_movimento.'">Inf.</h5>
+        </div>
+
+
+
+
+        <div>
+        <h4>3</h4>
+        <label for="submit">infine... </label>
+        <input type="submit" name="submit" value="Vai alla pagina di conferma" align="center" >
+        <input type="hidden" name="do" value="conf">
+        <input type="hidden" name="id_ute" value="'.$id_ut.'">
+        <h5 title="'.$help_partenza.'">Inf.</h5>
+        </div>
+
+
+        </form>
+        ';
+
+
+        return $h;
+
+}
+function cassa_sub_credits_confirm($id_ute){
+
+
+        global $db;
+        global  $usr,
+                $importo,
+                $descrizione_movimento;
+
+        $help_pwd='Per evitare che su un computer lasciato incustodito possano essere effettuate operazioni pericolose.';
+        $help_partenza ='Ricarica il credito dell\'utente';
+        $help_contabilizza ='Se clicchi questa opzione il movimento risulterà subito contabilizzato.';
+
+        if(read_option_gas_text(_USER_ID_GAS,"_GAS_CASSA_USE_PASSWORD_CONFIRM")=="SI"){
+            $check_pwd ='<div>
+                            <h4>1</h4>
+                            <label for="pwd">Inserisci la tua password</label>
+                            <input type="password" name="pwd" value="" size="20"></input>
+                            <h5 title="'.$help_pwd.'">Inf.</h5>
+                        </div>';
+        }else{
+            $check_pwd ="";
+        }
+
+        $h2 ='
+        <div class="retegas_form ui-corner-all">
+        <h3>Richiesta di conferma operazione</h3>
+        <strong>Stai per togliere '.$importo.' Euro al credito di '.fullname_from_id($id_ute).';<br>
+        </strong>
+        <br>
+
+        <form name="sub_credit" method="POST" action="">
+
+        '.$check_pwd.'
+
+        <div>
+            <h4>2</h4>
+            <label for="contabilizza">Contabilizza subito</label>
+            <input type="checkbox" name="contabilizza" value="si" size="20"></input>
+            <h5 title="'.$help_contabilizza.'">Inf.</h5>
+        </div>
+
+        <div>
+        <h4>3</h4>
+        <label for="submit">infine... </label>
+        <input type="submit" name="submit" value="Conferma operazione" align="center" >
+        <input type="hidden" name="importo" value="'.$importo.'">
+        <input type="hidden" name="descrizione_movimento" value="'.$descrizione_movimento.'">
+        <input type="hidden" name="do" value="sub">
+        <input type="hidden" name="validation" value ="'.mimmo_encode(time()).'">
+        <input type="hidden" name="id_ute" value="'.$id_ute.'">
+        <h5 title="'.$help_partenza.'">Inf.</h5>
+        </div>
+
+        </form>
+
+        <h5>
+        oppure <a class="awesome medium red" href="">Abbandona</a>
+        </h5>
+        <br>
+        <br>
+        </div>
+        ';
+
+        return $h2;
+
+}
 //PAGA UNA DITTA
 function cassa_pay_ditta(){
 
 
-        global $db;     
+        global $db;
         global  $id_ordine,
                 $importo,
                 $descrizione_movimento,
@@ -155,22 +277,22 @@ function cassa_pay_ditta(){
         <input type="text" name="importo" value="'.$importo.'" size="20"></input>
         <h5 title="'.$help_importo.'">Inf.</h5>
         </div>
-        
+
         <div>
         <h4>2</h4>
         <label for="descrizione">... eventualmente una nota breve (max 200 caratteri)</label>
         <input type="text" name="descrizione_movimento" value="'.$descrizione_movimento.'" size="50"></input>
         <h5 title="'.$help_descrizione_movimento.'">Inf.</h5>
-        </div> 
-        
+        </div>
+
         <div>
         <h4>3</h4>
         <label for="numero_documento">Se esiste indicare il numero del documento (fattura, bolla)</label>
         <input type="text" name="numero_documento" value="'.$numero_documento.'" size="50"></input>
         <h5 title="'.$help_numero_documento.'">Inf.</h5>
         </div>
-        
-        
+
+
         <div>
         <h4>3</h4>
         <label for="submit">dopodichè... </label>
@@ -178,36 +300,36 @@ function cassa_pay_ditta(){
         <input type="hidden" name="do" value="conf">
         <input type="hidden" name="id_ordine" value="'.$id_ordine.'">
         <h5 title="'.$help_partenza.'">Inf.</h5>
-        </div> 
+        </div>
 
 
         </form>
-        ';              
+        ';
 
 
-        return $h;      
+        return $h;
 
 }
 function cassa_pay_ditta_confirm(){
 
 
-        global $db;     
+        global $db;
         global  $id_ordine,
                 $importo,
                 $descrizione_movimento,
                 $numero_documento;
 
-        $help_pwd='Per evitare che su un computer lasciato incustodito possano essere effettuate operazioni pericolose.';        
+        $help_pwd='Per evitare che su un computer lasciato incustodito possano essere effettuate operazioni pericolose.';
         $help_partenza ='Completa il pagamento. E\' ovvio che con questa operazione la ditta non riceverà realmente i soldini...';
         $help_contabilizza ='Se clicchi questa opzione il movimento risulterà subito contabilizzato.';
-                
+
         $h2 ='
         <div class="retegas_form ui-corner-all">
         <h3>Richiesta di conferma operazione</h3>
         <strong>Stai per sottrarre '.$importo.' Euro alla cassa del '.fullname_from_id($id_ute).';<br>
         </strong>
         <br>
-        
+
         <form name="add_credit" method="POST" action="">
         <div>
             <h4>1</h4>
@@ -215,14 +337,14 @@ function cassa_pay_ditta_confirm(){
             <input type="password" name="pwd" value="" size="20"></input>
             <h5 title="'.$help_pwd.'">Inf.</h5>
         </div>
-        
+
         <div>
             <h4>2</h4>
             <label for="contabilizza">Contabilizza subito</label>
             <input type="checkbox" name="contabilizza" value="si" size="20"></input>
             <h5 title="'.$help_contabilizza.'">Inf.</h5>
         </div>
-        
+
         <div>
         <h4>3</h4>
         <label for="submit">infine... </label>
@@ -235,16 +357,16 @@ function cassa_pay_ditta_confirm(){
         </div>
 
         </form>
-        
+
         <h5>
         oppure <a class="awesome medium red" href="">Abbandona</a>
         </h5>
         <br>
         <br>
         </div>
-        ';        
+        ';
 
-        return $h2;      
+        return $h2;
 
 }
 
@@ -252,7 +374,7 @@ function cassa_pay_ditta_confirm(){
 function cassa_rett_credits($id_ut){
 
 
-        global $db;     
+        global $db;
         global  $usr,
                 $importo,
                 $descrizione_movimento,
@@ -265,7 +387,7 @@ function cassa_rett_credits($id_ut){
             $chk2="checked";
             $chk1="";
         }
-                
+
 
         $help_descrizione_movimento='Descrizione movimento';
         //$help_ditta ='Seleziona una ditta tra quelle con listini disponibili';
@@ -285,7 +407,7 @@ function cassa_rett_credits($id_ut){
         <input type="text" name="importo" value="'.$importo.'" size="20"></input>
         <h5 title="'.$help_importo.'">Inf.</h5>
         </div>
-        
+
         <div>
         <h4>2</h4>
         <label for="segno_movimento">Il tipo di operazione</label>
@@ -293,21 +415,21 @@ function cassa_rett_credits($id_ut){
         <input type="radio" name="segno_movimento" value="+" '.$chk2.'>Aggiungi Credito
         <h5 title="'.$help_segno_movimento.'">Inf.</h5>
         </div>
-  
+
         <div>
         <h4>3</h4>
         <label for="descrizione">una nota obbligatoria per spiegare il movimento (max 200 caratteri)</label>
         <input type="text" name="descrizione_movimento" value="'.$descrizione_movimento.'" size="50"></input>
         <h5 title="'.$help_descrizione_movimento.'">Inf.</h5>
-        </div> 
-        
+        </div>
+
         <div>
         <h4>4</h4>
         <h5 title="'.$help_note_movimento.'">Inf.</h5>
         <label for="note_movimento">Puoi aggiungere delle note estese.</label>
         <textarea id="note_movimento" class ="ckeditor" name="note_movimento" cols="20" style="display:inline-block;">'.$note_movimento.'</textarea>
-        </div> 
-        
+        </div>
+
         <div>
         <h4>5</h4>
         <label for="submit">poi... </label>
@@ -315,37 +437,37 @@ function cassa_rett_credits($id_ut){
         <input type="hidden" name="do" value="conf">
         <input type="hidden" name="id_ute" value="'.$id_ut.'">
         <h5 title="'.$help_partenza.'">Inf.</h5>
-        </div> 
+        </div>
 
 
         </form>
-        ';              
+        ';
 
 
-        return $h;      
+        return $h;
 
 }
 function cassa_rett_credits_confirm($id_ute){
 
 
-        global $db;     
+        global $db;
         global  $usr,
                 $importo,
                 $descrizione_movimento,
                 $note_movimento,
                 $segno_movimento;
 
-        $help_pwd='Per evitare che su un computer lasciato incustodito possano essere effettuate operazioni pericolose.';        
+        $help_pwd='Per evitare che su un computer lasciato incustodito possano essere effettuate operazioni pericolose.';
         $help_partenza ='Ricarica il credito dell\'utente';
         $help_contabilizza ='Se clicchi questa opzione il movimento risulterà subito contabilizzato.';
-                
+
         $h2 ='
         <div class="retegas_form ui-corner-all">
         <h3>Rettifica credito (pag 2/2)</h3>
         <strong>Stai per rettificare di '.$importo.' Euro il credito di '.fullname_from_id($id_ute).';<br>
         </strong>
         <br>
-        
+
         <form name="add_credit" method="POST" action="">
         <div>
             <h4>1</h4>
@@ -353,21 +475,21 @@ function cassa_rett_credits_confirm($id_ute){
             <input type="password" name="pwd" value="" size="20"></input>
             <h5 title="'.$help_pwd.'">Inf.</h5>
         </div>
-        
+
         <div>
             <h4>2</h4>
             <label for="registra">Registra subito subito</label>
             <input type="checkbox" name="registra" value="si" size="20" CHECKED></input>
             <h5 title="'.$help_registra.'">Inf.</h5>
         </div>
-        
+
         <div>
             <h4>3</h4>
             <label for="contabilizza">Contabilizza subito</label>
             <input type="checkbox" name="contabilizza" value="si" size="20"></input>
             <h5 title="'.$help_contabilizza.'">Inf.</h5>
         </div>
-        
+
         <div>
         <h4>3</h4>
         <label for="submit">infine... </label>
@@ -382,25 +504,25 @@ function cassa_rett_credits_confirm($id_ute){
         </div>
 
         </form>
-        
+
         <h5>
         oppure <a class="awesome medium red" href="">Abbandona</a>
         </h5>
         <br>
         <br>
         </div>
-        ';        
+        ';
 
-        return $h2;      
+        return $h2;
 
 }
 
 
 function cassa_situazione_users_table($id_gas){
-global $db,$RG_addr;      
+global $db,$RG_addr;
 
     $result = mysql_query("SELECT * FROM maaking_users WHERE id_gas='$id_gas' AND isactive=1;");
-    $totalrows = mysql_num_rows($result);     
+    $totalrows = mysql_num_rows($result);
     $gas_name = gas_nome($id_gas);
 
 
@@ -410,7 +532,7 @@ global $db,$RG_addr;
             <table id=\"output\">
          <thead>
          <tr>
-         <th>&nbsp;</th>         
+         <th>&nbsp;</th>
         <th>#</th>
         <th>Nome</th>
         <th>Op. Da Registrare</th>
@@ -418,17 +540,17 @@ global $db,$RG_addr;
         <th>Saldo in attesa</th>
         <th>Saldo Registrato</th>
         <th>Saldo Contabilizzato</th>
-        <th>Saldo Attuale</th> 
+        <th>Saldo Attuale</th>
         </tr>
         </thead>
         <tbody>";
 
-       $riga=0;  
+       $riga=0;
 
          while ($row = mysql_fetch_array($result)){
-            
-            if(read_option_text($row["userid"],"_USER_USA_CASSA")){ 
-             
+
+            if(read_option_text($row["userid"],"_USER_USA_CASSA")){
+
                 $riga++;
                 $d1 = "id_gas";
                 $id_utente = $row["userid"];
@@ -437,19 +559,19 @@ global $db,$RG_addr;
                 $saldo_a = cassa_saldo_utente_in_attesa($id_utente);
                 $saldo_r = cassa_saldo_utente_registrato($id_utente);
                 $saldo_t = cassa_saldo_utente_totale($id_utente);
-                $op1='<a class="awesome small celeste" href="'.$RG_addr["movimenti_cassa_users"].'?id_utente='.mimmo_encode($id_utente).'">M</a>'; 
-                
+                $op1='<a class="awesome small celeste" href="'.$RG_addr["movimenti_cassa_users"].'?id_utente='.mimmo_encode($id_utente).'">M</a>';
+
                 $h.= "
                 <tr>
                 <td $col_1>$op1</td>
-                <td $col_1>$id_utente</td> 
+                <td $col_1>$id_utente</td>
                 <td $col_2><a href=\"".$RG_addr["pag_users_form"]."?id_utente=".mimmo_encode($id_utente)."\">$fullname</a></td>
                 <td $col_3>&nbsp;</td>
                 <td $col_4>&nbsp;</td>
                 <td $col_5>$saldo_a</td>
                 <td $col_5>$saldo_r</td>
                 <td $col_5>$saldo_c</td>
-                <td $col_5>$saldo_t</td>   
+                <td $col_5>$saldo_t</td>
                 </tr>";
             }
          }//end while
@@ -458,15 +580,15 @@ global $db,$RG_addr;
          $h.= "
          </tbody>
          </table>";
-         return $h;    
-    
-    
+         return $h;
+
+
 }
 function cassa_movimenti_users_table($id_user){
-global $db,$RG_addr,$__movcas;      
+global $db,$RG_addr,$__movcas;
 
     $result = mysql_query("SELECT * FROM retegas_cassa_utenti WHERE id_utente='$id_user' ORDER BY id_cassa_utenti ASC;");
-    $totalrows = mysql_num_rows($result);     
+    $totalrows = mysql_num_rows($result);
     $fullname = fullname_from_id($id_user);
 
 
@@ -475,7 +597,7 @@ global $db,$RG_addr,$__movcas;
             <table id=\"output\">
          <thead>
          <tr>
-        <th>&nbsp;</th>          
+        <th>&nbsp;</th>
         <th>#</th>
         <th data-sorter=\"shortDate\">Data</th>
         <th>Tipo</th>
@@ -485,12 +607,12 @@ global $db,$RG_addr,$__movcas;
         <th>Ordine</th>
         <th>Cassiere</th>
         <th>REG</th>
-        <th>CON</th> 
+        <th>CON</th>
         </tr>
         </thead>
         <tbody>";
 
-       $riga=0;  
+       $riga=0;
 
          while ($row = mysql_fetch_array($result)){
          $riga++;
@@ -509,7 +631,7 @@ global $db,$RG_addr,$__movcas;
          if($row["id_ordine"]<>0){
             $ordine_op = $row["id_ordine"] . "<br><span class=\"small_link\">" . descrizione_ordine_from_id_ordine($row["id_ordine"])."</span>";
          }else{
-            $ordine_op = null; 
+            $ordine_op = null;
          }
          $cassiere_op = fullname_from_id($row["id_cassiere"]);
          if($row["registrato"]=="si"){
@@ -525,12 +647,12 @@ global $db,$RG_addr,$__movcas;
          }else{
              $CON = "NO";
          }
-         
-         
+
+
             $h.= "
             <tr>
             <td $col_1>$pal</td>
-            <td $col_1><a class=\"awesome small blue\"href=\"".$RG_addr["cassa_movimento_singolo"]."?id_movimento=$id_op\">$id_op</a></td> 
+            <td $col_1><a class=\"awesome small blue\"href=\"".$RG_addr["cassa_movimento_singolo"]."?id_movimento=$id_op\">$id_op</a></td>
             <td $col_1>$data_op</td>
             <td $col_1>$tipo_op</td>
             <td $col_5>$credito_op</td>
@@ -539,7 +661,7 @@ global $db,$RG_addr,$__movcas;
             <td $col_1>$ordine_op</td>
             <td $col_1>$cassiere_op</td>
             <td $col_1>$REG</td>
-            <td $col_1>$CON</td>   
+            <td $col_1>$CON</td>
             </tr>";
 
          }//end while
@@ -548,25 +670,25 @@ global $db,$RG_addr,$__movcas;
          $h.= "
          </tbody>
          </table>";
-         return $h;    
-    
-    
+         return $h;
+
+
 }
 function cassa_movimenti_gas_table($id_gas, $filter = null){
-global $db,$RG_addr,$__movcas;      
+global $db,$RG_addr,$__movcas;
 
     if(is_empty($filter)){
         $filter = " WHERE id_gas='$id_gas' ";
     }else{
-        $filter = $filter ." AND id_gas='$id_gas' "; 
+        $filter = $filter ." AND id_gas='$id_gas' ";
     }
 
     $result = $db->sql_query("SELECT * FROM retegas_cassa_utenti $filter ORDER BY id_cassa_utenti DESC;");
-    $totalrows = mysql_num_rows($result);     
+    $totalrows = mysql_num_rows($result);
     $fullname = fullname_from_id($id_user);
 
-    
-    
+
+
 
     $h .= " <div class=\"rg_widget rg_widget_helper\">
             <h3>Tutti i movimenti inseriti al ".date("d/m/Y H:i")."</h3>
@@ -577,13 +699,13 @@ global $db,$RG_addr,$__movcas;
               <label for=\"data_al\">Al (escluso)</label>
               <input id=\"data_al\" type=\"datetime\" name=\"data_al\">
               <input type=\"submit\" value=\"filtra\">
-            
+
             </form>
-            
+
             <table id=\"output\" class=\"medium_size\">
          <thead>
          <tr>
-        <th>&nbsp</th>          
+        <th>&nbsp</th>
         <th>#</th>
         <th>Utente</th>
         <th data-sorter=\"shortDate\">Data</th>
@@ -595,12 +717,12 @@ global $db,$RG_addr,$__movcas;
         <th>Ditta</th>
         <th>Cassiere</th>
         <th>REG</th>
-        <th>CON</th> 
+        <th>CON</th>
         </tr>
         </thead>
         <tbody>";
 
-       $riga=0;  
+       $riga=0;
 
          while ($row = mysql_fetch_array($result)){
          $riga++;
@@ -620,7 +742,7 @@ global $db,$RG_addr,$__movcas;
          $cassiere_op = fullname_from_id($row["id_cassiere"]);
          $ditta ="<a ".rg_tooltip(ditta_nome($row["id_ditta"])).">".$row["id_ditta"]."</a>";
          $utente = fullname_from_id($row["id_utente"]);
-         
+
          if($row["registrato"]=="si"){
              $REG = "SI<br><span class=\"small_link\">".conv_datetime_from_db($row["data_registrato"])."</span>";
              $pal = '<IMG SRC="'.$RG_addr["img_pallino_grigio"].'" ALT="" style="height:16px; width:16px;vertical_align:middle;border=0;">';
@@ -634,15 +756,15 @@ global $db,$RG_addr,$__movcas;
          }else{
              $CON = "NO";
          }
-         
-         $op3 = '<a rel="'.$id_op.'" class="display_full_message">Info...</a>';  
 
-         
+         $op3 = '<a rel="'.$id_op.'" class="display_full_message">Info...</a>';
+
+
             $h.= "
             <tr>
             <td $col_1>$pal</td>
             <td $col_1><a class=\"awesome small blue\"href=\"".$RG_addr["cassa_movimento_singolo"]."?id_movimento=$id_op\">$id_op</a></td>
-            <td $col_1>$utente</td> 
+            <td $col_1>$utente</td>
             <td $col_1>$data_op</td>
             <td $col_1>$tipo_op</td>
             <td $col_5>$credito_op</td>
@@ -652,7 +774,7 @@ global $db,$RG_addr,$__movcas;
             <td $col_1>$ditta</td>
             <td $col_1>$cassiere_op</td>
             <td $col_1>$REG</td>
-            <td $col_1>$CON</td>   
+            <td $col_1>$CON</td>
             </tr>";
 
          }//end while
@@ -661,15 +783,15 @@ global $db,$RG_addr,$__movcas;
          $h.= "
          </tbody>
          </table>";
-         return $h;    
-    
-    
+         return $h;
+
+
 }
 function cassa_movimenti_ordine_utente($id_ordine,$id_user){
-global $db,$RG_addr,$__movcas;      
+global $db,$RG_addr,$__movcas;
 
     $result = $db->sql_query("SELECT * FROM retegas_cassa_utenti WHERE id_ordine='$id_ordine' AND id_utente='$id_user';");
-    $totalrows = mysql_num_rows($result);     
+    $totalrows = mysql_num_rows($result);
     $fullname = fullname_from_id($id_user);
 
 
@@ -678,7 +800,7 @@ global $db,$RG_addr,$__movcas;
             <table id=\"output\" class=\"medium_size\">
          <thead>
          <tr>
-        <th>&nbsp</th>          
+        <th>&nbsp</th>
         <th>#</th>
         <th>Utente</th>
         <th data-sorter=\"shortDate\">Data</th>
@@ -690,12 +812,12 @@ global $db,$RG_addr,$__movcas;
         <th>Ditta</th>
         <th>Cassiere</th>
         <th>REG</th>
-        <th>CON</th> 
+        <th>CON</th>
         </tr>
         </thead>
         <tbody>";
 
-       $riga=0;  
+       $riga=0;
 
          while ($row = mysql_fetch_array($result)){
          $riga++;
@@ -715,7 +837,7 @@ global $db,$RG_addr,$__movcas;
          $cassiere_op = fullname_from_id($row["id_cassiere"]);
          $ditta = $row["id_ditta"];
          $utente = fullname_from_id($row["id_utente"]);
-         
+
          if($row["registrato"]=="si"){
              $REG = "SI<br><span class=\"small_link\">".conv_datetime_from_db($row["data_registrato"])."</span>";
              $pal = pallino("grigio");
@@ -729,15 +851,15 @@ global $db,$RG_addr,$__movcas;
          }else{
              $CON = "NO";
          }
-         
-         $op3 = '<a rel="'.$id_op.'" class="awesome small blue display_full_message" style="margin:4px;">Info</a>';  
 
-         
+         $op3 = '<a rel="'.$id_op.'" class="awesome small blue display_full_message" style="margin:4px;">Info</a>';
+
+
             $h.= "
             <tr>
             <td $col_1>$pal</td>
             <td $col_1><a class=\"awesome small blue\"href=\"".$RG_addr["cassa_movimento_sing_ut"]."?id_movimento=$id_op\">$id_op</a></td>
-            <td $col_1>$utente</td> 
+            <td $col_1>$utente</td>
             <td $col_1>$data_op</td>
             <td $col_1>$tipo_op</td>
             <td $col_5>$credito_op</td>
@@ -747,7 +869,7 @@ global $db,$RG_addr,$__movcas;
             <td $col_1>$ditta</td>
             <td $col_1>$cassiere_op</td>
             <td $col_1>$REG</td>
-            <td $col_1>$CON</td>   
+            <td $col_1>$CON</td>
             </tr>";
 
          }//end while
@@ -756,15 +878,15 @@ global $db,$RG_addr,$__movcas;
          $h.= "
          </tbody>
          </table>";
-         return $h;    
-    
-    
+         return $h;
+
+
 }
 function cassa_movimenti_ordine_utente_tipo($id_ordine,$id_user,$id_tipo){
-global $db,$RG_addr,$__movcas;      
+global $db,$RG_addr,$__movcas;
 
     $result = $db->sql_query("SELECT * FROM retegas_cassa_utenti WHERE id_ordine='$id_ordine' AND id_utente='$id_user' AND tipo_movimento='$id_tipo';");
-    $totalrows = mysql_num_rows($result);     
+    $totalrows = mysql_num_rows($result);
     $fullname = fullname_from_id($id_user);
 
 
@@ -773,7 +895,7 @@ global $db,$RG_addr,$__movcas;
             <table id=\"output\" class=\"medium_size\">
          <thead>
          <tr>
-        <th>&nbsp</th>          
+        <th>&nbsp</th>
         <th>#</th>
         <th>Utente</th>
         <th data-sorter=\"shortDate\">Data</th>
@@ -785,12 +907,12 @@ global $db,$RG_addr,$__movcas;
         <th>Ditta</th>
         <th>Cassiere</th>
         <th>REG</th>
-        <th>CON</th> 
+        <th>CON</th>
         </tr>
         </thead>
         <tbody>";
 
-       $riga=0;  
+       $riga=0;
 
          while ($row = mysql_fetch_array($result)){
          $riga++;
@@ -810,7 +932,7 @@ global $db,$RG_addr,$__movcas;
          $cassiere_op = fullname_from_id($row["id_cassiere"]);
          $ditta = $row["id_ditta"];
          $utente = fullname_from_id($row["id_utente"]);
-         
+
          if($row["registrato"]=="si"){
              $REG = "SI<br><span class=\"small_link\">".conv_datetime_from_db($row["data_registrato"])."</span>";
              $pal = pallino("grigio");
@@ -824,15 +946,15 @@ global $db,$RG_addr,$__movcas;
          }else{
              $CON = "NO";
          }
-         
-         $op3 = '<a rel="'.$id_op.'" class="awesome small blue display_full_message" style="margin:4px;">Info</a>';  
 
-         
+         $op3 = '<a rel="'.$id_op.'" class="awesome small blue display_full_message" style="margin:4px;">Info</a>';
+
+
             $h.= "
             <tr>
             <td $col_1>$pal</td>
             <td $col_1><a class=\"awesome small blue\"href=\"".$RG_addr["cassa_movimento_singolo"]."?id_movimento=$id_op\">$id_op</a></td>
-            <td $col_1>$utente</td> 
+            <td $col_1>$utente</td>
             <td $col_1>$data_op</td>
             <td $col_1>$tipo_op</td>
             <td $col_5>$credito_op</td>
@@ -842,7 +964,7 @@ global $db,$RG_addr,$__movcas;
             <td $col_1>$ditta</td>
             <td $col_1>$cassiere_op</td>
             <td $col_1>$REG</td>
-            <td $col_1>$CON</td>   
+            <td $col_1>$CON</td>
             </tr>";
 
          }//end while
@@ -851,17 +973,17 @@ global $db,$RG_addr,$__movcas;
          $h.= "
          </tbody>
          </table>";
-         return $h;    
-    
-    
+         return $h;
+
+
 }
 
 
 function cassa_movimenti_solo_gas_table($id_gas){
-global $db,$RG_addr,$__movcas;      
+global $db,$RG_addr,$__movcas;
 
     $result = mysql_query("SELECT * FROM retegas_cassa_utenti WHERE id_gas='$id_gas' AND escludi_gas='0';");
-    $totalrows = mysql_num_rows($result);     
+    $totalrows = mysql_num_rows($result);
     $fullname = fullname_from_id($id_user);
 
 
@@ -870,7 +992,7 @@ global $db,$RG_addr,$__movcas;
             <table id=\"output\">
          <thead>
          <tr>
-        <th>&nbsp</th>          
+        <th>&nbsp</th>
         <th>#</th>
         <th>Utente</th>
         <th data-sorter=\"shortDate\">Data</th>
@@ -882,12 +1004,12 @@ global $db,$RG_addr,$__movcas;
         <th>Ditta</th>
         <th>Cassiere</th>
         <th>REG</th>
-        <th>CON</th> 
+        <th>CON</th>
         </tr>
         </thead>
         <tbody>";
 
-       $riga=0;  
+       $riga=0;
 
          while ($row = mysql_fetch_array($result)){
          $riga++;
@@ -907,7 +1029,7 @@ global $db,$RG_addr,$__movcas;
          $cassiere_op = fullname_from_id($row["id_cassiere"]);
          $ditta = $row["id_ditta"];
          $utente = fullname_from_id($row["id_utente"]);
-         
+
          if($row["registrato"]=="si"){
              $REG = "SI<br><span class=\"small_link\">".conv_datetime_from_db($row["data_registrato"])."</span>";
              $pal = '<IMG SRC="'.$RG_addr["img_pallino_grigio"].'" ALT="" style="height:16px; width:16px;vertical_align:middle;border=0;">';
@@ -921,13 +1043,13 @@ global $db,$RG_addr,$__movcas;
          }else{
              $CON = "NO";
          }
-         
-         
+
+
             $h.= "
             <tr>
             <td $col_1>$pal</td>
             <td $col_1>$id_op</td>
-            <td $col_1>$utente</td> 
+            <td $col_1>$utente</td>
             <td $col_1>$data_op</td>
             <td $col_1>$tipo_op</td>
             <td $col_5>$credito_op</td>
@@ -937,7 +1059,7 @@ global $db,$RG_addr,$__movcas;
             <td $col_1>$ditta</td>
             <td $col_1>$cassiere_op</td>
             <td $col_1>$REG</td>
-            <td $col_1>$CON</td>   
+            <td $col_1>$CON</td>
             </tr>";
 
          }//end while
@@ -946,12 +1068,12 @@ global $db,$RG_addr,$__movcas;
          $h.= "
          </tbody>
          </table>";
-         return $h;    
-    
-    
+         return $h;
+
+
 }
 function cassa_movimenti_registrare($id_gas,$id_ordine=null){
-global $db,$RG_addr,$__movcas;      
+global $db,$RG_addr,$__movcas;
 
     if(!is_empty($id_ordine)){
         $id_ordine=CAST_TO_INT($id_ordine);
@@ -960,18 +1082,18 @@ global $db,$RG_addr,$__movcas;
     }
 
     $result = mysql_query("SELECT * FROM retegas_cassa_utenti WHERE id_gas='$id_gas' AND registrato ='no' $filter_ordine;");
-    $totalrows = mysql_num_rows($result);     
+    $totalrows = mysql_num_rows($result);
     $fullname = fullname_from_id($id_user);
 
     if($totalrows>0){
     $h .= " <div class=\"rg_widget rg_widget_helper\">
             <h3>Movimenti da Registrare al ".date("d/m/Y H:i")." $title_ordine</h3>
-            <form id=\"registra_mov\" class=\"retegas_form\">
-            <a onClick=\"$('#registra_mov').toggleCheckboxes();\" class=\"awesome small yellow destra\">Seleziona Tutti</a><br>
+            <form id=\"registra_mov\" class=\"retegas_form\" method=\"POST\">
+            <!--<a onClick=\"$('#registra_mov').toggleCheckboxes();\" class=\"awesome small yellow destra\">Seleziona Tutti</a><br>-->
             <table id=\"output\" class=\"medium_size\">
          <thead>
          <tr>
-        <th class=\"filter-false\">&nbsp</th>          
+        <th class=\"filter-false\">&nbsp</th>
         <th>#</th>
         <th>Utente</th>
         <th data-sorter=\"shortDate\">Data</th>
@@ -983,12 +1105,12 @@ global $db,$RG_addr,$__movcas;
         <th>Ditta</th>
         <th>Cassiere</th>
         <th>REG</th>
-        <th>CON</th> 
+        <th>CON</th>
         </tr>
         </thead>
         <tbody>";
 
-       $riga=0;  
+       $riga=0;
 
          while ($row = mysql_fetch_array($result)){
          $riga++;
@@ -1008,17 +1130,17 @@ global $db,$RG_addr,$__movcas;
          if($row["id_cassiere"]<>0){
             $cassiere_op = fullname_from_id($row["id_cassiere"]);
          }else{
-            $cassiere_op = "Automatico"; 
+            $cassiere_op = "Automatico";
          }
          $ditta = $row["id_ditta"];
          $utente = fullname_from_id($row["id_utente"]);
-         
+
          if(!is_printable_from_id_ord($row["id_ordine"])){
              $disabled=" DISABLED ";
          }else{
              $disabled = "";
          }
-         
+
          if($row["registrato"]=="si"){
              $REG = "SI<br><span class=\"small_link\">".conv_datetime_from_db($row["data_registrato"])."</span>";
              $pal = '<IMG SRC="'.$RG_addr["img_pallino_grigio"].'" ALT="" style="height:16px; width:16px;vertical_align:middle;border=0;">';
@@ -1032,13 +1154,13 @@ global $db,$RG_addr,$__movcas;
          }else{
              $CON = "NO";
          }
-         
-         
+
+
             $h.= "
             <tr>
             <td $col_1>$pal</td>
             <td $col_1>$id_op</td>
-            <td $col_1>$utente</td> 
+            <td $col_1>$utente</td>
             <td $col_1>$data_op</td>
             <td $col_1>$tipo_op</td>
             <td $col_5>$credito_op</td>
@@ -1048,7 +1170,7 @@ global $db,$RG_addr,$__movcas;
             <td $col_1>$ditta</td>
             <td $col_1>$cassiere_op</td>
             <td $col_1>$REG</td>
-            <td $col_1>$CON</td>   
+            <td $col_1>$CON</td>
             </tr>
             ";
 
@@ -1064,22 +1186,25 @@ global $db,$RG_addr,$__movcas;
          <br>
          </form>";
          $h.= "<div class=\"ui-state-highlight ui-corner-all padding_6px\">
-         I movimenti degli ordini NON CONFERMATI non possono essere contabilizzati.</div>";   
+         I movimenti degli ordini NON REGISTRATI non possono essere contabilizzati.</div>";
 
     }else{
      //SE NON CI SONO MOVIMENTI
-        $h= "<div class=\"ui-state-highlight ui-corner-all padding_6px\"><h3>Evviva !!!</h3>..non ci sono movimenti da registrare !!!!</div>";   
+        $h= "<div class=\"ui-state-highlight ui-corner-all padding_6px\"><h3>Evviva !!!</h3>..non ci sono movimenti da registrare !!!!</div>";
     }
- 
-         return $h;    
-    
-    
-}
-function cassa_movimenti_contabilizzare($id_gas){
-global $db,$RG_addr,$__movcas;      
 
-    $result = mysql_query("SELECT * FROM retegas_cassa_utenti WHERE id_gas='$id_gas' AND registrato ='si' AND contabilizzato='no';");
-    $totalrows = mysql_num_rows($result);     
+         return $h;
+
+
+}
+function cassa_movimenti_contabilizzare($id_gas, $id_ordine=null){
+global $db,$RG_addr,$__movcas;
+    if(CAST_TO_INT($id_ordine)>0){
+        $result = $db->sql_query("SELECT * FROM retegas_cassa_utenti WHERE id_gas='$id_gas' AND registrato ='si' AND contabilizzato='no' AND id_ordine='$id_ordine'");
+    }else{
+        $result = $db->sql_query("SELECT * FROM retegas_cassa_utenti WHERE id_gas='$id_gas' AND registrato ='si' AND contabilizzato='no';");
+    }
+    $totalrows = mysql_num_rows($result);
     $fullname = fullname_from_id($id_user);
 
     if($totalrows>0){
@@ -1090,7 +1215,7 @@ global $db,$RG_addr,$__movcas;
             <table id=\"output\" class=\"medium_size\">
          <thead>
          <tr>
-        <th>&nbsp</th>          
+        <th>&nbsp</th>
         <th>#</th>
         <th>Utente</th>
         <th data-sorter=\"shortDate\">Data</th>
@@ -1102,12 +1227,12 @@ global $db,$RG_addr,$__movcas;
         <th>Ditta</th>
         <th>Cassiere</th>
         <th>REG</th>
-        <th>CON</th> 
+        <th>CON</th>
         </tr>
         </thead>
         <tbody>";
 
-       $riga=0;  
+       $riga=0;
 
          while ($row = mysql_fetch_array($result)){
          $riga++;
@@ -1127,7 +1252,7 @@ global $db,$RG_addr,$__movcas;
          $cassiere_op = fullname_from_id($row["id_cassiere"]);
          $ditta = $row["id_ditta"];
          $utente = fullname_from_id($row["id_utente"]);
-         
+
          if($row["registrato"]=="si"){
              $REG = "SI<br><span class=\"small_link\">".conv_datetime_from_db($row["data_registrato"])."</span>";
              $pal = '<IMG SRC="'.$RG_addr["img_pallino_grigio"].'" ALT="" style="height:16px; width:16px;vertical_align:middle;border=0;">';
@@ -1138,13 +1263,13 @@ global $db,$RG_addr,$__movcas;
          }else{
              $CON = "<input type=\"checkbox\" name=\"box_contabila[]\" class=\"check_reg\" value=\"$id_op\">";
          }
-         
-         
+
+
             $h.= "
             <tr>
             <td $col_1>$pal</td>
             <td $col_1>$id_op</td>
-            <td $col_1>$utente</td> 
+            <td $col_1>$utente</td>
             <td $col_1>$data_op</td>
             <td $col_1>$tipo_op</td>
             <td $col_5>$credito_op</td>
@@ -1154,7 +1279,7 @@ global $db,$RG_addr,$__movcas;
             <td $col_1>$ditta</td>
             <td $col_1>$cassiere_op</td>
             <td $col_1>$REG</td>
-            <td $col_1>$CON</td>   
+            <td $col_1>$CON</td>
             </tr>
             ";
 
@@ -1169,15 +1294,15 @@ global $db,$RG_addr,$__movcas;
          <input type=\"submit\" value=\"Contabilizza questi movimenti\" class=\"awesome destra\">
          <br>
          </form>";
-         
+
     }else{
      //SE NON CI SONO MOVIMENTI
-        $h= "<div class=\"ui-state-highlight ui-corner-all padding_6px\"><h3>Evviva !!!</h3>..non ci sono movimenti da contabilizzare !!!!</div>";   
+        $h= "<div class=\"ui-state-highlight ui-corner-all padding_6px\"><h3>Evviva !!!</h3>..non ci sono movimenti da contabilizzare !!!!</div>";
     }
-         
-         return $h;    
-    
-    
+
+         return $h;
+
+
 }
 
 function cassa_movimento_singolo($id_movimento){
@@ -1194,9 +1319,9 @@ function cassa_movimento_singolo($id_movimento){
 
       global $db,$__movcas;
       $result = $db->sql_query($my_query);
-      $row = $db->sql_fetchrow($result);  
+      $row = $db->sql_fetchrow($result);
 
-    
+
          // VALORI DELLE CELLE da DB---------------------
 
               $c1 = $row["id_cassa_utenti"];
@@ -1212,8 +1337,8 @@ function cassa_movimento_singolo($id_movimento){
               }else{
                   $c8 = "NO";
               }
-              
-              
+
+
               $c9 = $row["descrizione_movimento"];
               $c10 = $row["note_movimento"];
               $c11 = $row["data_movimento"];
@@ -1225,11 +1350,11 @@ function cassa_movimento_singolo($id_movimento){
               $c17 = $row["contabilizzato"];
               $c18 = $row["data_contabilizzato"];
 
-              
+
               if($c7<>3){
                   $form_rettifica="<form method=\"POST\" action=\"\">
                        <input type=\"radio\" name=\"segno\" value=\"+\" checked>+ (positiva)<br>
-                       <input type=\"radio\" name=\"segno\" value=\"-\">- (negativa)<br> 
+                       <input type=\"radio\" name=\"segno\" value=\"-\">- (negativa)<br>
                        <hr>
                        Importo : <input type=\"text\" name=\"importo\" size=3><br>
                        <hr>
@@ -1240,14 +1365,14 @@ function cassa_movimento_singolo($id_movimento){
                        <input class=\"awesome red medium mb6\" type=\"submit\" value=\"Rettifica\">
                        </form>";
               }else{
-                 $form_rettifica = "Questo movimento è già una rettifica"; 
+                 $form_rettifica = "Questo movimento è già una rettifica";
               }
               if($c7==movimento::carico_credito){
-                 $form_rettifica = "Non si possono rettificare i carichi crediti"; 
+                 $form_rettifica = "Non si possono rettificare i carichi crediti";
               }
-              
-              
-              
+
+
+
               $form_elimina="<form method=\"POST\" action=\"\">
                        <input type=\"hidden\" name=\"id_movimento\" value=\"$c1\">
                        <input type=\"hidden\" name=\"do\" value=\"do_del\">
@@ -1260,9 +1385,9 @@ $h_table .= "
              <div class=\"ui-widget-header ui-corner-all padding_6px\">
              $titolo_tabella
              <br>
-             <table>  
+             <table>
              <tr>
-             <td>";         
+             <td>";
 $h_table .=  "<table>
         <tr class=\"odd\">
             <th $col_1>#</th>
@@ -1279,7 +1404,7 @@ $h_table .=  "<table>
                                                                         $('#result').html(data);
                                                                         $('#micro_table').tablesorter({widgets: ['zebra'],
                                                                         cancelSelection : true,
-                                                                        dateFormat: 'uk'                                                               
+                                                                        dateFormat: 'uk'
                                                                         });
                                                                       }
                                                                     });\"
@@ -1310,7 +1435,7 @@ $h_table .=  "<table>
                                                                         $('#result').html(data);
                                                                         $('#micro_table').tablesorter({widgets: ['zebra'],
                                                                         cancelSelection : true,
-                                                                        dateFormat: 'uk'                                                               
+                                                                        dateFormat: 'uk'
                                                                         });
                                                                       }
                                                                     });\"><span class=\"ui-icon ui-icon-arrowthick-1-e\"></span></a></td>
@@ -1341,7 +1466,7 @@ $h_table .=  "<table>
             <td $col_2>$c12</td>
             <td $col_2>&nbsp</td>
         </tr>
-        
+
         <tr class=\"odd\">
             <th $col_1>Ordine</th>
             <td $col_2>$c13, ".descrizione_ordine_from_id_ordine($c13)."</td>
@@ -1352,7 +1477,7 @@ $h_table .=  "<table>
                                                                         $('#result').html(data);
                                                                         $('#micro_table').tablesorter({widgets: ['zebra'],
                                                                         cancelSelection : true,
-                                                                        dateFormat: 'uk'                                                               
+                                                                        dateFormat: 'uk'
                                                                         });
                                                                       }
                                                                     });\"><span class=\"ui-icon ui-icon-arrowthick-1-e\"></span></a></td>
@@ -1396,7 +1521,7 @@ $h_table .=  "<table>
         </table>
         </td>
         <td>
-        <table>        
+        <table>
         <tr>
         <td>
         <div class=\"\" id=\"result\" style=\"height:36em;\"></div>
@@ -1410,7 +1535,7 @@ $h_table .=  "<table>
 
 return $h_table;
       // END TABELLAGAS -----------------------------------------------------------------------
-   
+
 
   }
 function cassa_movimento_singolo_utente($id_movimento){
@@ -1427,9 +1552,9 @@ function cassa_movimento_singolo_utente($id_movimento){
 
       global $db,$__movcas;
       $result = $db->sql_query($my_query);
-      $row = $db->sql_fetchrow($result);  
+      $row = $db->sql_fetchrow($result);
 
-    
+
          // VALORI DELLE CELLE da DB---------------------
 
               $c1 = $row["id_cassa_utenti"];
@@ -1456,13 +1581,13 @@ function cassa_movimento_singolo_utente($id_movimento){
               $c17 = $row["contabilizzato"];
               $c18 = $row["data_contabilizzato"];
 
-              
+
 
 
 $h_table .= " <h3>
              $titolo_tabella
              </h3>";
-                      
+
 $h_table .=  "<table>
         <tr class=\"odd\">
             <th $col_1>#</th>
@@ -1520,7 +1645,7 @@ $h_table .=  "<table>
             <td $col_2>$c12</td>
             <td $col_2>&nbsp</td>
         </tr>
-        
+
         <tr class=\"odd\">
             <th $col_1>Ordine</th>
             <td $col_2>$c13, ".descrizione_ordine_from_id_ordine($c13)."</td>
@@ -1557,34 +1682,34 @@ $h_table .=  "<table>
 
 return $h_table;
       // END TABELLAGAS -----------------------------------------------------------------------
-   
+
 
   }
-  
+
 
 function cassa_gas_panel($id_gas){
  global $RG_addr;
  $pre_green = '<div style="   padding:6px;
-                        margin-bottom:2px; 
-                        border:3px solid rgba(60, 210, 40, 1); 
+                        margin-bottom:2px;
+                        border:3px solid rgba(60, 210, 40, 1);
                         background-color:rgba(60, 210, 40, .5)" class="ui-corner-all">';
  $pre_grey = '<div style="   padding:6px;
-                        margin-bottom:2px; 
-                        border:3px solid rgba(210, 210, 210, 1); 
+                        margin-bottom:2px;
+                        border:3px solid rgba(210, 210, 210, 1);
                         background-color:rgba(210, 210, 210, .5)" class="ui-corner-all">';
  $pre_red = '<div style="   padding:6px;
-                        margin-bottom:2px; 
-                        border:3px solid rgba(210, 60, 40, 1); 
-                        background-color:rgba(210, 60, 40, .5)" class="ui-corner-all">';                       
+                        margin-bottom:2px;
+                        border:3px solid rgba(210, 60, 40, 1);
+                        background-color:rgba(210, 60, 40, .5)" class="ui-corner-all">';
  $post = '</div>';
- 
+
  //SALDO TOTALE-
  $st = _nf(cassa_saldo_gas_totale($id_gas));
  $pre_st = $pre_grey;
  //-----------------
- 
- 
- 
+
+
+
  //SALDO REGISTRATO-
  $sr = cassa_saldo_gas_registrato($id_gas);
  if($sr<>$st){
@@ -1592,10 +1717,10 @@ function cassa_gas_panel($id_gas){
     $button_sr = '<a class="awesome silver small destra" href="">Registra</a>';
  }else{
     $pre_sr = $pre_green;
-    $button_sr = ""; 
+    $button_sr = "";
  }
  //-----------------
- 
+
  //SALDO CONTABILIZZATO-
  $sc = cassa_saldo_gas_contabilizzato($id_gas);
  if($sc<>$sr){
@@ -1603,11 +1728,11 @@ function cassa_gas_panel($id_gas){
     $button_sc = '<a class="awesome silver small destra" href="">Contabilizza</a>';
  }else{
     $pre_sc = $pre_green;
-    $button_sc = ""; 
+    $button_sc = "";
  }
- 
- //-----------------  
- 
+
+ //-----------------
+
  //Tutti i movimenti GAS
  $mg = db_nr_q("id_gas",$id_gas,"retegas_cassa_utenti");
  $pre_mg = $pre_grey;
@@ -1617,80 +1742,80 @@ function cassa_gas_panel($id_gas){
  $mu = db_nr_q_2("id_gas",$id_gas,"id_ditta","0","retegas_cassa_utenti");
  $pre_mu = $pre_grey;
  $button_mu = '<a class="awesome silver small destra" href="">Visualizza</a>';
- 
+
   //Movimenti su ditte
  $md = db_nr_q_condition(" id_gas = '$id_gas' AND (id_ditta <> '0') ","retegas_cassa_utenti");
  $pre_md = $pre_grey;
  $button_md = '<a class="awesome silver small destra" href="">Visualizza</a>';
- 
+
  //Movimenti non REGISTRATI
  $mnr = db_nr_q_condition(" id_gas = '$id_gas' AND (registrato = 'no') ","retegas_cassa_utenti");
  if($mnr<>0){
     $pre_mnr = $pre_red;
-    $button_mnr = '<a class="awesome silver small destra" href="'.$RG_addr["cassa_movimenti_reg"].'">Registra</a>'; 
+    $button_mnr = '<a class="awesome silver small destra" href="'.$RG_addr["cassa_movimenti_reg"].'">Registra</a>';
  }else{
     $pre_mnr = $pre_green;
-    $button_mnr = "";    
+    $button_mnr = "";
  }
 
- 
+
   //Movimenti non CONTABILIZZATI
  $mnc = db_nr_q_condition(" id_gas = '$id_gas' AND (registrato = 'si') AND (contabilizzato = 'no') ","retegas_cassa_utenti");
  if($mnc<>0){
     $pre_mnc = $pre_red;
-    $button_mnc = '<a class="awesome silver small destra" href="'.$RG_addr["cassa_movimenti_con"].'">Contabilizza</a>'; 
+    $button_mnc = '<a class="awesome silver small destra" href="'.$RG_addr["cassa_movimenti_con"].'">Contabilizza</a>';
  }else{
     $pre_mnc = $pre_green;
-    $button_mnc = '';    
+    $button_mnc = '';
  }
- 
 
- 
+
+
  $h .=' <div class="rg_widget rg_widget_helper">
         <table>
         <tr style="vertical-align:top">
         <td width="50%">';
- 
- $h .= $pre_mg.'Saldo in Database : <b>'.$st.'</b>'.$post;       
+
+ $h .= $pre_mg.'Saldo in Database : <b>'.$st.'</b>'.$post;
  $h .= $pre_mg.'Movimenti di CASSA : <b>'.$mg.'</b>'.$button_mg.$post;
 
  $h .= $pre_sr.'Saldo GAS da mov. Registrati : <b>'.$sr.'</b>'.$button_sr.$post;
- $h .= $pre_sc.'Saldo GAS da mov. Contabilizzati : <b>'.$sc.'</b>'.$button_sc.$post;     
-  
+ $h .= $pre_sc.'Saldo GAS da mov. Contabilizzati : <b>'.$sc.'</b>'.$button_sc.$post;
+
  //$h .= $pre.'FULLNAME: <b>'.db_val_q("userid",$id,"fullname","maaking_users").'</b>'.$post;
  //$h .= $pre.'LAST ACT: <b>'.db_val_q("userid",$id,"last_activity","maaking_users").'</b>'.$post;
  //$h .= $pre.'LAST LOGIN: <b>'.db_val_q("userid",$id,"lastlogin","maaking_users").'</b>'.$post;
  //$h .= $pre.'REGDATE: <b>'.db_val_q("userid",$id,"regdate","maaking_users").'</b>'.$post;
  //$h .= $pre.'IP ADDR: <b>'.db_val_q("userid",$id,"ipaddress","maaking_users").'</b>'.$post;
- //$h .= $pre.'RECORDS in messaggi: <b>'.db_nr_q("id_user",$id,"retegas_messaggi").'</b>'.$post;    
- //$h .= $pre.'RECORDS in bacheca: <b>'.db_nr_q("id_utente",$id,"retegas_bacheca").'</b>'.$post;    
+ //$h .= $pre.'RECORDS in messaggi: <b>'.db_nr_q("id_user",$id,"retegas_messaggi").'</b>'.$post;
+ //$h .= $pre.'RECORDS in bacheca: <b>'.db_nr_q("id_utente",$id,"retegas_bacheca").'</b>'.$post;
  //$h .= $pre.'RECORDS in listini: <b>'.db_nr_q("id_utenti",$id,"retegas_listini").'</b>'.$post;
 
- 
- 
+
+
  $h .= '</td>
         <td width="50%">';
         $h .= $pre_mnr.'Movimenti NON registrati : <b>'.$mnr.'</b>'.$button_mnr.$post;
         $h .= $pre_mnc.'Movimenti NON contabilizzati : <b>'.$mnc.'</b>'.$button_mnc.$post;
         //$h .= $pre_mu.'Movimenti utenti : <b>'.$mu.'</b>'.$button_mu.$post;
        // $h .= $pre_md.'Movimenti ditte : <b>'.$md.'</b>'.$button_md.$post;
-        
-         
-        
-// $h .= $pre.'RECORDS in maaking_users: <b>'.db_nr_q("userid",$id,"maaking_users").'</b>'.$post;
-// $h .= $pre.'RECORDS in dettaglio ordini: <b>'.db_nr_q("id_utenti",$id,"retegas_dettaglio_ordini").'</b>'.$post;       
-// $h .= $pre.'RECORDS in amici: <b>'.db_nr_q("id_referente",$id,"retegas_amici").'</b>'.$post;    
-// $h .= $pre.'RECORDS in ordini: <b>'.db_nr_q("id_utente",$id,"retegas_ordini").'</b>'.$post;    
-// $h .= $pre.'RECORDS in distribuzione spesa: <b>'.db_nr_q("id_user",$id,"retegas_distribuzione_spesa").'</b>'.$post;    
-// $h .= $pre.'Permessi accordati : '.utenti_scheda_permessi($id).$post;   
 
- 
+
+
+// $h .= $pre.'RECORDS in maaking_users: <b>'.db_nr_q("userid",$id,"maaking_users").'</b>'.$post;
+// $h .= $pre.'RECORDS in dettaglio ordini: <b>'.db_nr_q("id_utenti",$id,"retegas_dettaglio_ordini").'</b>'.$post;
+// $h .= $pre.'RECORDS in amici: <b>'.db_nr_q("id_referente",$id,"retegas_amici").'</b>'.$post;
+// $h .= $pre.'RECORDS in ordini: <b>'.db_nr_q("id_utente",$id,"retegas_ordini").'</b>'.$post;
+// $h .= $pre.'RECORDS in distribuzione spesa: <b>'.db_nr_q("id_user",$id,"retegas_distribuzione_spesa").'</b>'.$post;
+// $h .= $pre.'Permessi accordati : '.utenti_scheda_permessi($id).$post;
+
+
  $h .='</td>
         </tr>
         </table>
         </div>';
-        
-  
-        
- return $h;    
-}  
+
+
+
+ return $h;
+}

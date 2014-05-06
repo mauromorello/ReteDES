@@ -1,5 +1,5 @@
 <?php
-   
+
 // immette i file che contengono il motore del programma
 include_once ("../../rend.php");
 include_once ("../ordini_renderer.php");
@@ -9,33 +9,33 @@ include_once ("../../retegas.class.php");
 
 // controlla se l'user ha effettuato il login oppure no
 if (!_USER_LOGGED_IN){
-     pussa_via(); 
-}    
+     pussa_via();
+}
 
 //Se non è settato il gas lo imposto come quello dell'utente
 if(!isset($id_gas)){$id_gas = _USER_ID_GAS;}
 
-if (!(_USER_PERMISSIONS & perm::puo_partecipare_ordini)){
-     go("sommario",_USER_ID,"Non puoi partecipare agli ordini. Contatta il tuo referente GAS.");
-}
-
-if (ordine_inesistente($id_ordine)){
-     go("sommario",_USER_ID,"Ordine insesistente");
-}
-
-//Se non sono almeno referente GAS allora non posso vedere nulla.
-$mio_Stato = ordine_io_cosa_sono($id_ordine,_USER_ID);
-if(!(_USER_PERMISSIONS & perm::puo_vedere_tutti_ordini)){
-    if ($mio_Stato<3){
-        go("sommario",_USER_ID,"Questo ordine non mi compete");
+if(_USER_PERMISSIONS & perm::puo_vedere_tutti_ordini){
+        $ok = "OK";
     }
-}
-//Se sono referente gas controllo di vedere il MIO gas
-if ($mio_Stato==3){
-    if($id_gas<>_USER_ID_GAS){
-        go("sommario",_USER_ID,"Solo il referente ordine può vedere tutti i gas.");
+
+    if(read_option_gas_text_new($id_gas,"_GAS_VISIONE_CONDIVISA")=="SI"){
+        $ok = "OK";
     }
-}
+    if(id_referente_ordine_proprio_gas($id_ordine,$id_gas)==_USER_ID){
+        $ok = "OK";
+        $ref = "OK";
+    }
+
+    //SE E' UN AIUTO EXTRA
+    if(check_option_referente_extra($id_ordine,_USER_ID)>0){
+        $ok = "OK";
+    }
+
+    if($ok<>"OK"){
+        go("ordini_form",_USER_ID,"Questa operazione ti è preclusa.","?id_ordine=$id_ordine");
+        exit;
+    }
 
 
 $stato_ordine = stato_from_id_ord($id_ordine);
@@ -43,10 +43,10 @@ $stato_ordine = stato_from_id_ord($id_ordine);
 
 if($stato_ordine==2){
     $alert = "<div class=\"ui-state-error ui-corner-all padding_6px\">
-                <h4>Finchè l'ordine non è confermato, questi dati sono da considerarsi NON ATTENDIBILI<br>
+                <h4>Finchè l'ordine non è CONVALIDATO, questi dati sono da considerarsi NON ATTENDIBILI<br>
                 </h4>
-              </div>  ";    
-    
+              </div>  ";
+
 }
 
 
@@ -59,10 +59,10 @@ $r->title = "Spesa GAS - Riepilogo utenti";
 
 
 //Messaggio popup;
-//$r->messaggio = "Pagina di test"; 
+//$r->messaggio = "Pagina di test";
 //Dico quale menù orizzontale dovrà  essere associato alla pagina.
 //$r->menu_orizzontale = ordini_menu_completo($user,$id_ordine);
-    
+
     //SE l'ordine è chiuso allora posso stamparlo
     if(is_printable_from_id_ord($id_ordine)){
     $r->menu_orizzontale[] = '  <li><a class="medium silver awesome">Esporta</a>
@@ -104,16 +104,16 @@ $h .= "<thead>";
 $h .= "</thead>";
 $h .= "<tbody>";
 while ($row = mysql_fetch_array($res)){
-    
-    
-    
+
+
+
     if(is_integer($riga / 2)){
         $cl  ="class=\"odd\"";
     }else{
         $cl = "";
     }
-    
-    
+
+
     unset($opz);
     if($stato_ordine==2){
     //    $opz = "<a class=\"awesome option yellow\">M</a>
@@ -122,13 +122,13 @@ while ($row = mysql_fetch_array($res)){
     if($stato_ordine==3){
         //$opz = "<a class=\"option blue awesome\" title=\"Assegna\" href=\"../../ordini_chiusi/ordini_chiusi_ass_q.php?id=".$row["id_articoli"]."&id_ordine=$id_ordine&q_min=".db_val_q("id_articoli",$row["id_articoli"],"qta_minima","retegas_articoli")."&id_dett=".$row["id_dettaglio_ordini"]."\">A</a>";
     }
-    
+
 
     if(id_gas_user($row["id_utenti"])==$id_gas){
-        
+
         $riga++;
         $trasporto = valore_costo_trasporto_ordine_user($id_ordine,$row["id_utenti"]);
-        $gestione = valore_costo_gestione_ordine_user($id_ordine,$row["id_utenti"]); 
+        $gestione = valore_costo_gestione_ordine_user($id_ordine,$row["id_utenti"]);
         $costo_gas = valore_costo_mio_gas($id_ordine,$row["id_utenti"]);
         $maggiorazione_gas = valore_costo_maggiorazione_mio_gas($id_ordine,$row["id_utenti"]);
         $totale_costi = $trasporto +
@@ -138,17 +138,24 @@ while ($row = mysql_fetch_array($res)){
         $netto =  valore_arrivato_netto_ordine_user($id_ordine,$row["id_utenti"]);
         $totale_lordo = $netto +
                         $totale_costi;
-        
+
         if(check_option_prenotazione_ordine($id_ordine,$row["id_utenti"])){
             $prenotazione = "<span style=\"COLOR:red\"> (Prenotazione attiva)</span>";
         }else{
             $prenotazione="";
         }
-        
+
         $h .="<tr $cl>";
         $h .="<td class=\"sinistra column_hide\">$opz</td>";
         $h .="<td class=\"sinistra\">&nbsp;</td>";
-        $h .="<td class=\"sinistra\">".fullname_from_id($row["id_utenti"])." $prenotazione</td>";
+
+        if(_SITE_SHOW_USERID){
+            $h .="<td class=\"sinistra\">ID: <strong>".$row["id_utenti"]."</strong> - ".fullname_from_id($row["id_utenti"])." $prenotazione</td>";
+        } else {
+            $h .="<td class=\"sinistra\">".fullname_from_id($row["id_utenti"])." $prenotazione</td>";
+        }
+
+        //$h .="<td class=\"sinistra\">".fullname_from_id($row["id_utenti"])." $prenotazione</td>";
         $h .="<td class=\"destra\">"._nf($trasporto)."</td>";
         $h .="<td class=\"destra\">"._nf($gestione)."</td>";
         $h .="<td class=\"destra\">"._nf($costo_gas)."</td>";
@@ -158,7 +165,7 @@ while ($row = mysql_fetch_array($res)){
         $h .="<td class=\"destra\">"._nf($totale_lordo)."</td>";
         $h .="</tr>";
     }
-    
+
 }
 $h .="</tbody>";
 $h .= "<tfoot>";
@@ -251,11 +258,11 @@ $costi_esterni = $costo_trasporto + $costo_gestione;
 
 
 //GRAN TOTALE INTERNO
-   
+
     $costi = $costi_esterni+
-             $costo_gas + 
+             $costo_gas +
              $magg_gas;
-    
+
     $h2 .="<tr class=\"total\">";
     $h2 .="<th class=\"column_hide\">&nbsp;</th>";
     $h2 .="<th class=\"sinistra\">&nbsp;</th>";
@@ -273,7 +280,7 @@ $costi_esterni = $costo_trasporto + $costo_gestione;
 if($id_gas == _USER_ID_GAS ){
     $h.=$h2;
 }
-    
+
 $h .= "</tfoot>";
 
 
@@ -299,19 +306,19 @@ if(_USER_OPT_NO_HEADER=="SI"){
 }else{
     $i=load_pdf_header("../../images/rg.jpg");
     $o=render_scheda_pdf_ordine($id_ordine).
-    "<h3>Riepilogo articoli ".gas_nome($id_gas)."</h3>";;    
+    "<h3>Riepilogo articoli ".gas_nome($id_gas)."</h3>";;
 }
 
 //Mando all'utente la sua pagina
 if($output=="pdf"){
-    require_once("../../lib/dompdf_2/dompdf_config.inc.php");
+    require_once("../../lib/dompdf_3/dompdf_config.inc.php");
 
     $dompdf = new DOMPDF();
     $dompdf->load_html("<html><head>".$s."</head><body>".$i.$o.$h."</body></html>");
     $dompdf->render();
     $dompdf->stream("riepilogo_utenti_gas_".$id_gas."_$id_ordine-$cod.pdf",array("Attachment" => 0));
 die();
-    
+
 }elseif($output=="html"){
     echo $s.$i.$o.$h;
 }else{
@@ -322,6 +329,6 @@ die();
                     ."</div>";
     echo $r->create_retegas();
 }
-//Distruggo l'oggetto r    
-unset($r)   
+//Distruggo l'oggetto r
+unset($r)
 ?>

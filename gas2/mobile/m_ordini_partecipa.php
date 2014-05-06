@@ -26,7 +26,7 @@ if(!isset($id_ordine)){
 (int)$id_ordine;
 
 
-//Capire se è un ordine partecipabile
+//Capire se ? un ordine partecipabile
 if($do=="do_referente"){
     if($accetto=="si"){
         $result=$db->sql_query("UPDATE retegas_referenze SET retegas_referenze.id_utente_referenze = '"._USER_ID."'
@@ -51,7 +51,7 @@ if(ordine_partecipabile($id_ordine)){
                         <form action="'.$RG_addr["m_ordini_partecipa"].'" method="post" data-ajax="false">
                         <div data-role="fieldcontain">
                             <fieldset data-role="controlgroup">
-                               <legend>Accetto di diventare referente di questo ordine per il MIO gas. Questo vuol dire che dovrò occuparmi di raccogliere gli ordini che mi perverranno dagli iscritti al mio GAS, e dovrò gestire il recupero della merce ed i pagamenti che verranno effettuati al gestore principale dell\'ordine. Cliccando la casella qui sotto mi impegno a rispettare gli impegni presi.</legend>
+                               <legend>Accetto di diventare referente di questo ordine per il MIO gas. Questo vuol dire che dovrÃ  occuparmi di raccogliere gli ordini che mi perverranno dagli iscritti al mio GAS, e dovrÃ  gestire il recupero della merce ed i pagamenti che verranno effettuati al gestore principale dell\'ordine. Cliccando la casella qui sotto mi impegno a rispettare gli impegni presi.</legend>
                                <input type="checkbox" name="accetto" id="accetto" value="si"/>
                                <label for="accetto">Accetto</label>
                             </fieldset>

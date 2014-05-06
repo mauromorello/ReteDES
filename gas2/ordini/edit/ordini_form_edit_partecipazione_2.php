@@ -10,10 +10,10 @@ if (!_USER_LOGGED_IN){
      pussa_via(); 
 }    
 
-if(id_referente_ordine_globale($id_ordine)<>_USER_ID){
-        pussa_via();
-        exit;     
-    }
+if(!posso_gestire_ordine_full($id_ordine,_USER_ID)){
+        go("ordini_form",_USER_ID,"Questa operazione ti è preclusa.","?id_ordine=$id_ordine");
+        exit;
+}
     
 if(ordine_inesistente($id_ordine)){
         pussa_via();
@@ -165,7 +165,7 @@ if($msg){$r->messaggio=$msg;}
                 if (_USER_ID_GAS<>$id_gas){ // IL DES DIVERSO DAL PROPRIO 
                     
                     //$gas_ext_perm = leggi_permessi_gas($id_gas);
-                    $gas_ext_perm = read_option_gas_text($id_gas,"_GAS_PUO_PART_ORD_EST");
+                    $gas_ext_perm = read_option_gas_text_new($id_gas,"_GAS_PUO_PART_ORD_EST");
                     
                     if($gas_ext_perm=="SI"){
                         $condizione = "<input $hidden name=box[] value=\"$id_gas\" ".$box_selected."> $box_imp";

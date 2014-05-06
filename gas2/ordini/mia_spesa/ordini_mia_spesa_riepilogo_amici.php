@@ -1,5 +1,5 @@
 <?php
-   
+
 // immette i file che contengono il motore del programma
 include_once ("../../rend.php");
 include_once ("../ordini_renderer.php");
@@ -7,8 +7,8 @@ include_once ("../../retegas.class.php");
 
 // controlla se l'user ha effettuato il login oppure no
 if (!_USER_LOGGED_IN){
-     pussa_via(); 
-}    
+     pussa_via();
+}
 
 if (!(_USER_PERMISSIONS & perm::puo_partecipare_ordini)){
      go("sommario",_USER_ID,"Non puoi partecipare agli ordini. Contatta il tuo referente GAS.");
@@ -28,10 +28,10 @@ $stato_ordine = stato_from_id_ord($id_ordine);
 if($stato_ordine==2){
     $alert = "<div class=\"ui-state-error ui-corner-all padding_6px\">
                 <h4>Le operazioni di modifica quantitativo ed assegnazione prodotto si possono fare dalla scheda \"partecipa\"<br>
-                    Finchè l'ordine non è confermato, questi dati sono da considerarsi NON ATTENDIBILI<br>
+                    Finchè l'ordine non è CONVALIDATO, questi dati sono da considerarsi NON ATTENDIBILI<br>
                 </h4>
-              </div>  ";    
-    
+              </div>  ";
+
 }
 
 
@@ -44,7 +44,7 @@ $r->title = "Mia Spesa - Riepilogo Amici";
 
 
 //Messaggio popup;
-//$r->messaggio = "Pagina di test"; 
+//$r->messaggio = "Pagina di test";
 //Dico quale men? orizzontale dovr?? essere associato alla pagina.
 //$r->menu_orizzontale = ordini_menu_completo($user,$id_ordine);
 if(is_printable_from_id_ord($id_ordine)){
@@ -98,32 +98,32 @@ $h .= "<tbody>";
 
 //CICLO CHE PASSA TUTTI GLI AMICI
 while ($row = mysql_fetch_array($res)){
-        
-    
+
+
         if($row["id_amico"]==0){
             $chi = "Me stesso";
         }else{
-            $chi = db_val_q("id_amici",$row["id_amico"],"nome","retegas_amici");    
+            $chi = db_val_q("id_amici",$row["id_amico"],"nome","retegas_amici");
         }
-        
-        
-        
-        
+
+
+
+
         $riga++;
-        
+
         if(is_integer($riga / 2)){
             $cl  ="class=\"odd\"";
         }else{
             $cl = "";
         }
-        
+
         $tot_riga = valore_netto_singolo_amico($id_ordine,_USER_ID, $row["id_amico"]);
         $tot_costi = valore_costi_totali_amico($id_ordine,_USER_ID, $row["id_amico"]);
         $tot_amico = _nf($tot_riga + $tot_costi);
         $tot_riga = _nf($tot_riga);
         $tot_costi = _nf($tot_costi);
-        
-         
+
+
         $h .="<tr $cl>";
         $h .="<td class=\"sinistra column_hide\">$opz</td>";
         $h .="<td class=\"sinistra\">$chi</td>";
@@ -135,8 +135,8 @@ while ($row = mysql_fetch_array($res)){
         $h .="<td class=\"destra\">$tot_riga</td>";
         $h .="<td class=\"destra\">$tot_costi</td>";
         $h .="<td class=\"destra\">$tot_amico</td>";
-        $h .="</tr>";  
-  
+        $h .="</tr>";
+
 
 }
 $h .="</tbody>";
@@ -144,8 +144,8 @@ $h .= "<tfoot>";
 //SUB TOTALE
     $netto = valore_arrivato_netto_ordine_user($id_ordine,_USER_ID);
     $costi = valore_costi_totali($id_ordine,_USER_ID);
-    
-    
+
+
     $h .="<tr class=\"total\">";
     $h .="<th class=\"column_hide\">&nbsp;</th>";
     $h .="<th class=\"sinistra\">&nbsp;</th>";
@@ -162,7 +162,7 @@ $h .= "<tfoot>";
 
 
 
-    
+
 $h .= "</tfoot>";
 
 
@@ -187,19 +187,19 @@ if(_USER_OPT_NO_HEADER=="SI"){
 
 }else{
     $i=load_pdf_header("../../images/rg.jpg");
-    $o=render_scheda_pdf_ordine($id_ordine);    
+    $o=render_scheda_pdf_ordine($id_ordine);
 }
 
 //Mando all'utente la sua pagina
 if($output=="pdf"){
-    require_once("../../lib/dompdf_2/dompdf_config.inc.php");
+    require_once("../../lib/dompdf_3/dompdf_config.inc.php");
 
     $dompdf = new DOMPDF();
     $dompdf->load_html("<html><head>".$s."</head><body>".$i.$o.$h."</body></html>");
     $dompdf->render();
     $dompdf->stream("riepilogo_ord_$id_ordine-$cod.pdf",array("Attachment" => 0));
 die();
-    
+
 }elseif($output=="html"){
     echo $s.$i.$o.$h;
 }else{
@@ -210,6 +210,6 @@ die();
                     ."</div>";
     echo $r->create_retegas();
 }
-//Distruggo l'oggetto r    
-unset($r)   
+//Distruggo l'oggetto r
+unset($r)
 ?>

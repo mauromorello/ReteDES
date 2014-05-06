@@ -80,10 +80,10 @@ $data = fgetcsv($fd, 1000, _USER_CSV_SEPARATOR);
 		
 		
 		
-		if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[0])>0){$warn_string++;}  //codice
-		if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[1])>0){$warn_string++;}   //descr
-		if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[3])>0){$warn_string++;}  //u mis
-		if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[5])>0){$warn_string++;}   // ingombro
+		//if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[0])>0){$warn_string++;}  //codice
+		//if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[1])>0){$warn_string++;}   //descr
+		//if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[3])>0){$warn_string++;}  //u mis
+		//if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[5])>0){$warn_string++;}   // ingombro
 		//if ($data[7]<1){$erro_zero++;}
 		//if ($data[6]<1){$erro_zero++;}
 		
@@ -97,7 +97,7 @@ $data = fgetcsv($fd, 1000, _USER_CSV_SEPARATOR);
 		if (!is_numeric(trim(str_replace(array(",","?"),array(".",""),$data[4])))){$erro_num++;} 
 		if (!is_numeric(trim(str_replace(array(",","?"),array(".",""),$data[2])))){$erro_num++;}
 		
-		$data[8]=sanitize($data[8]);
+		//$data[8]=sanitize($data[8]);
 		
 		if (trim($data[9])=="UNICO"){$unici++;}
 		
@@ -231,10 +231,10 @@ $htable .="</tr>";
 		
 		if ($erro_doppi>0){if (in_array($data[0],$doppi)){$bg[0] = "class=\"articoli_doppi\"";}}// e' uno dei doppi
 		
-		if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[0])>0){$bg[0] = "class=\"punteggiatura\"";}// Cod art. COntiene caratteri insulsi
-		if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[1])>0){$bg[1] = "class=\"punteggiatura\"";}// Descriz COntiene caratteri insulsi  
-		if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[3])>0){$bg[3] = "class=\"punteggiatura\"";}// U mis caratteri insulsi  
-		if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[5])>0){$bg[5] = "class=\"punteggiatura\"";}// Ingombro caratteri insulsi  
+		//if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[0])>0){$bg[0] = "class=\"punteggiatura\"";}// Cod art. COntiene caratteri insulsi
+		//if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[1])>0){$bg[1] = "class=\"punteggiatura\"";}// Descriz COntiene caratteri insulsi  
+		//if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[3])>0){$bg[3] = "class=\"punteggiatura\"";}// U mis caratteri insulsi  
+		//if (ereg("[^A-Za-z0-9.,-_!$%()= ]",  $data[5])>0){$bg[5] = "class=\"punteggiatura\"";}// Ingombro caratteri insulsi  
 		
 		if (!is_numeric(trim(str_replace(array(","),array("."),$data[7])))){$bg[7] = "class=\"non_riconosciuto\"";} 
 		if (!is_numeric(trim(str_replace(array(","),array("."),$data[6])))){$bg[6] = "class=\"non_riconosciuto\"";}

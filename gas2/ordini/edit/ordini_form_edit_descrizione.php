@@ -30,12 +30,12 @@ if (is_logged_in($user)){
 
 	//COntrollo permessi
 
-		//COntrollo permessi
+		
 
-	if(id_referente_ordine_globale($id_ordine)<>$id_user){
-		pussa_via();
-		exit;     
-	}
+    if(!posso_gestire_ordine_full($id_ordine,_USER_ID)){
+        go("ordini_form",_USER_ID,"Questa operazione ti è preclusa.","?id_ordine=$id_ordine");
+        exit;
+    }
 	
 	if(ordine_inesistente($id_ordine)){
 		pussa_via();

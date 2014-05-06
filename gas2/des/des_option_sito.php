@@ -128,7 +128,7 @@ $h .= "<div class=\"rg_widget rg_widget_helper\">
 //DES ZOOM
 $h .= "<div class=\"rg_widget rg_widget_helper\">
         <form method=\"post\" action=\"\" class=\"retegas_form\">
-        <h3>Longitudine</h3>
+        <h3>Zoom mappa</h3>
         <label for=\"des_zoom\">Quantità di zoom (1 lontano <--> 15 vicino)</label>
         <input type=\"text\" id=\"des_zoom\"  name=\"des_zoom\" value=\""._USER_DES_ZOOM."\" size=\"50\" ></input>
         <input type=\"hidden\" name=\"do\" value=\"do_des_zoom\"></inupt>

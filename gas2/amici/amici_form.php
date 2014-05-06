@@ -82,8 +82,4 @@ if (is_logged_in($user)){
       echo $html;
       exit;
 
-      unset($retegas);      
-      
-      
-    
-?>
+      unset($retegas);

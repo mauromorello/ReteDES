@@ -29,8 +29,8 @@ if($do=="del"){
     $sql =  $db->sql_query("delete from retegas_articoli where retegas_articoli.id_listini='$id_listino';");   
                 
         $msg = "Svuotamento Riuscito";
-        log_me("",$id_user,"LIS","SVU","Svuotato il listino $id dal suo proprietario",0,$sql);    
-        go("sommario",_USER_ID,$msg);    
+        log_me("",$id_user,"LIS","SVU","Svuotato il listino $id_listino dal suo proprietario",0,$sql);    
+        go("listini_scheda",_USER_ID,$msg,"?id_listino=$id_listino");    
         exit;
 }
 
@@ -62,7 +62,7 @@ $h.= "
                     <span class=\"ui-icon ui-icon-trash\" style=\"float:left; margin:0 7px 16px 0;\"></span>
                     Stai cancellare tutti gli articoli di questo listino : sei sicuro ?
                     <a href=\"".$RG_addr["listini_form_empty"]."?id_listino=$id_listino&do=del\" class=\"awesome red medium\">SI</a> 
-                    <a href=\"".$RG_addr["sommario"]."\" class=\"awesome green medium\">NO</a>
+                    <a href=\"".$RG_addr["listini_scheda"]."?id_listino=$id_listino\" class=\"awesome green medium\">NO</a>
                     </div>
                     <div class=\"ui-widget-header ui-corner-tl ui-corner-tr action-icon padding-6px\">$titolo_tabella</div> 
                     <table>

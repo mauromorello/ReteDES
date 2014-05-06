@@ -54,7 +54,7 @@ if (!empty($multiplier)){
 }
 
 $sql_ditte ="SELECT
-                Sum(retegas_dettaglio_ordini.qta_arr * retegas_articoli.prezzo) AS SQO,
+                Sum(retegas_dettaglio_ordini.qta_arr * retegas_dettaglio_ordini.prz_dett_arr) AS SQO,
                 retegas_ditte.descrizione_ditte,
                 retegas_ditte.id_ditte,
                 retegas_ditte.ditte_gc_lat,
@@ -64,7 +64,7 @@ $sql_ditte ="SELECT
                 Inner Join retegas_ordini ON retegas_ordini.id_listini = retegas_listini.id_listini
                 Inner Join retegas_dettaglio_ordini ON retegas_ordini.id_ordini = retegas_dettaglio_ordini.id_ordine
                 Inner Join retegas_ditte ON retegas_listini.id_ditte = retegas_ditte.id_ditte
-                Inner Join retegas_articoli ON retegas_dettaglio_ordini.id_articoli = retegas_articoli.id_articoli
+                
                 WHERE
                 retegas_dettaglio_ordini.data_inserimento > DATE_SUB(CURDATE(), INTERVAL $days DAY)
                 AND

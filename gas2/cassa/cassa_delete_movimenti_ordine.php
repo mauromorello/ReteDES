@@ -1,5 +1,5 @@
 <?php
-   
+
 // immette i file che contengono il motore del programma
 include_once ("../rend.php");
 include_once ("../ordini/ordini_renderer.php");
@@ -9,8 +9,8 @@ include_once ("../retegas.class.php");
 
 // controlla se l'user ha effettuato il login oppure no
 if (!_USER_LOGGED_IN){
-     pussa_via(); 
-}    
+     pussa_via();
+}
 
 //Se non ? settato il gas lo imposto come quello dell'utente
 if(!isset($id_gas)){$id_gas = _USER_ID_GAS;}
@@ -29,39 +29,39 @@ if (ordine_inesistente($id_ordine)){
 
 
 if($do=="del"){
-        
-       
-         $time_now = time();  
-         (int)$validation = mimmo_decode($validation);  
+
+
+         $time_now = time();
+         (int)$validation = mimmo_decode($validation);
          $time_diff = $time_now - $validation;
-         
+
          if($time_diff>60){
              go("sommario",_USER_ID,"Il tempo per effettuare questa operazione ? scaduto, riparti daccapo.");
          }
-        
+
          $pwd = md5($pwd);
          $result = $db->sql_query("SELECT userid,password FROM maaking_users WHERE userid='"._USER_ID."' AND password='$pwd'");
 
          if($db->sql_numrows($result) == 0){
-         
+
           $msg .= "La password non ? stata riconosciuta";
           $e_pwd++;
-               
+
          }
-        
-        
-        
+
+
+
         $err =  $e_pwd;
-        
+
         if($err==0){
-        
+
         //INSERT IN CASSA UTENTI
-        $my_query="DELETE FROM retegas_cassa_utenti WHERE id_ordine='$id_ordine' AND id_gas='"._USER_ID_GAS."';";                                         
-        
+        $my_query="DELETE FROM retegas_cassa_utenti WHERE id_ordine='$id_ordine' AND id_gas='"._USER_ID_GAS."';";
+
 
         $result = $db->sql_query($my_query);
         $nrows = $db->sql_affectedrows($result);
-        
+
         if (is_null($result)){
             $msg = "Errore nella cancallazione movimenti";
         }else{
@@ -69,18 +69,18 @@ if($do=="del"){
             $ok++;
             log_me($id_ordine,_USER_ID,"CAS","DEL","Cancellazione movimenti cassa",$nrows,$my_query);
         };
-            
-            
+
+
         if($ok==1){
-                go("sommario",_USER_ID,$msg);
+                go("ordini_form",_USER_ID,$msg,"?id_ordine=$id_ordine");
             }else{
                 go("sommario",_USER_ID,"E' successo qualcosa di imprevisto durante questa operazione");
-            
+
             }
-            
-            
+
+
         }
-        
+
     }
 
 
@@ -111,7 +111,7 @@ $h2 ='
         <strong>Stai per eliminare tutti i movimenti relativi all\'ordine '.$id_ordine.' <br>
         </strong>
         <br>
-        
+
         <form name="del_mov_ord" method="POST" action="">
         <div>
             <h4>1</h4>
@@ -119,8 +119,8 @@ $h2 ='
             <input type="password" name="pwd" value="" size="20"></input>
             <h5 title="'.$help_pwd.'">Inf.</h5>
         </div>
-        
-        
+
+
         <div>
         <h4>3</h4>
         <label for="submit">infine... </label>
@@ -132,7 +132,7 @@ $h2 ='
         </div>
 
         </form>
-        
+
         <h5>
         oppure <a class="awesome medium red" href="">Abbandona</a>
         </h5>
@@ -145,6 +145,6 @@ $h2 ='
 $r->contenuto = schedina_ordine($id_ordine).'<div class="rg_widget rg_widget_helper">'.$h2.'</div>';
 echo $r->create_retegas();
 
-//Distruggo l'oggetto r    
-unset($r)   
+//Distruggo l'oggetto r
+unset($r)
 ?>

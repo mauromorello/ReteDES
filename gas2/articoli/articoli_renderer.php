@@ -128,7 +128,7 @@ function articoli_render_add($id){
         <div>
         <h4>12</h4>
         <label for="opz_2">... qua il secondo....</label>
-        <input type="text" name="opz_2" value="'.$opz_1.'" size="20"></input>
+        <input type="text" name="opz_2" value="'.$opz_2.'" size="20"></input>
         <h5 title="'.$help_opz_2.'">Inf.</h5>
         </div>
         

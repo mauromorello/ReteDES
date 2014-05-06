@@ -1,5 +1,5 @@
 <?php
-   
+
 // immette i file che contengono il motore del programma
 include_once ("../../rend.php");
 include_once ("../ordini_renderer.php");
@@ -9,8 +9,8 @@ include_once ("../../retegas.class.php");
 
 // controlla se l'user ha effettuato il login oppure no
 if (!_USER_LOGGED_IN){
-     pussa_via(); 
-}    
+     pussa_via();
+}
 
 if (!(_USER_PERMISSIONS & perm::puo_partecipare_ordini)){
      go("sommario",_USER_ID,"Non puoi partecipare agli ordini. Contatta il tuo referente GAS.");
@@ -30,10 +30,10 @@ $stato_ordine = stato_from_id_ord($id_ordine);
 if($stato_ordine==2){
     $alert = "<div class=\"ui-state-error ui-corner-all padding_6px\">
                 <h4>Le operazioni di modifica quantitativo ed assegnazione prodotto si possono fare dalla scheda \"partecipa\"<br>
-                    Finchè l'ordine non è confermato, questi dati sono da considerarsi NON ATTENDIBILI<br>
+                    Finchè l'ordine non è CONVALIDATO, questi dati sono da considerarsi NON ATTENDIBILI<br>
                 </h4>
-              </div>  ";    
-    
+              </div>  ";
+
 }
 
 
@@ -46,7 +46,7 @@ $r->title = "Mia Spesa - Riepilogo";
 
 
 //Messaggio popup;
-//$r->messaggio = "Pagina di test"; 
+//$r->messaggio = "Pagina di test";
 //Dico quale menù orizzontale dovrà  essere associato alla pagina.
 //$r->menu_orizzontale = ordini_menu_completo($user,$id_ordine);
 if(is_printable_from_id_ord($id_ordine)){
@@ -90,16 +90,16 @@ $h .= "<thead>";
 $h .= "</thead>";
 $h .= "<tbody>";
 while ($row = mysql_fetch_array($res)){
-    
+
     $riga++;
-    
+
     if(is_integer($riga / 2)){
         $cl  ="class=\"odd\"";
     }else{
         $cl = "";
     }
-    
-    
+
+
     unset($opz);
     if($stato_ordine==2){
     //    $opz = "<a class=\"awesome option yellow\">M</a>
@@ -108,25 +108,29 @@ while ($row = mysql_fetch_array($res)){
     if($stato_ordine==3){
         $opz = "<a class=\"option blue awesome\" title=\"Assegna\" href=\"../../ordini_chiusi/ordini_chiusi_ass_q.php?id=".$row["id_articoli"]."&id_ordine=$id_ordine&q_min=".db_val_q("id_articoli",$row["id_articoli"],"qta_minima","retegas_articoli")."&id_dett=".$row["id_dettaglio_ordini"]."\">A</a>";
     }
-    
-    $misura = " (".db_val_q("id_articoli",$row["id_articoli"],"u_misura","retegas_articoli")." ".db_val_q("id_articoli",$row["id_articoli"],"misura","retegas_articoli").")";
-    
+
+    //$misura = " (".db_val_q("id_articoli",$row["id_articoli"],"u_misura","retegas_articoli")." ".db_val_q("id_articoli",$row["id_articoli"],"misura","retegas_articoli").")";
+
     unset($alert_qta);
     if($row["qta_arr"]==0){
                 $alert_qta = "<div class=\"campo_alert\">ANNULLATA</div>";
             }else if($row["qta_arr"]<>$row["qta_ord"]){
                 $alert_qta = "<div class=\"campo_alert\">MODIFICATA</div>";
             }
-    
+    if($row["prz_dett_arr"]<>$row["prz_dett"]){
+        $alert_prz = "<div class=\"campo_alert\">MODIFICATO</div>";
+    }
+
+
     $h .="<tr $cl>";
     $h .="<td class=\"sinistra column_hide\">$opz</td>";
     $h .="<td class=\"sinistra\">".db_nr_q("id_riga_dettaglio_ordine",$row["id_dettaglio_ordini"],"retegas_distribuzione_spesa")."</td>";
-    $h .="<td class=\"sinistra\">".db_val_q("id_articoli",$row["id_articoli"],"codice","retegas_articoli")."</td>";
-    $h .="<td class=\"sinistra\">".db_val_q("id_articoli",$row["id_articoli"],"descrizione_articoli","retegas_articoli").$misura."</td>";
+    $h .="<td class=\"sinistra\">".$row["art_codice"]."</td>";
+    $h .="<td class=\"sinistra\">".$row["art_desc"]." ".$row["art_um"]."</td>";
     $h .="<td class=\"centro\">"._nf($row["qta_ord"])."</td>";
     $h .="<td class=\"centro\">"._nf($row["qta_arr"]).$alert_qta."</td>";
-    $h .="<td class=\"destra\">"._nf(db_val_q("id_articoli",$row["id_articoli"],"prezzo","retegas_articoli"))."</td>";
-    $h .="<td class=\"destra\">"._nf($row["qta_arr"]*db_val_q("id_articoli",$row["id_articoli"],"prezzo","retegas_articoli"))."</td>";
+    $h .="<td class=\"destra\">"._nf($row["prz_dett_arr"]).$alert_prz."</td>";
+    $h .="<td class=\"destra\">"._nf($row["qta_arr"]*$row["prz_dett_arr"])."</td>";
     $h .="<td class=\"destra\">&nbsp;</td>";
     $h .="<td class=\"destra\">&nbsp;</td>";
     $h .="</tr>";
@@ -201,9 +205,9 @@ if($magg_gas>0){
     $netto = valore_arrivato_netto_ordine_user($id_ordine,_USER_ID);
     $costi = $costo_trasporto +
              $costo_gestione +
-             $costo_gas + 
+             $costo_gas +
              $magg_gas;
-    
+
     $h .="<tr class=\"total\">";
     $h .="<th class=\"column_hide\">&nbsp;</th>";
     $h .="<th>&nbsp;</th>";
@@ -218,7 +222,7 @@ if($magg_gas>0){
     $h .="</tr>";
 
 
-    
+
 $h .= "</tfoot>";
 
 
@@ -243,19 +247,19 @@ if(_USER_OPT_NO_HEADER=="SI"){
 
 }else{
     $i=load_pdf_header("../../images/rg.jpg");
-    $o=render_scheda_pdf_ordine($id_ordine);    
+    $o=render_scheda_pdf_ordine($id_ordine);
 }
 
 //Mando all'utente la sua pagina
 if($output=="pdf"){
-    require_once("../../lib/dompdf_2/dompdf_config.inc.php");
+    require_once("../../lib/dompdf_3/dompdf_config.inc.php");
 
     $dompdf = new DOMPDF();
     $dompdf->load_html("<html><head>".$s."</head><body>".$i.$o.$h."</body></html>");
     $dompdf->render();
     $dompdf->stream("riepilogo_ord_$id_ordine-$cod.pdf",array("Attachment" => 0));
 die();
-    
+
 }elseif($output=="html"){
     echo $s.$i.$o.$h;
 }else{
@@ -266,6 +270,6 @@ die();
                     ."</div>";
     echo $r->create_retegas();
 }
-//Distruggo l'oggetto r    
-unset($r)   
+//Distruggo l'oggetto r
+unset($r)
 ?>

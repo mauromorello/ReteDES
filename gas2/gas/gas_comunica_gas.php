@@ -53,7 +53,8 @@ if($do=="send"){
         $qry=" SELECT
         maaking_users.fullname,
         maaking_users.email,
-        maaking_users.user_site_option
+        maaking_users.user_site_option,
+        userid
         FROM
         maaking_users
         WHERE
@@ -63,18 +64,27 @@ if($do=="send"){
         $result = $db->sql_query($qry); 
         while ($row = mysql_fetch_array($result)){
             //echo "Permessi utente $row[0] = $row[2]<br>";
-            if($row[2] & opti::acconsento_comunica_tutti){
+            //if($row[2] & opti::acconsento_comunica_tutti){
+            //    $verso_chi[] = $row[0] ;
+            //    $mail_verso_chi[] = $row[1] ;
+            //    $destinatari++; 
+            //}
+            
+            $uosm = read_option_text($row[3],"_USER_OPT_SEND_MAIL");
+            if($uosm<>"NO"){ 
                 $verso_chi[] = $row[0] ;
                 $mail_verso_chi[] = $row[1] ;
-                $destinatari++; 
+                $lista_destinatari .= $row[0]."; <br>";
             }
+            
+            
         }
 
-          $soggetto = "["._SITE_NAME."] ". sanitize($data_2);
+          $soggetto = "["._SITE_NAME."] ".$data_2;
         
           manda_mail_multipla_istantanea($da_chi,$mail_da_chi,$verso_chi,$mail_verso_chi,$soggetto,$data_6,"MAN",0,$id_user,$data_6);
             
-          $msg="Mail  inviata a : <br>$destinatari destinatari.";
+          $msg="Mail  inviata a: <br>$lista_destinatari";
           unset($do);
           
           go("sommario",_USER_ID,$msg);
@@ -123,7 +133,7 @@ if($do=="send"){
       
           // qui ci va la pagina vera e proria  
       
-      $retegas->content =  gas_render_form_mail_gas($gas);
+      $retegas->content =  gas_render_form_mail_gas();
       
       //  Adesso ho tutti gli elementi per poter costruire la pagina, che metto nella variabile "html"
       $html = $retegas->sito_render();

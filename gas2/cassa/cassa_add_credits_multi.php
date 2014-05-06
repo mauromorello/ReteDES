@@ -32,7 +32,7 @@ if($do=="confirm_multi"){
          
         
         $importo = CAST_TO_FLOAT(trim(str_replace(array(",","€"),array(".",""),$box_val[$key])));
-        $log .= "KEY : $key, id_utente : $id_utente, DOC : $$doc, IMPORTO : $importo<br>";
+        $log .= "KEY : $key, id_utente : $id_utente, DOC : $doc, IMPORTO : $importo<br>";
         //echo "key = $key ID_utente = $id_utente DOC = $doc Soldi = $importo<br>";
         if($importo>0){
             
@@ -162,10 +162,10 @@ $r->messaggio = $msg;
     $h .= " <div class=\"rg_widget rg_widget_helper\">
         
             <h3>Utenti $gas_name, Carico credito collettivo, solo utenti che hanno abilitato la cassa.</h3>
-        <div class=\"rg_widget rg_widget_helper ui-state-error\">
+        <!--<div class=\"rg_widget rg_widget_helper ui-state-error\">
         <h3>Attenzione</h3>
         <p>Per inserire valori con decimali usare LA VIRGOLA e non il punto. Prima di confermare la seconda pagina del caricamento, verificare se gli importi assegnati agli utenti corrispondano
-        a quelli inseriti.</p></div>
+        a quelli inseriti.</p></div>-->
         <form method=\"POST\"  action=\"\" class=\"retegas_form\">
         <div>
         <table>
@@ -199,9 +199,15 @@ $r->messaggio = $msg;
                      $class="";
                  }
                  //$box_val[$riga-1] = CAST_TO_FLOAT($box_val[$riga-1]);
-                //$box_val[$riga-1] = CAST_TO_FLOAT(trim(str_replace(array(",","€"),array(".",""),$box_val[$riga-1])));
+                
                 
                 $riga++;
+                
+                
+                $box_val[$riga-1] = (str_replace(array(",","€"),array(".",""),$box_val[$riga-1]));
+                $box_val[$riga-1] = CAST_TO_FLOAT($box_val[$riga-1],0,1000);
+                
+                
                 $d1 = "id_gas";
                 $id_utente = $row["userid"];
                 $fullname = $row["fullname"];
@@ -219,7 +225,7 @@ $r->messaggio = $msg;
                     $doc ="<span class=\"small_link\">".$box_doc[$riga-1]."</span>
                             <input type=\"hidden\"  name=\"box_doc[]\" value=\"".$box_doc[$riga-1]."\">";
                 }else{
-                    $carico_credito = "<input type=\"NUMBER\" step=\"any\" min=\"0\" style=\"width:7em\" name=\"box_val[]\" value=\"0\">
+                    $carico_credito = "<input type=\"TEXT\"  style=\"width:7em\" name=\"box_val[]\" value=\"0\">
                                         <input type=\"hidden\"  name=\"box_id_utente[]\" value=\"".mimmo_encode($id_utente)."\">
                                         <input type=\"hidden\"  name=\"box_clean_id_utente[]\" value=\"".($id_utente)."\">";   
                     $doc = "<input type=\"text\" size=\"10\" name=\"box_doc[]\" value=\"\">";                    

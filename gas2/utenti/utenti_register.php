@@ -20,20 +20,20 @@ include_once ("utenti_render.php");
               $msg .= "Manca il nome utente<br>";
           }
           
-          //if(!isValid($username)){
-          //   $err_log++;
-          //   $msg .= "L'username scelto contiene caratteri non validi<br>"; 
-          //}
+          if(!isValid($username)){
+             $err_log++;
+            $msg .= "L'username scelto contiene caratteri non validi<br>"; 
+          }
           
           
           if(is_empty($password)){
               $err_empty++;
               $msg .= "Manca la prima password<br>";
           }
-          //if(!isValid($password)){
-          //   $err_log++;
-          //   $msg .= "La password scelta contiene caratteri non validi<br>"; 
-          //}
+          if(!isValid($password)){
+             $err_log++;
+             $msg .= "La password scelta contiene caratteri non validi<br>"; 
+          }
           
           
           if(is_empty($password2)){
